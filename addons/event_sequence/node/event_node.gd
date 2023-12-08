@@ -54,6 +54,7 @@ func _run_dictionary_list(list: Array[Dictionary]):
 		# Wait for the script to run and then continue
 		script_instance.parse_dict(event_self)
 		var is_successful: bool = await script_instance.run(self)
+		print("Finished %s" % script_instance.name)
 		
 		if is_successful and event_root.has(EventConst.item_key_child):
 			_run_dictionary_list(event_root[EventConst.item_key_child])

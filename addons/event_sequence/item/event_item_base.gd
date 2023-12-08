@@ -47,17 +47,34 @@ func get_icon_path() -> String:
 
 #endregion
 
-#region Event Data
+#region Data
 
 var name: String
 var script_path: String
 
-var event_variable = null
+var event_variable: String = ""
 var userdata: Dictionary = {}
 
 #endregion
 
-#region Implementation
+#region App Functionality
+
+func run(event_node: EventNode) -> bool:
+	print(name)
+	return true
+
+func parse_dict(dict: Dictionary) -> void:
+	name = dict[EventConst.item_key_name]
+	if dict.has(EventConst.item_key_variable):
+		event_variable = dict[EventConst.item_key_variable]
+	
+	if dict.has(EventConst.item_key_userdata):
+		if typeof(dict[EventConst.item_key_userdata]) == TYPE_DICTIONARY:
+			userdata = dict[EventConst.item_key_userdata]
+
+#endregion
+
+#region Editor Functionality
 
 func _ready():
 	if name.is_empty():
@@ -93,7 +110,10 @@ func _setup_column_config(item: TreeItem, column: EventConst.EditorColumn, confi
 	item.set_metadata(column, config["name"])
 	item.set_tooltip_text(column, config["name"])
 	item.set_editable(column, config["editable"])
-	item.set_cell_mode(column, config["cell_mode"])
+	if column == EventConst.EditorColumn.VARIABLE:
+		item.set_cell_mode(column, TreeItem.CELL_MODE_STRING)
+	else:
+		item.set_cell_mode(column, config["cell_mode"])
 	
 	match(item.get_cell_mode(column)):
 		TreeItem.CELL_MODE_STRING:
@@ -102,26 +122,11 @@ func _setup_column_config(item: TreeItem, column: EventConst.EditorColumn, confi
 			else: if userdata.has(EventConst.item_key_userdata_generic):
 				item.set_text(column, userdata[EventConst.item_key_userdata_generic])
 		TreeItem.CELL_MODE_RANGE:
-			if column == EventConst.EditorColumn.VARIABLE and event_variable:
-				item.set_range(column, event_variable)
-			else: if userdata.has(EventConst.item_key_userdata_generic):
+			if userdata.has(EventConst.item_key_userdata_generic):
 				item.set_range(column, userdata[EventConst.item_key_userdata_generic])
 		TreeItem.CELL_MODE_CUSTOM:
 			for idx in userdata:
 				item.set_meta(userdata.keys()[idx], userdata.values()[idx])
-
-func run(event_node: EventNode) -> bool:
-	print(name)
-	return true
-
-func parse_dict(dict: Dictionary) -> void:
-	name = dict[EventConst.item_key_name]
-	if dict.has(EventConst.item_key_variable):
-		event_variable = dict[EventConst.item_key_variable]
-	
-	if dict.has(EventConst.item_key_userdata):
-		if typeof(dict[EventConst.item_key_userdata]) == TYPE_DICTIONARY:
-			userdata = dict[EventConst.item_key_userdata]
 
 func build_userdata_from_tree(item: TreeItem) -> Dictionary:
 	userdata = {}
@@ -133,5 +138,42 @@ func build_userdata_from_tree(item: TreeItem) -> Dictionary:
 		userdata[meta] = item.get_meta(meta)
 	
 	return userdata
+
+#endregion
+
+#region Utility
+
+func is_valid_generic(event_node: EventNode, is_fetching: bool) -> bool:
+	var is_valid: bool = is_valid_event_variable(event_node, is_fetching)
+	is_valid = is_valid and is_valid_userdata(EventConst.item_key_userdata_generic)
+	
+	if is_valid:
+		if userdata[EventConst.item_key_userdata_generic].is_empty():
+			warn("Value wasn't set in %s!" % [get_second_column_config()["name"]])
+			return false
+	
+	return is_valid
+
+func is_valid_event_variable(event_node: EventNode, is_fetching: bool) -> bool:
+	if event_variable.is_empty():
+		warn("Variable Name isn't set!")
+		return false
+	
+	if not is_fetching and not event_node.fetch_database.has(event_variable):
+		warn("Cannot use variable \"%s\" as it hasn't been set yet." % [event_variable])
+		return false
+	
+	return true
+
+func is_valid_userdata(key: String) -> bool:
+	if not userdata.has(key):
+		warn("Value wasn't set in data! Double-check your sequence.")
+		return false
+	
+	return true
+
+func warn(message: String):
+	push_warning("EventNode ran into an problem at item \"%s\"
+		%s" % [name, message])
 
 #endregion

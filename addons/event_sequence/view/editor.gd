@@ -31,8 +31,8 @@ func _ready():
 	# Connect clicking on a tree item to a function
 	tree.cell_selected.connect(_tree_cell_clicked)
 	
-	tree.item_mouse_selected.connect(_tree_clicked)
-	tree.empty_clicked.connect(_tree_clicked)
+	tree.item_mouse_selected.connect(_tree_item_clicked)
+	tree.empty_clicked.connect(_tree_empty_clicked)
 	
 	tree.refresh_tree.connect(_tree_refresh)
 
@@ -44,10 +44,10 @@ func _exit_tree():
 	if tree.cell_selected.is_connected(_tree_cell_clicked):
 		tree.cell_selected.disconnect(_tree_cell_clicked)
 		
-	if tree.item_mouse_selected.is_connected(_tree_clicked):
-		tree.item_mouse_selected.disconnect(_tree_clicked)
-	if tree.empty_clicked.is_connected(_tree_clicked):
-		tree.empty_clicked.disconnect(_tree_clicked)
+	if tree.item_mouse_selected.is_connected(_tree_item_clicked):
+		tree.item_mouse_selected.disconnect(_tree_item_clicked)
+	if tree.empty_clicked.is_connected(_tree_empty_clicked):
+		tree.empty_clicked.disconnect(_tree_empty_clicked)
 	
 	if tree.refresh_tree.is_connected(_tree_refresh):
 		tree.refresh_tree.disconnect(_tree_refresh)
@@ -70,9 +70,16 @@ func _tree_cell_clicked():
 		tree.set_column_title(EventConst.EditorColumn.VARIABLE, "None")
 		tree.set_column_title(EventConst.EditorColumn.USERDATA, "None")
 
-func _tree_clicked(position: Vector2, mouse_button_index: int):
-	# If right clicked on a tree item, open the add popup	
+func _tree_item_clicked(position: Vector2, mouse_button_index: int):
+	# If right clicked on a tree item, open the add popup
 	if mouse_button_index == 2:
+		popup_tree_add.popup()
+		popup_tree_add.position = DisplayServer.mouse_get_position()
+
+func _tree_empty_clicked(position: Vector2, mouse_button_index: int):
+	# If right clicked on a tree item, open the add popup
+	if mouse_button_index == 2:
+		tree.deselect_all()
 		popup_tree_add.popup()
 		popup_tree_add.position = DisplayServer.mouse_get_position()
 

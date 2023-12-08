@@ -20,27 +20,19 @@ func get_second_column_config() -> Dictionary:
 	}
 
 func run(event_node: EventNode) -> bool:
+	if not is_valid_generic(event_node, false): return true
+	
+	# Get the item from the fetch data and the name of the signal
+	var target = event_node.fetch_database[event_variable]
 	var signal_name: String = userdata[EventConst.item_key_userdata_generic]
 	
-	if typeof(event_variable) == TYPE_NIL or typeof(signal_name) == TYPE_NIL:
-		push_warning("EventNode cannot await for signal from node without node variable and signal name")
-		return true
-	
-	if not event_node.fetch_database.has(event_variable):
-		push_warning("EventNode cannot await for signal from node with an unknown variable name (%s)"
-		% [event_variable])
-		return true
-	
-	var target: Node = event_node.fetch_database[event_variable]
-	
-	if not event_node.fetch_database[event_variable] is Node:
-		push_warning("EventNode cannot await for signal from node using variable name that isn't node
-		Variable: %s - Signal: %s" % [str(event_variable), str(signal_name)])
+	# Ensure this item is a node
+	if not target is Node:
+		warn("Variable \"%s\" must contain a singular node, nothing else!" % [event_variable])
 		return true
 	
 	if not target.has_signal(signal_name):
-		push_warning("EventNode cannot await for signal from node since node doesn't have signal (%s)"
-		% [signal_name])
+		warn("Node in variable \"%s\" doesn't have signal \"%s\"" % [event_variable, signal_name])
 		return true
 	
 	target.connect(signal_name, _event_complete_trigger)

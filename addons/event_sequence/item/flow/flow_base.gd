@@ -13,7 +13,7 @@ func is_allow_in_editor() -> bool:
 
 func get_first_column_config() -> Dictionary:
 	return {
-		"name": "Variable Name (w/ Node)",
+		"name": "Variable Name (Node)",
 		"editable": true,
 		"cell_mode": TreeItem.CELL_MODE_STRING
 	}

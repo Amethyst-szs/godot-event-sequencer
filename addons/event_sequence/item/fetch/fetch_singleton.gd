@@ -18,19 +18,17 @@ func get_second_column_config() -> Dictionary:
 	}
 
 func run(event_node: EventNode) -> bool:
+	if not is_valid_generic(event_node, true): return true
+	
 	var singleton_name: String = userdata[EventConst.item_key_userdata_generic]
 	var tree_root: Window = event_node.get_tree().root
-	
-	if event_variable.is_empty():
-		push_warning("EventNode: You must set the variable name to store this fetch into!")
-		return true
 	
 	for node in tree_root.get_children():
 		if singleton_name == node.name:
 			event_node.fetch_database[event_variable] = node
 			return true
 	
-	push_warning("EventNode tried to fetch Singleton/Autoload \"%s\" but couldn't find it!"
+	warn("EventNode tried to fetch Singleton/Autoload \"%s\" but couldn't find it!"
 			% [singleton_name])
 	
 	return true

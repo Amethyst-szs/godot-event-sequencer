@@ -18,16 +18,11 @@ func get_second_column_config() -> Dictionary:
 	}
 
 func run(event_node: EventNode) -> bool:
+	if not is_valid_generic(event_node, true): return true
+	
+	# Get array of nodes
 	var group_name: String = userdata[EventConst.item_key_userdata_generic]
-	
-	if event_variable.is_empty():
-		push_warning("EventNode: You must set the variable name to store this fetch into!")
-		return true
-	
-	if typeof(group_name) == TYPE_NIL:
-		push_warning("EventNode tried to fetch group but didn't have a group name!")
-		return true
-	
 	var nodes: Array[Node] = event_node.get_tree().get_nodes_in_group(group_name)
 	event_node.fetch_database[event_variable] = nodes
+	
 	return true
