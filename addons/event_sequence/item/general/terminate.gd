@@ -23,8 +23,8 @@ func get_color() -> Color:
 func get_icon_path() -> String:
 	return "res://addons/event_sequence/test-icon.svg"
 
-func run(event_node: EventNode) -> bool:
+func run(event_node: EventNode) -> EventConst.ItemResponseType:
 	if not event_variable.is_empty():
 		error(event_variable)
 	
-	return true
+	return EventConst.ItemResponseType.TERMINATE

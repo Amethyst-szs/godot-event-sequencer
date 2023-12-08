@@ -7,6 +7,8 @@ class_name EventNode
 @export var script_list: Array[Script] = []
 @export var fetch_database: Dictionary = {}
 
+@export var is_terminating: bool = false
+
 func _ready():
 	if not Engine.is_editor_hint():
 		preload_scripts(event_list)
@@ -29,10 +31,13 @@ func preload_scripts(dict_list: Array[Dictionary]):
 			preload_scripts(event[EventConst.item_key_child])
 
 func start():
-	_run_dictionary_list(event_list)
+	_run_dictionary_list(event_list, true)
 
-func _run_dictionary_list(list: Array[Dictionary]):
+func _run_dictionary_list(list: Array[Dictionary], is_first_recursion: bool = false):
 	for idx in range(list.size()):
+		if is_terminating:
+			return
+		
 		# Get event dictionary
 		var event_root: Dictionary = list[idx]
 		if not event_root.has(EventConst.item_key_self):
@@ -53,10 +58,19 @@ func _run_dictionary_list(list: Array[Dictionary]):
 		
 		# Wait for the script to run and then continue
 		script_instance.parse_dict(event_self)
-		var is_successful: bool = await script_instance.run(self)
+		var result: EventConst.ItemResponseType = await script_instance.run(self)
 		
-		if is_successful and event_root.has(EventConst.item_key_child):
-			await _run_dictionary_list(event_root[EventConst.item_key_child])
+		match(result):
+			EventConst.ItemResponseType.OK:
+				if event_root.has(EventConst.item_key_child):
+					await _run_dictionary_list(event_root[EventConst.item_key_child])
+			EventConst.ItemResponseType.SKIP_CHILDREN:
+				continue
+			EventConst.ItemResponseType.TERMINATE:
+				is_terminating = true
 	
-	# Once iterating through events is complete, empty out fetch database
-	fetch_database.clear()
+	
+	# Once iterating through events is complete
+	if is_first_recursion:
+		fetch_database.clear()
+		is_terminating = false

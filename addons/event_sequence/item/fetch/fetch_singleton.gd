@@ -17,8 +17,9 @@ func get_second_column_config() -> Dictionary:
 		"cell_mode": TreeItem.CELL_MODE_STRING
 	}
 
-func run(event_node: EventNode) -> bool:
-	if not is_valid_generic(event_node, true): return true
+func run(event_node: EventNode) -> EventConst.ItemResponseType:
+	if not is_valid_generic(event_node, true):
+		return EventConst.ItemResponseType.OK
 	
 	var singleton_name: String = userdata[EventConst.item_key_userdata_generic]
 	var tree_root: Window = event_node.get_tree().root
@@ -26,9 +27,9 @@ func run(event_node: EventNode) -> bool:
 	for node in tree_root.get_children():
 		if singleton_name == node.name:
 			event_node.fetch_database[event_variable] = node
-			return true
+			return EventConst.ItemResponseType.OK
 	
 	warn("EventNode tried to fetch Singleton/Autoload \"%s\" but couldn't find it!"
 			% [singleton_name])
 	
-	return true
+	return EventConst.ItemResponseType.OK

@@ -19,8 +19,9 @@ func get_second_column_config() -> Dictionary:
 		"cell_mode": TreeItem.CELL_MODE_STRING
 	}
 
-func run(event_node: EventNode) -> bool:
-	if not is_valid_generic(event_node, false): return true
+func run(event_node: EventNode) -> EventConst.ItemResponseType:
+	if not is_valid_generic(event_node, false):
+		return EventConst.ItemResponseType.OK
 	
 	# Get the item from the fetch data and the name of the signal
 	var target = event_node.fetch_database[event_variable]
@@ -29,16 +30,16 @@ func run(event_node: EventNode) -> bool:
 	# Ensure this item is a node
 	if not target is Node:
 		warn("Variable \"%s\" must contain a singular node, nothing else!" % [event_variable])
-		return true
+		return EventConst.ItemResponseType.OK
 	
 	if not target.has_signal(signal_name):
 		warn("Node in variable \"%s\" doesn't have signal \"%s\"" % [event_variable, signal_name])
-		return true
+		return EventConst.ItemResponseType.OK
 	
 	target.connect(signal_name, _event_complete_trigger)
 	await event_complete
 	
-	return true
+	return EventConst.ItemResponseType.OK
 
 func _event_complete_trigger():
 	event_complete.emit()

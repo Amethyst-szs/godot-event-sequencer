@@ -59,9 +59,9 @@ var userdata: Dictionary = {}
 
 #region App Functionality
 
-func run(event_node: EventNode) -> bool:
+func run(event_node: EventNode) -> EventConst.ItemResponseType:
 	print(name)
-	return true
+	return EventConst.ItemResponseType.OK
 
 func parse_dict(dict: Dictionary) -> void:
 	name = dict[EventConst.item_key_name]
