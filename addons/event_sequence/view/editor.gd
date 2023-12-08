@@ -10,6 +10,8 @@ var save_timer: float = -1.0
 
 @onready var tree: Tree = %Tree
 @onready var popup_tree_add: Popup = $TreeAddPopup
+@onready var popup_userdata_edit: Popup = $UserdataEditPopup
+@onready var userdata_edit_list := $UserdataEditPopup/Scroll/List
 
 var selected_node: EventNode = null
 
@@ -34,6 +36,8 @@ func _ready():
 	# Connect clicking on a tree item to a function
 	tree.cell_selected.connect(_tree_cell_clicked)
 	
+	tree.button_clicked.connect(_tree_button_pressed)
+	
 	tree.item_mouse_selected.connect(_tree_item_clicked)
 	tree.empty_clicked.connect(_tree_empty_clicked)
 	
@@ -46,6 +50,9 @@ func _exit_tree():
 	
 	if tree.cell_selected.is_connected(_tree_cell_clicked):
 		tree.cell_selected.disconnect(_tree_cell_clicked)
+	
+	if tree.button_clicked.is_connected(_tree_button_pressed):
+		tree.button_clicked.disconnect(_tree_button_pressed)
 		
 	if tree.item_mouse_selected.is_connected(_tree_item_clicked):
 		tree.item_mouse_selected.disconnect(_tree_item_clicked)
@@ -72,6 +79,11 @@ func _tree_cell_clicked():
 	else:
 		tree.set_column_title(EventConst.EditorColumn.VARIABLE, "None")
 		tree.set_column_title(EventConst.EditorColumn.USERDATA, "None")
+
+func _tree_button_pressed(item: TreeItem, column: int, id: int, mouse_button_index: int):
+	# Build inspector panel
+	tree.set_selected(item, column)
+	popup_userdata_edit.build_menu(item, column)
 
 func _tree_item_clicked(position: Vector2, mouse_button_index: int):
 	# If right clicked on a tree item, open the add popup
@@ -132,7 +144,7 @@ func save() -> void:
 func setup_default_tree(parent: TreeItem) -> void:
 	var default_item_script: Script = ResourceLoader.load(default_item_path, "Script")
 	var default_item = default_item_script.new()
-			
+	
 	default_item.name = default_item_name
 	default_item.script_path = default_item_path
 	default_item.add_to_tree(parent, self)
@@ -265,3 +277,7 @@ func _get_selected_node() -> EventNode:
 	return null
 
 #endregion
+
+
+func _on_button_pressed():
+	popup_userdata_edit.popup()

@@ -30,6 +30,9 @@ func get_second_column_config() -> Dictionary:
 		"cell_mode": TreeItem.CELL_MODE_STRING
 	}
 
+func get_userdata_keys() -> Array[Dictionary]:
+	return []
+
 func is_first_column_editable() -> bool:
 	return false
 
@@ -106,7 +109,7 @@ func add_to_tree(parent: TreeItem, editor: Control) -> TreeItem:
 	
 	return item
 
-func _setup_column_config(item: TreeItem, column: EventConst.EditorColumn, config: Dictionary):
+func _setup_column_config(item: TreeItem, column: EventConst.EditorColumn, config: Dictionary) -> bool:
 	item.set_metadata(column, config["name"])
 	item.set_tooltip_text(column, config["name"])
 	item.set_editable(column, config["editable"])
@@ -125,8 +128,13 @@ func _setup_column_config(item: TreeItem, column: EventConst.EditorColumn, confi
 			if userdata.has(EventConst.item_key_userdata_generic):
 				item.set_range(column, userdata[EventConst.item_key_userdata_generic])
 		TreeItem.CELL_MODE_CUSTOM:
+			item.add_button(EventConst.EditorColumn.USERDATA, NoiseTexture2D.new())
 			for idx in userdata:
 				item.set_meta(userdata.keys()[idx], userdata.values()[idx])
+			
+			return true
+	
+	return false
 
 func build_userdata_from_tree(item: TreeItem) -> Dictionary:
 	userdata = {}

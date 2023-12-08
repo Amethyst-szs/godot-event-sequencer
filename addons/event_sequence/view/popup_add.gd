@@ -18,6 +18,9 @@ func _ready():
 	
 	# All all buttons into interface
 	for path in EventConst.ScriptScanFolders:
+		if not DirAccess.dir_exists_absolute(path):
+			continue
+		
 		var dir: DirAccess = DirAccess.open(path)
 		for file in dir.get_files():
 			_create_button(path + file)

@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://bx5hddkgml270"]
+[gd_scene load_steps=7 format=3 uid="uid://bx5hddkgml270"]
 
 [ext_resource type="Script" path="res://addons/event_sequence/view/editor.gd" id="1_xiffy"]
 [ext_resource type="Script" path="res://addons/event_sequence/view/popup_add.gd" id="2_06btc"]
 [ext_resource type="Script" path="res://addons/event_sequence/view/event_tree.gd" id="2_gw54i"]
+[ext_resource type="Script" path="res://addons/event_sequence/view/popup_userdata.gd" id="4_fx4fc"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ap782"]
 content_margin_left = 15.0
@@ -101,6 +102,29 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_apxsf")
 clip_tabs = false
 
+[node name="UserdataEditPopup" type="Popup" parent="."]
+disable_3d = true
+transparent_bg = true
+position = Vector2i(50, 50)
+size = Vector2i(400, 400)
+transparent = true
+script = ExtResource("4_fx4fc")
+
+[node name="Scroll" type="ScrollContainer" parent="UserdataEditPopup"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ap782")
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 2
+
+[node name="List" type="VBoxContainer" parent="UserdataEditPopup/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
 [node name="NoTree" type="MarginContainer" parent="."]
 visible = false
 layout_mode = 1
@@ -119,4 +143,13 @@ layout_mode = 2
 text = "Select an EventNode in your Scene Tree to get started!"
 horizontal_alignment = 1
 
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_left = 787.0
+offset_top = 486.0
+offset_right = 831.0
+offset_bottom = 517.0
+text = "TEST"
+
 [connection signal="pressed" from="TreeAddPopup/ScrollContainer/VBox/HBoxContainer/Button" to="TreeAddPopup" method="_on_debug_refresh_pressed"]
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
