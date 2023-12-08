@@ -11,7 +11,7 @@ func _ready():
 #region Drag and Drop Functionality
 
 func _get_drag_data(position: Vector2):
-	if not get_selected():
+	if not get_next_selected(null):
 		return
 	
 	set_drop_mode_flags(DROP_MODE_INBETWEEN | DROP_MODE_ON_ITEM)

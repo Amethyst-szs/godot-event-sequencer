@@ -1,6 +1,9 @@
 @tool
 extends Control
 
+# State variables
+var save_timer: float = -1.0
+
 # Node references
 @onready var tree_screen: MarginContainer = $TreeContainer
 @onready var notree_screen: MarginContainer = $NoTree
@@ -57,7 +60,7 @@ func _exit_tree():
 #region Tree Interaction
 
 func _tree_cell_clicked():
-	var select: TreeItem = tree.get_selected()
+	var select: TreeItem = tree.get_next_selected(null)
 	var column: int = tree.get_selected_column()
 	
 	if select:
@@ -91,21 +94,36 @@ func _tree_refresh():
 	_new_tree()
 
 func _input(event: InputEvent):
-	if not selected_node:
+	if not selected_node or not visible:
 		return
 	
 	if event is InputEventKey and event.is_pressed():
 		match event.as_text():
-			"Ctrl+S", "Command+S":
+			"Ctrl+S", "Command+S", "F5", "F6":
 				save()
 			"Delete":
-				tree.get_selected().free()
+				var item: TreeItem = tree.get_next_selected(null)
+				while item != null:
+					item.free()
+					item = tree.get_next_selected(item)
+				
 				save()
 				get_viewport().set_input_as_handled()
 
 #endregion
 
 #region Tree Saving and Loading
+
+# Automatically save a short bit after user input
+func _process(delta: float) -> void:
+	if visible and Input.is_anything_pressed():
+		save_timer = 0.5
+	
+	if save_timer != -1.0:
+		save_timer -= delta
+		if save_timer <= 0:
+			save()
+			save_timer = -1
 
 func save() -> void:
 	if selected_node:

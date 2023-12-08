@@ -53,6 +53,7 @@ columns = 3
 column_titles_visible = true
 allow_rmb_select = true
 hide_root = true
+select_mode = 2
 scroll_horizontal_enabled = false
 script = ExtResource("2_gw54i")
 
