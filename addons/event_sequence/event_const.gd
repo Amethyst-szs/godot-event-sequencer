@@ -19,6 +19,6 @@ enum EditorDialogTab {
 # Editor tree columns
 enum EditorColumn {
 	NAME,
-	PROPERTY1,
-	PROPERTY2,
+	VARIABLE,
+	USERDATA,
 }

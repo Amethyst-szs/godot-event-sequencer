@@ -49,8 +49,8 @@ func get_icon_path() -> String:
 var name: String
 var script_path: String
 
-var property1 = null
-var property2 = null
+var event_source_variable = null
+var userdata: Dictionary = {}
 
 #endregion
 
@@ -79,8 +79,8 @@ func add_to_tree(parent: TreeItem, editor: Control) -> TreeItem:
 	item.set_editable(EventConst.EditorColumn.NAME, true)
 	
 	# Custom columns
-	_setup_column_config(item, EventConst.EditorColumn.PROPERTY1, get_first_column_config())
-	_setup_column_config(item, EventConst.EditorColumn.PROPERTY2, get_second_column_config())
+	_setup_column_config(item, EventConst.EditorColumn.VARIABLE, get_first_column_config())
+	_setup_column_config(item, EventConst.EditorColumn.USERDATA, get_second_column_config())
 	
 	return item
 
@@ -92,15 +92,18 @@ func _setup_column_config(item: TreeItem, column: EventConst.EditorColumn, confi
 	
 	match(item.get_cell_mode(column)):
 		TreeItem.CELL_MODE_STRING:
-			if column == EventConst.EditorColumn.PROPERTY1 and property1:
-				item.set_text(column, property1)
-			else: if property2:
-				item.set_text(column, property2)
+			if column == EventConst.EditorColumn.VARIABLE and event_source_variable:
+				item.set_text(column, event_source_variable)
+			else: if userdata.has("input"):
+				item.set_text(column, userdata["input"])
 		TreeItem.CELL_MODE_RANGE:
-			if column == EventConst.EditorColumn.PROPERTY1 and property1:
-				item.set_range(column, property1)
-			else: if property2:
-				item.set_range(column, property2)
+			if column == EventConst.EditorColumn.VARIABLE and event_source_variable:
+				item.set_range(column, event_source_variable)
+			else: if userdata.has("input"):
+				item.set_range(column, userdata["input"])
+		TreeItem.CELL_MODE_CUSTOM:
+			for idx in userdata:
+				item.set_meta(userdata.keys()[idx], userdata.values()[idx])
 
 func run(event_node: EventNode) -> bool:
 	print(name)
@@ -108,10 +111,24 @@ func run(event_node: EventNode) -> bool:
 
 func parse_dict(dict: Dictionary) -> void:
 	name = dict["name"]
+	if dict.has("v"):
+		event_source_variable = dict["v"]
 	
-	if dict.has("p1"):
-		property1 = dict["p1"]
-	if dict.has("p2"):
-		property2 = dict["p2"]
+	if dict.has("u") and typeof(dict["u"]) == TYPE_DICTIONARY:
+		userdata = dict["u"]
+	
+	print(dict)
+
+func build_userdata_from_tree(item: TreeItem) -> Dictionary:
+	userdata = {}
+	
+	for meta in item.get_meta_list():
+		if meta.begins_with("__"):
+			continue
+		
+		userdata[meta] = item.get_meta(meta)
+	
+	print(userdata)
+	return userdata
 
 #endregion

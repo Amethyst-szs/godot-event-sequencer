@@ -61,14 +61,14 @@ func _tree_cell_clicked():
 	var column: int = tree.get_selected_column()
 	
 	if select:
-		var column_1_title: String = select.get_metadata(EventConst.EditorColumn.PROPERTY1)
-		tree.set_column_title(EventConst.EditorColumn.PROPERTY1, column_1_title)
+		var column_1_title: String = select.get_metadata(EventConst.EditorColumn.VARIABLE)
+		tree.set_column_title(EventConst.EditorColumn.VARIABLE, column_1_title)
 		
-		var column_2_title: String = select.get_metadata(EventConst.EditorColumn.PROPERTY2)
-		tree.set_column_title(EventConst.EditorColumn.PROPERTY2, column_2_title)
+		var column_2_title: String = select.get_metadata(EventConst.EditorColumn.VARIABLE)
+		tree.set_column_title(EventConst.EditorColumn.VARIABLE, column_2_title)
 	else:
-		tree.set_column_title(EventConst.EditorColumn.PROPERTY1, "None")
-		tree.set_column_title(EventConst.EditorColumn.PROPERTY2, "None")
+		tree.set_column_title(EventConst.EditorColumn.VARIABLE, "None")
+		tree.set_column_title(EventConst.EditorColumn.USERDATA, "None")
 
 func _tree_clicked(position: Vector2, mouse_button_index: int):
 	# If right clicked on a tree item, open the add popup	
@@ -162,12 +162,12 @@ func _try_build_tree(parent: TreeItem = null, dict_list: Array = []) -> bool:
 func _build_item_from_dict(parent_item: TreeItem, dict: Dictionary) -> TreeItem:
 	# Load in the item's script
 	var script: Script = ResourceLoader.load(dict["script"], "Script")
-	var item = script.new()
+	var script_instance = script.new()
 	
-	# Pasrse the current dictionary and let it add itself to the list
-	item.script_path = dict["script"]
-	item.parse_dict(dict)
-	return item.add_to_tree(parent_item, self)
+	# Parse the current dictionary and let it add itself to the list
+	script_instance.script_path = dict["script"]
+	script_instance.parse_dict(dict)
+	return script_instance.add_to_tree(parent_item, self)
 
 func _build_dict_from_tree(root: TreeItem) -> Array[Dictionary]:
 	if not root:
@@ -193,13 +193,24 @@ func _build_dict_from_item(item: TreeItem) -> Dictionary:
 	dict["name"] = item.get_text(EventConst.EditorColumn.NAME)
 	dict["script"] = item.get_metadata(EventConst.EditorColumn.NAME)
 	
-	var property1 = _get_property_from_column(item, EventConst.EditorColumn.PROPERTY1)
-	if property1:
-		dict["p1"] = property1
+	# New instance of script
+	var script: Script = ResourceLoader.load(dict["script"], "Script")
+	var script_instance = script.new()
 	
-	var property2 = _get_property_from_column(item, EventConst.EditorColumn.PROPERTY2)
-	if property2:
-		dict["p2"] = property2
+	var variable = _get_property_from_column(item, EventConst.EditorColumn.VARIABLE)
+	if variable:
+		dict["v"] = variable
+	
+	var userdata_cellmode: int = item.get_cell_mode(EventConst.EditorColumn.USERDATA)
+	if userdata_cellmode == TreeItem.CELL_MODE_CUSTOM:
+		var userdata: Dictionary = script_instance.build_userdata_from_tree(item)
+		if not userdata.is_empty():
+			dict["u"] = userdata
+	else:
+		var userdata = _get_property_from_column(item, EventConst.EditorColumn.USERDATA)
+		if userdata:
+			dict["u"] = {}
+			dict["u"]["input"] = userdata
 
 	return dict
 

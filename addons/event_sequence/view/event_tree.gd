@@ -5,8 +5,8 @@ signal refresh_tree
 
 func _ready():
 	set_column_title(EventConst.EditorColumn.NAME, "Name")
-	set_column_title(EventConst.EditorColumn.PROPERTY1, "None")
-	set_column_title(EventConst.EditorColumn.PROPERTY2, "None")
+	set_column_title(EventConst.EditorColumn.VARIABLE, "None")
+	set_column_title(EventConst.EditorColumn.USERDATA, "None")
 
 #region Drag and Drop Functionality
 
