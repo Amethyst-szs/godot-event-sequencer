@@ -176,4 +176,8 @@ func warn(message: String):
 	push_warning("EventNode ran into an problem at item \"%s\"
 		%s" % [name, message])
 
+func error(message: String):
+	push_error("EventNode ran into a terminating error at item \"%s\"
+		%s" % [name, message])
+
 #endregion

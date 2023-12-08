@@ -28,7 +28,6 @@ size_flags_vertical = 3
 script = ExtResource("1_xiffy")
 
 [node name="TreeContainer" type="MarginContainer" parent="."]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -43,11 +42,18 @@ theme_override_constants/margin_bottom = 8
 [node name="Tree" type="Tree" parent="TreeContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_constants/v_separation = 8
+theme_override_constants/draw_relationship_lines = 1
+theme_override_constants/relationship_line_width = 2
+theme_override_constants/parent_hl_line_width = 2
+theme_override_constants/children_hl_line_width = 2
 theme_override_constants/icon_max_width = 28
+theme_override_constants/scrollbar_margin_right = 15
 columns = 3
 column_titles_visible = true
 allow_rmb_select = true
 hide_root = true
+scroll_horizontal_enabled = false
 script = ExtResource("2_gw54i")
 
 [node name="TreeAddPopup" type="Popup" parent="."]
@@ -95,6 +101,7 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_apxsf")
 clip_tabs = false
 
 [node name="NoTree" type="MarginContainer" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
