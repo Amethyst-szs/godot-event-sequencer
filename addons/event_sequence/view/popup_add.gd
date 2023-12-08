@@ -1,6 +1,7 @@
 @tool
 extends Popup
 
+@onready var root: Control = get_parent()
 @onready var tree: Tree = %Tree
 @onready var tabs: TabContainer = %AddPopupTabs
 
@@ -26,8 +27,11 @@ func _create_button(script_path: String) -> void:
 		return
 	
 	# Load in the item's script
-	var script: Script = load(script_path)
+	var script: Script = ResourceLoader.load(script_path, "Script")
 	var item = script.new()
+	
+	if not item.is_allow_in_editor():
+		return
 	
 	# Build button
 	var button: Button = Button.new()
@@ -50,18 +54,20 @@ func _create_button(script_path: String) -> void:
 	button.pressed.connect(_button_pressed.bind(script_path))
 
 func _button_pressed(script_path: String):
-	var script: Script = load(script_path)
+	var script: Script = ResourceLoader.load(script_path, "Script")
 	var item: EventItemBase = script.new()
 	
-	item.name = item.get_name()
 	item.script_path = script_path
 	
-	var tree_item: TreeItem = item.add_to_tree(tree.get_root())
+	var tree_item: TreeItem = item.add_to_tree(tree.get_root(), root)
 	
 	if tree.get_selected():
 		tree_item.move_after(tree.get_selected())
 	
+	tree.set_selected(tree_item, 0)
+	
+	root.save()
 	visible = false
 
-func _on_debug_reload_pressed():
+func _on_debug_refresh_pressed():
 	_ready()

@@ -1,9 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://bx5hddkgml270"]
+[gd_scene load_steps=6 format=3 uid="uid://bx5hddkgml270"]
 
 [ext_resource type="Script" path="res://addons/event_sequence/view/editor.gd" id="1_xiffy"]
 [ext_resource type="Script" path="res://addons/event_sequence/view/popup_add.gd" id="2_06btc"]
 [ext_resource type="Script" path="res://addons/event_sequence/view/event_tree.gd" id="2_gw54i"]
-[ext_resource type="Script" path="res://addons/event_sequence/node/event_node.gd" id="2_mfndx"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ap782"]
 content_margin_left = 15.0
@@ -28,14 +27,22 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_xiffy")
 
-[node name="Tree" type="Tree" parent="."]
-unique_name_in_owner = true
+[node name="TreeContainer" type="MarginContainer" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Tree" type="Tree" parent="TreeContainer"]
+unique_name_in_owner = true
+layout_mode = 2
 theme_override_constants/icon_max_width = 28
 columns = 3
 column_titles_visible = true
@@ -48,7 +55,6 @@ disable_3d = true
 transparent_bg = true
 position = Vector2i(50, 50)
 size = Vector2i(400, 400)
-visible = true
 transparent = true
 script = ExtResource("2_06btc")
 
@@ -67,17 +73,20 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Header" type="Label" parent="TreeAddPopup/ScrollContainer/VBox"]
-visible = false
+[node name="HBoxContainer" type="HBoxContainer" parent="TreeAddPopup/ScrollContainer/VBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="Button" type="Button" parent="TreeAddPopup/ScrollContainer/VBox/HBoxContainer"]
+layout_mode = 2
+text = "(DEBUG REFRESH)"
+flat = true
+
+[node name="Header" type="Label" parent="TreeAddPopup/ScrollContainer/VBox/HBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 0
-text = "Add New Event"
+text = "Add Item"
 horizontal_alignment = 1
-
-[node name="Button" type="Button" parent="TreeAddPopup/ScrollContainer/VBox"]
-layout_mode = 2
-theme_override_constants/icon_max_width = 32
-text = "Reload Panel (Debug)"
 
 [node name="AddPopupTabs" type="TabContainer" parent="TreeAddPopup/ScrollContainer/VBox"]
 unique_name_in_owner = true
@@ -85,41 +94,21 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_apxsf")
 clip_tabs = false
 
-[node name="EventNode" type="Node" parent="."]
-script = ExtResource("2_mfndx")
-event_list = Array[Dictionary]([{
-"self": {
-"name": "Event Item Base",
-"script": "res://addons/event_sequence/item/general/event_item_comment.gd"
-}
-}, {
-"children": Array[Dictionary]([{
-"children": Array[Dictionary]([{
-"self": {
-"name": "Event Item Base",
-"script": "res://addons/event_sequence/item/general/event_item_comment.gd"
-}
-}]),
-"self": {
-"name": "Event Item Base",
-"script": "res://addons/event_sequence/item/general/event_item_comment.gd"
-}
-}]),
-"self": {
-"name": "Event Item Base",
-"script": "res://addons/event_sequence/item/general/event_item_comment.gd"
-}
-}])
+[node name="NoTree" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
-[node name="Timer" type="Timer" parent="."]
+[node name="Label" type="Label" parent="NoTree"]
+layout_mode = 2
+text = "Select an EventNode in your Scene Tree to get started!"
+horizontal_alignment = 1
 
-[node name="Button" type="Button" parent="."]
-layout_mode = 0
-offset_left = 896.0
-offset_top = 497.0
-offset_right = 953.0
-offset_bottom = 528.0
-text = "WRITE"
-
-[connection signal="pressed" from="TreeAddPopup/ScrollContainer/VBox/Button" to="TreeAddPopup" method="_on_debug_reload_pressed"]
-[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="TreeAddPopup/ScrollContainer/VBox/HBoxContainer/Button" to="TreeAddPopup" method="_on_debug_refresh_pressed"]
