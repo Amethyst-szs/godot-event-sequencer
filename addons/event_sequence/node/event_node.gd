@@ -24,7 +24,7 @@ func _run_dictionary_list(list: Array[Dictionary]):
 		var event_self: Dictionary = event_root["self"]
 		
 		# New instance of script
-		var script: Script = load("res://addons/event_sequence/item/%s" % [event_self["script"]])
+		var script: Script = load(event_self["script"])
 		var script_instance = script.new()
 		
 		# Check if this is a comment type event, skip if so

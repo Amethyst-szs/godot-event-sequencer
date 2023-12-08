@@ -5,15 +5,15 @@
 [ext_resource type="Script" path="res://addons/event_sequence/view/event_tree.gd" id="2_gw54i"]
 [ext_resource type="Script" path="res://addons/event_sequence/node/event_node.gd" id="2_mfndx"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cqijr"]
-bg_color = Color(0.121569, 0.121569, 0.121569, 1)
-border_width_bottom = 10
-corner_radius_top_left = 15
-corner_radius_top_right = 15
-corner_radius_bottom_right = 15
-corner_radius_bottom_left = 15
-shadow_size = 10
-shadow_offset = Vector2(10, 10)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ap782"]
+content_margin_left = 15.0
+content_margin_top = 10.0
+content_margin_right = 15.0
+content_margin_bottom = 15.0
+bg_color = Color(0.0823529, 0.0823529, 0.0823529, 1)
+corner_radius_top_left = 25
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_apxsf"]
 
@@ -47,121 +47,67 @@ script = ExtResource("2_gw54i")
 disable_3d = true
 transparent_bg = true
 position = Vector2i(50, 50)
-size = Vector2i(650, 350)
+size = Vector2i(400, 400)
+visible = true
 transparent = true
 script = ExtResource("2_06btc")
 
-[node name="Panel" type="PanelContainer" parent="TreeAddPopup"]
-custom_minimum_size = Vector2(600, 300)
-offset_right = 40.0
-offset_bottom = 40.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_cqijr")
+[node name="ScrollContainer" type="ScrollContainer" parent="TreeAddPopup"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ap782")
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 2
 
-[node name="Margin" type="MarginContainer" parent="TreeAddPopup/Panel"]
+[node name="VBox" type="VBoxContainer" parent="TreeAddPopup/ScrollContainer"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="VBox" type="VBoxContainer" parent="TreeAddPopup/Panel/Margin"]
-layout_mode = 2
-
-[node name="Header" type="Label" parent="TreeAddPopup/Panel/Margin/VBox"]
+[node name="Header" type="Label" parent="TreeAddPopup/ScrollContainer/VBox"]
+visible = false
 layout_mode = 2
 size_flags_vertical = 0
 text = "Add New Event"
 horizontal_alignment = 1
 
-[node name="AddPopupTabs" type="TabContainer" parent="TreeAddPopup/Panel/Margin/VBox"]
+[node name="Button" type="Button" parent="TreeAddPopup/ScrollContainer/VBox"]
+layout_mode = 2
+theme_override_constants/icon_max_width = 32
+text = "Reload Panel (Debug)"
+
+[node name="AddPopupTabs" type="TabContainer" parent="TreeAddPopup/ScrollContainer/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_apxsf")
 clip_tabs = false
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TreeAddPopup/Panel/Margin/VBox/AddPopupTabs"]
-layout_mode = 2
-
-[node name="Button" type="Button" parent="TreeAddPopup/Panel/Margin/VBox/AddPopupTabs/VBoxContainer"]
-layout_mode = 2
-text = "Add node debug"
-
 [node name="EventNode" type="Node" parent="."]
 script = ExtResource("2_mfndx")
 event_list = Array[Dictionary]([{
-"children": Array[Dictionary]([{
 "self": {
-"name": "Drag Test",
-"script": "event_item.gd"
-}
-}]),
-"self": {
-"name": "New Name",
-"script": "event_item.gd"
-}
-}, {
-"children": Array[Dictionary]([{
-"self": {
-"name": "New Name",
-"script": "event_item.gd"
-}
-}]),
-"self": {
-"name": "New Name",
-"script": "event_item.gd"
+"name": "Event Item Base",
+"script": "res://addons/event_sequence/item/general/event_item_comment.gd"
 }
 }, {
 "children": Array[Dictionary]([{
 "children": Array[Dictionary]([{
-"children": Array[Dictionary]([{
-"children": Array[Dictionary]([{
-"children": Array[Dictionary]([{
-"children": Array[Dictionary]([{
-"children": Array[Dictionary]([{
-"children": Array[Dictionary]([{
 "self": {
-"name": "New Name",
-"script": "event_item.gd"
+"name": "Event Item Base",
+"script": "res://addons/event_sequence/item/general/event_item_comment.gd"
 }
 }]),
 "self": {
-"name": "New Name",
-"script": "event_item.gd"
+"name": "Event Item Base",
+"script": "res://addons/event_sequence/item/general/event_item_comment.gd"
 }
 }]),
 "self": {
-"name": "New Name",
-"script": "event_item.gd"
-}
-}]),
-"self": {
-"name": "New Name",
-"script": "event_item.gd"
-}
-}]),
-"self": {
-"name": "New Name",
-"script": "event_item.gd"
-}
-}]),
-"self": {
-"name": "New Name",
-"script": "event_item.gd"
-}
-}]),
-"self": {
-"name": "New Name",
-"script": "event_item.gd"
-}
-}]),
-"self": {
-"name": "New Name",
-"script": "event_item.gd"
-}
-}]),
-"self": {
-"name": "New Name",
-"script": "event_item.gd"
+"name": "Event Item Base",
+"script": "res://addons/event_sequence/item/general/event_item_comment.gd"
 }
 }])
 
@@ -175,5 +121,5 @@ offset_right = 953.0
 offset_bottom = 528.0
 text = "WRITE"
 
-[connection signal="pressed" from="TreeAddPopup/Panel/Margin/VBox/AddPopupTabs/VBoxContainer/Button" to="TreeAddPopup" method="_on_button_pressed"]
+[connection signal="pressed" from="TreeAddPopup/ScrollContainer/VBox/Button" to="TreeAddPopup" method="_on_debug_reload_pressed"]
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

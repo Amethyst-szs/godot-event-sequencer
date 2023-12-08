@@ -4,18 +4,20 @@ extends Tree
 signal refresh_tree
 
 func _ready():
-	set_column_title(EventItem.EditorColumn.NAME, "Name")
-	set_column_title(EventItem.EditorColumn.PROPERTY, "Properties")
+	set_column_title(EventConst.EditorColumn.NAME, "Name")
+	set_column_title(EventConst.EditorColumn.PROPERTY, "Properties")
 
 #region Drag and Drop Functionality
 
 func _get_drag_data(position: Vector2):
+	if not get_selected():
+		return
+	
 	set_drop_mode_flags(DROP_MODE_INBETWEEN | DROP_MODE_ON_ITEM)
 
 	var preview = Label.new()
 	preview.text = get_selected().get_text(0)
 	set_drag_preview(preview)
-	print("get drag")
 	
 	return get_selected()
 

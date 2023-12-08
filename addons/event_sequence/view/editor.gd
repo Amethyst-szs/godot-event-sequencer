@@ -23,7 +23,7 @@ func _enter_tree():
 func _ready():
 	# Connect clicking on a tree item to a function
 	tree.item_mouse_selected.connect(_tree_item_clicked)
-	tree.nothing_selected.connect(_tree_nothing_clicked)
+	tree.empty_clicked.connect(_tree_nothing_clicked)
 	tree.refresh_tree.connect(_tree_refresh)
 
 func _exit_tree():
@@ -33,10 +33,11 @@ func _exit_tree():
 	
 	if tree.item_mouse_selected.is_connected(_tree_item_clicked):
 		tree.item_mouse_selected.disconnect(_tree_item_clicked)
-	if tree.nothing_selected.is_connected(_tree_nothing_clicked):
-		tree.nothing_selected.disconnect(_tree_nothing_clicked)
-	if tree.nothing_selected.is_connected(_tree_refresh):
-		tree.nothing_selected.disconnect(_tree_refresh)
+	if tree.empty_clicked.is_connected(_tree_nothing_clicked):
+		tree.empty_clicked.disconnect(_tree_nothing_clicked)
+	
+	if tree.refresh_tree.is_connected(_tree_refresh):
+		tree.refresh_tree.disconnect(_tree_refresh)
 
 #endregion
 
@@ -48,9 +49,11 @@ func _tree_item_clicked(position: Vector2, mouse_button_index: int):
 		popup_tree_add.popup()
 		popup_tree_add.position = DisplayServer.mouse_get_position()
 
-func _tree_nothing_clicked():
-	popup_tree_add.popup()
-	popup_tree_add.position = DisplayServer.mouse_get_position()
+func _tree_nothing_clicked(position: Vector2, mouse_button_index: int):
+	# If right clicked on nothing, open the add popup	
+	if mouse_button_index == 2:
+		popup_tree_add.popup()
+		popup_tree_add.position = DisplayServer.mouse_get_position()
 
 func _tree_refresh():
 	if not selected_node:
@@ -114,10 +117,11 @@ func _build_tree(parent: TreeItem = null, dict_list: Array = []) -> void:
 
 func _build_item_from_dict(parent_item: TreeItem, dict: Dictionary) -> TreeItem:
 	# Load in the item's script
-	var script: Script = load("res://addons/event_sequence/item/%s" % [dict["script"]])
+	var script: Script = load(dict["script"])
 	var item = script.new()
 	
 	# Pasrse the current dictionary and let it add itself to the list
+	item.script_path = dict["script"]
 	item.parse_dict(dict)
 	return item.add_to_tree(parent_item)
 
@@ -142,8 +146,8 @@ func _build_dict_from_tree(root: TreeItem) -> Array[Dictionary]:
 func _build_dict_from_item(item: TreeItem) -> Dictionary:
 	var dict: Dictionary = {}
 	
-	dict["name"] = item.get_text(EventItem.EditorColumn.NAME)
-	dict["script"] = item.get_metadata(EventItem.EditorColumn.NAME)
+	dict["name"] = item.get_text(EventConst.EditorColumn.NAME)
+	dict["script"] = item.get_metadata(EventConst.EditorColumn.NAME)
 
 	return dict
 
