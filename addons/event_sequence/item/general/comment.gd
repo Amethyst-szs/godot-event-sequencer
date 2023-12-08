@@ -4,6 +4,9 @@ extends EventItemBase
 func get_name() -> String:
 	return "Comment"
 
+func get_description() -> String:
+	return "Skipped when running, use this to leave notes or make folders in your sequence"
+
 func is_allow_in_editor() -> bool:
 	return true
 

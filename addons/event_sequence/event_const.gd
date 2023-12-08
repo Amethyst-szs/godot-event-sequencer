@@ -22,3 +22,13 @@ enum EditorColumn {
 	VARIABLE,
 	USERDATA,
 }
+
+# EventItem dictionary keys
+const item_key_self: String = "self"
+const item_key_child: String = "children"
+
+const item_key_name: String = "name"
+const item_key_script: String = "script"
+const item_key_variable: String = "v"
+const item_key_userdata: String = "u"
+const item_key_userdata_generic: String = "input"

@@ -64,8 +64,8 @@ func _tree_cell_clicked():
 		var column_1_title: String = select.get_metadata(EventConst.EditorColumn.VARIABLE)
 		tree.set_column_title(EventConst.EditorColumn.VARIABLE, column_1_title)
 		
-		var column_2_title: String = select.get_metadata(EventConst.EditorColumn.VARIABLE)
-		tree.set_column_title(EventConst.EditorColumn.VARIABLE, column_2_title)
+		var column_2_title: String = select.get_metadata(EventConst.EditorColumn.USERDATA)
+		tree.set_column_title(EventConst.EditorColumn.USERDATA, column_2_title)
 	else:
 		tree.set_column_title(EventConst.EditorColumn.VARIABLE, "None")
 		tree.set_column_title(EventConst.EditorColumn.USERDATA, "None")
@@ -143,29 +143,29 @@ func _try_build_tree(parent: TreeItem = null, dict_list: Array = []) -> bool:
 		if not typeof(event_dict) == TYPE_DICTIONARY:
 			continue
 		
-		# Ensure it has the property "self"
-		if not event_dict.has("self"):
+		# Ensure it has the property EventConst.item_key_self
+		if not event_dict.has(EventConst.item_key_self):
 			continue
 		
 		# Create a new tree item and add it using the current parent and dictionary
-		var item: TreeItem = _build_item_from_dict(parent, event_dict["self"])
+		var item: TreeItem = _build_item_from_dict(parent, event_dict[EventConst.item_key_self])
 		
 		# Check if this dictionary has children
-		if not event_dict.has("children"):
+		if not event_dict.has(EventConst.item_key_child):
 			continue
 		
 		# Create array of the child dictionary data and iterate through it
-		_try_build_tree(item, event_dict["children"])
+		_try_build_tree(item, event_dict[EventConst.item_key_child])
 	
 	return true
 
 func _build_item_from_dict(parent_item: TreeItem, dict: Dictionary) -> TreeItem:
 	# Load in the item's script
-	var script: Script = ResourceLoader.load(dict["script"], "Script")
+	var script: Script = ResourceLoader.load(dict[EventConst.item_key_script], "Script")
 	var script_instance = script.new()
 	
 	# Parse the current dictionary and let it add itself to the list
-	script_instance.script_path = dict["script"]
+	script_instance.script_path = dict[EventConst.item_key_script]
 	script_instance.parse_dict(dict)
 	return script_instance.add_to_tree(parent_item, self)
 
@@ -178,10 +178,10 @@ func _build_dict_from_tree(root: TreeItem) -> Array[Dictionary]:
 	
 	for child in children:
 		var dict: Dictionary = {}
-		dict["self"] = _build_dict_from_item(child)
+		dict[EventConst.item_key_self] = _build_dict_from_item(child)
 		
 		if child.get_child_count() > 0:
-			dict["children"] = _build_dict_from_tree(child)
+			dict[EventConst.item_key_child] = _build_dict_from_tree(child)
 		
 		dict_list.push_back(dict)
 	
@@ -190,27 +190,27 @@ func _build_dict_from_tree(root: TreeItem) -> Array[Dictionary]:
 func _build_dict_from_item(item: TreeItem) -> Dictionary:
 	var dict: Dictionary = {}
 	
-	dict["name"] = item.get_text(EventConst.EditorColumn.NAME)
-	dict["script"] = item.get_metadata(EventConst.EditorColumn.NAME)
+	dict[EventConst.item_key_name] = item.get_text(EventConst.EditorColumn.NAME)
+	dict[EventConst.item_key_script] = item.get_metadata(EventConst.EditorColumn.NAME)
 	
 	# New instance of script
-	var script: Script = ResourceLoader.load(dict["script"], "Script")
+	var script: Script = ResourceLoader.load(dict[EventConst.item_key_script], "Script")
 	var script_instance = script.new()
 	
 	var variable = _get_property_from_column(item, EventConst.EditorColumn.VARIABLE)
 	if variable:
-		dict["v"] = variable
+		dict[EventConst.item_key_variable] = variable
 	
 	var userdata_cellmode: int = item.get_cell_mode(EventConst.EditorColumn.USERDATA)
 	if userdata_cellmode == TreeItem.CELL_MODE_CUSTOM:
 		var userdata: Dictionary = script_instance.build_userdata_from_tree(item)
 		if not userdata.is_empty():
-			dict["u"] = userdata
+			dict[EventConst.item_key_userdata] = userdata
 	else:
 		var userdata = _get_property_from_column(item, EventConst.EditorColumn.USERDATA)
 		if userdata:
-			dict["u"] = {}
-			dict["u"]["input"] = userdata
+			dict[EventConst.item_key_userdata] = {}
+			dict[EventConst.item_key_userdata][EventConst.item_key_userdata_generic] = userdata
 
 	return dict
 

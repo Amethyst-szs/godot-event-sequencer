@@ -7,6 +7,9 @@ class_name EventItemBase
 func get_name() -> String:
 	return "Event Item Base"
 
+func get_description() -> String:
+	return "Base class for all event items"
+
 func get_editor_tab() -> EventConst.EditorDialogTab:
 	return EventConst.EditorDialogTab.General
 
@@ -49,7 +52,7 @@ func get_icon_path() -> String:
 var name: String
 var script_path: String
 
-var event_source_variable = null
+var event_variable = null
 var userdata: Dictionary = {}
 
 #endregion
@@ -70,6 +73,8 @@ func add_to_tree(parent: TreeItem, editor: Control) -> TreeItem:
 	# Name column
 	item.set_text(EventConst.EditorColumn.NAME, name)
 	item.set_metadata(EventConst.EditorColumn.NAME, script_path)
+	item.set_tooltip_text(EventConst.EditorColumn.NAME, "%s\n%s"
+			% [get_name(), get_description()])
 	
 	var texture = load(get_icon_path())
 	var image: Image = texture.get_image()
@@ -92,15 +97,15 @@ func _setup_column_config(item: TreeItem, column: EventConst.EditorColumn, confi
 	
 	match(item.get_cell_mode(column)):
 		TreeItem.CELL_MODE_STRING:
-			if column == EventConst.EditorColumn.VARIABLE and event_source_variable:
-				item.set_text(column, event_source_variable)
-			else: if userdata.has("input"):
-				item.set_text(column, userdata["input"])
+			if column == EventConst.EditorColumn.VARIABLE and event_variable:
+				item.set_text(column, event_variable)
+			else: if userdata.has(EventConst.item_key_userdata_generic):
+				item.set_text(column, userdata[EventConst.item_key_userdata_generic])
 		TreeItem.CELL_MODE_RANGE:
-			if column == EventConst.EditorColumn.VARIABLE and event_source_variable:
-				item.set_range(column, event_source_variable)
-			else: if userdata.has("input"):
-				item.set_range(column, userdata["input"])
+			if column == EventConst.EditorColumn.VARIABLE and event_variable:
+				item.set_range(column, event_variable)
+			else: if userdata.has(EventConst.item_key_userdata_generic):
+				item.set_range(column, userdata[EventConst.item_key_userdata_generic])
 		TreeItem.CELL_MODE_CUSTOM:
 			for idx in userdata:
 				item.set_meta(userdata.keys()[idx], userdata.values()[idx])
@@ -110,14 +115,13 @@ func run(event_node: EventNode) -> bool:
 	return true
 
 func parse_dict(dict: Dictionary) -> void:
-	name = dict["name"]
-	if dict.has("v"):
-		event_source_variable = dict["v"]
+	name = dict[EventConst.item_key_name]
+	if dict.has(EventConst.item_key_variable):
+		event_variable = dict[EventConst.item_key_variable]
 	
-	if dict.has("u") and typeof(dict["u"]) == TYPE_DICTIONARY:
-		userdata = dict["u"]
-	
-	print(dict)
+	if dict.has(EventConst.item_key_userdata):
+		if typeof(dict[EventConst.item_key_userdata]) == TYPE_DICTIONARY:
+			userdata = dict[EventConst.item_key_userdata]
 
 func build_userdata_from_tree(item: TreeItem) -> Dictionary:
 	userdata = {}
@@ -128,7 +132,6 @@ func build_userdata_from_tree(item: TreeItem) -> Dictionary:
 		
 		userdata[meta] = item.get_meta(meta)
 	
-	print(userdata)
 	return userdata
 
 #endregion

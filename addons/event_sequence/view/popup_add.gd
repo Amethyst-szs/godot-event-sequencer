@@ -37,6 +37,7 @@ func _create_button(script_path: String) -> void:
 	var button: Button = Button.new()
 	
 	button.text = item.get_name()
+	button.tooltip_text = item.get_description()
 	button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	
 	var texture = load(item.get_icon_path())
