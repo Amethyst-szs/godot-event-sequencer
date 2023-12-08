@@ -1,0 +1,85 @@
+[gd_scene load_steps=5 format=3 uid="uid://bx5hddkgml270"]
+
+[ext_resource type="Script" path="res://addons/event_sequence/view/editor.gd" id="1_xiffy"]
+[ext_resource type="Script" path="res://addons/event_sequence/view/popup_add.gd" id="2_06btc"]
+[ext_resource type="Script" path="res://addons/event_sequence/node/event_node.gd" id="2_mfndx"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_apxsf"]
+
+[node name="Editor" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_xiffy")
+
+[node name="Tree" type="Tree" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+columns = 4
+column_titles_visible = true
+allow_rmb_select = true
+hide_root = true
+
+[node name="TreeAddPopup" type="Popup" parent="."]
+disable_3d = true
+position = Vector2i(50, 50)
+size = Vector2i(650, 350)
+script = ExtResource("2_06btc")
+
+[node name="Panel" type="PanelContainer" parent="TreeAddPopup"]
+custom_minimum_size = Vector2(600, 300)
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Margin" type="MarginContainer" parent="TreeAddPopup/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBox" type="VBoxContainer" parent="TreeAddPopup/Panel/Margin"]
+layout_mode = 2
+
+[node name="Header" type="Label" parent="TreeAddPopup/Panel/Margin/VBox"]
+layout_mode = 2
+size_flags_vertical = 0
+text = "Add New Event"
+horizontal_alignment = 1
+
+[node name="AddPopupTabs" type="TabContainer" parent="TreeAddPopup/Panel/Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_apxsf")
+clip_tabs = false
+
+[node name="EventNode" type="Node" parent="."]
+script = ExtResource("2_mfndx")
+event_list = Array[Dictionary]([{
+"name": "EventItem",
+"script": "res://addons/event_sequence/item/event_item_comment.gd"
+}, {
+"name": "EventItem",
+"script": "res://addons/event_sequence/item/event_item.gd"
+}, {
+"name": "EventItem",
+"script": "res://addons/event_sequence/item/event_item.gd"
+}, {
+"name": "EventItem",
+"script": "res://addons/event_sequence/item/event_item.gd"
+}, {
+"name": "EventItem",
+"script": "res://addons/event_sequence/item/event_item.gd"
+}])
+
+[node name="Timer" type="Timer" parent="."]
