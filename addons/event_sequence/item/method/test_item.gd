@@ -28,8 +28,28 @@ func get_userdata_keys() -> Array[Dictionary]:
 	return [
 		{
 			"name": "test",
-			"type": TYPE_STRING
-		}
+			"desc": "Testing value",
+			"type": TYPE_STRING,
+			"require": true,
+		},
+		{
+			"name": "int",
+			"desc": "Integer",
+			"type": TYPE_INT,
+			"require": true,
+		},
+		{
+			"name": "float",
+			"desc": "Floating Point",
+			"type": TYPE_FLOAT,
+			"require": true,
+		},
+		{
+			"name": "bool",
+			"desc": "Switchy",
+			"type": TYPE_BOOL,
+			"require": false,
+		},
 	]
 
 func get_color() -> Color:

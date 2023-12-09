@@ -129,7 +129,7 @@ func _setup_column_config(item: TreeItem, column: EventConst.EditorColumn, confi
 				item.set_range(column, userdata[EventConst.item_key_userdata_generic])
 		TreeItem.CELL_MODE_CUSTOM:
 			item.add_button(EventConst.EditorColumn.USERDATA, NoiseTexture2D.new())
-			for idx in userdata:
+			for idx in range(userdata.size()):
 				item.set_meta(userdata.keys()[idx], userdata.values()[idx])
 			
 			return true

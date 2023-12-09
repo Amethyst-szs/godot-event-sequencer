@@ -46,14 +46,14 @@ func _ready():
 func _exit_tree():
 	var editor_selection := EditorInterface.get_selection()
 	if editor_selection.selection_changed.is_connected(_new_tree):
-		editor_selection.selection_changed.connect(_new_tree)
+		editor_selection.selection_changed.disconnect(_new_tree)
 	
 	if tree.cell_selected.is_connected(_tree_cell_clicked):
 		tree.cell_selected.disconnect(_tree_cell_clicked)
 	
 	if tree.button_clicked.is_connected(_tree_button_pressed):
 		tree.button_clicked.disconnect(_tree_button_pressed)
-		
+	
 	if tree.item_mouse_selected.is_connected(_tree_item_clicked):
 		tree.item_mouse_selected.disconnect(_tree_item_clicked)
 	if tree.empty_clicked.is_connected(_tree_empty_clicked):
@@ -277,7 +277,3 @@ func _get_selected_node() -> EventNode:
 	return null
 
 #endregion
-
-
-func _on_button_pressed():
-	popup_userdata_edit.popup()
