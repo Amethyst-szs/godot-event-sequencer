@@ -11,6 +11,7 @@ var save_timer: float = -1.0
 @onready var tree: Tree = %Tree
 @onready var popup_tree_add: Popup = $TreeAddPopup
 @onready var popup_userdata_edit: Popup = $UserdataEditPopup
+@onready var popup_macros: Popup = $MacroPopup
 @onready var userdata_edit_list := $UserdataEditPopup/Scroll/List
 
 var selected_node: EventNode = null
@@ -18,11 +19,14 @@ var selected_node: EventNode = null
 # Reference to editor plugin
 var editor_plugin: EditorPlugin
 
+# Additonal tools and scripts
+@onready var macro_tool := EventSequenceMacroEditor.new(self, popup_macros)
+
 # Constants
 const default_item_name: String = "Start"
 const default_item_path: String = "res://addons/event_sequence/item/general/comment.gd"
 
-#region Init and Destructor
+#region Initalization
 
 func _enter_tree():
 	if not editor_plugin:
@@ -32,6 +36,7 @@ func _enter_tree():
 	var editor_selection := EditorInterface.get_selection()
 	editor_selection.selection_changed.connect(_new_tree)
 
+# When the node is fully ready, connect to every other important signal
 func _ready():
 	# Connect clicking on a tree item to a function
 	tree.cell_selected.connect(_tree_cell_clicked)
@@ -43,29 +48,31 @@ func _ready():
 	
 	tree.refresh_tree.connect(_tree_refresh)
 
-func _exit_tree():
-	var editor_selection := EditorInterface.get_selection()
-	if editor_selection.selection_changed.is_connected(_new_tree):
-		editor_selection.selection_changed.disconnect(_new_tree)
-	
-	if tree.cell_selected.is_connected(_tree_cell_clicked):
-		tree.cell_selected.disconnect(_tree_cell_clicked)
-	
-	if tree.button_clicked.is_connected(_tree_button_pressed):
-		tree.button_clicked.disconnect(_tree_button_pressed)
-	
-	if tree.item_mouse_selected.is_connected(_tree_item_clicked):
-		tree.item_mouse_selected.disconnect(_tree_item_clicked)
-	if tree.empty_clicked.is_connected(_tree_empty_clicked):
-		tree.empty_clicked.disconnect(_tree_empty_clicked)
-	
-	if tree.refresh_tree.is_connected(_tree_refresh):
-		tree.refresh_tree.disconnect(_tree_refresh)
-
 #endregion
 
-#region Tree Interaction
+#region Signal Responses and Input
 
+# Listen for special inputs if node is selected and editor is visible
+func _input(event: InputEvent):
+	if not selected_node or not visible:
+		return
+	
+	if event is InputEventKey and event.is_pressed():
+		match event.as_text():
+			"Ctrl+S", "Command+S", "F5", "F6":
+				save()
+			"Ctrl+M":
+				macro_create()
+			"Delete":
+				var item: TreeItem = tree.get_next_selected(null)
+				while item != null:
+					item.free()
+					item = tree.get_next_selected(item)
+				
+				save()
+				get_viewport().set_input_as_handled()
+
+# When clicking a cell, update the the column headers
 func _tree_cell_clicked():
 	var select: TreeItem = tree.get_next_selected(null)
 	var column: int = tree.get_selected_column()
@@ -80,17 +87,20 @@ func _tree_cell_clicked():
 		tree.set_column_title(EventConst.EditorColumn.VARIABLE, "None")
 		tree.set_column_title(EventConst.EditorColumn.USERDATA, "None")
 
+# When clicking on a tree button, open the userdata editor panel
 func _tree_button_pressed(item: TreeItem, column: int, id: int, mouse_button_index: int):
 	# Build inspector panel
 	tree.set_selected(item, column)
 	popup_userdata_edit.build_menu(item, column)
 
+# When clicking a tree item with the right mouse button, open the add popup
 func _tree_item_clicked(position: Vector2, mouse_button_index: int):
 	# If right clicked on a tree item, open the add popup
 	if mouse_button_index == 2:
 		popup_tree_add.popup()
 		popup_tree_add.position = DisplayServer.mouse_get_position()
 
+# When right clicking on nothing in the tree, deselect and open add popup on nothing
 func _tree_empty_clicked(position: Vector2, mouse_button_index: int):
 	# If right clicked on a tree item, open the add popup
 	if mouse_button_index == 2:
@@ -98,29 +108,13 @@ func _tree_empty_clicked(position: Vector2, mouse_button_index: int):
 		popup_tree_add.popup()
 		popup_tree_add.position = DisplayServer.mouse_get_position()
 
+# Save the tree to node and rebuild tree
 func _tree_refresh():
 	if not selected_node:
 		return
 	
 	selected_node.event_list = _build_dict_from_tree(tree.get_root())
 	_new_tree()
-
-func _input(event: InputEvent):
-	if not selected_node or not visible:
-		return
-	
-	if event is InputEventKey and event.is_pressed():
-		match event.as_text():
-			"Ctrl+S", "Command+S", "F5", "F6":
-				save()
-			"Delete":
-				var item: TreeItem = tree.get_next_selected(null)
-				while item != null:
-					item.free()
-					item = tree.get_next_selected(item)
-				
-				save()
-				get_viewport().set_input_as_handled()
 
 #endregion
 
@@ -137,10 +131,12 @@ func _process(delta: float) -> void:
 			save()
 			save_timer = -1
 
+## Write tree to selected node
 func save() -> void:
 	if selected_node:
 		selected_node.event_list = _build_dict_from_tree(tree.get_root())
 
+## Creates a default tree with one comment node
 func setup_default_tree(parent: TreeItem) -> void:
 	var default_item_script: Script = ResourceLoader.load(default_item_path, "Script")
 	var default_item = default_item_script.new()
@@ -149,6 +145,7 @@ func setup_default_tree(parent: TreeItem) -> void:
 	default_item.script_path = default_item_path
 	default_item.add_to_tree(parent, self)
 
+# Destroy the current tree and try to build a new tree, updating UI visiblity in process
 func _new_tree() -> void:
 	tree.clear()
 	
@@ -275,5 +272,17 @@ func _get_selected_node() -> EventNode:
 	
 	# If no event node is selected, return null
 	return null
+
+#endregion
+
+#region Macro Integration
+
+func macro_create():
+	var selection: TreeItem = tree.get_selected()
+	if not selection: return
+	
+	var self_data: Dictionary = _build_dict_from_item(selection)
+	var child_data: Array[Dictionary] = _build_dict_from_tree(selection)
+	macro_tool.write_macro("item.json", self_data, child_data)
 
 #endregion

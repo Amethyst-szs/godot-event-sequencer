@@ -4,10 +4,12 @@ extends Tree
 signal refresh_tree
 
 func _ready():
+	# Setup column expanding for each column
 	set_column_expand(EventConst.EditorColumn.NAME, true)
 	set_column_expand(EventConst.EditorColumn.VARIABLE, true)
 	set_column_expand(EventConst.EditorColumn.USERDATA, true)
 	
+	# Set default names for each column
 	set_column_title(EventConst.EditorColumn.NAME, "Name")
 	set_column_title(EventConst.EditorColumn.VARIABLE, "None")
 	set_column_title(EventConst.EditorColumn.USERDATA, "None")
