@@ -38,9 +38,30 @@ theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="Tree" type="Tree" parent="TreeContainer"]
+[node name="VBox" type="VBoxContainer" parent="TreeContainer"]
+layout_mode = 2
+
+[node name="Header" type="PanelContainer" parent="TreeContainer/VBox"]
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="HeaderMenu" type="MenuBar" parent="TreeContainer/VBox/Header"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_vertical = 0
+flat = true
+prefer_global_menu = false
+
+[node name="Macros" type="PopupMenu" parent="TreeContainer/VBox/Header/HeaderMenu"]
+disable_3d = true
+item_count = 1
+item_0/text = "Create Macro"
+item_0/id = 0
+
+[node name="Tree" type="Tree" parent="TreeContainer/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
 theme_override_constants/v_separation = 8
 theme_override_constants/draw_relationship_lines = 1
 theme_override_constants/relationship_line_width = 2
@@ -129,7 +150,6 @@ disable_3d = true
 transparent_bg = true
 initial_position = 4
 size = Vector2i(500, 400)
-visible = true
 transparent = true
 script = ExtResource("6_xaigg")
 
@@ -210,4 +230,5 @@ layout_mode = 2
 text = "Select an EventNode in your Scene Tree to get started!"
 horizontal_alignment = 1
 
+[connection signal="index_pressed" from="TreeContainer/VBox/Header/HeaderMenu/Macros" to="." method="_on_macro_menu_index_pressed"]
 [connection signal="pressed" from="TreeAddPopup/ScrollContainer/VBox/HBoxContainer/Button" to="TreeAddPopup" method="_on_debug_refresh_pressed"]

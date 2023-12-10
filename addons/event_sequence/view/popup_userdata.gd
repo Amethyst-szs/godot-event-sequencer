@@ -53,7 +53,7 @@ func build_menu(item: TreeItem, column: int):
 		
 		if key["require"]:
 			field_name.label_settings = LabelSettings.new()
-			field_name.label_settings.font_size = 21
+			field_name.label_settings.font_size = 18
 			field_name.label_settings.font_color = Color.LIGHT_PINK
 		
 		grid.add_child(field_name)

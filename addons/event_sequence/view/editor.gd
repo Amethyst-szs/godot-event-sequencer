@@ -9,6 +9,7 @@ var save_timer: float = -1.0
 @onready var notree_screen: MarginContainer = $NoTree
 
 @onready var tree: Tree = %Tree
+@onready var tree_header_menu: MenuBar = %HeaderMenu
 @onready var popup_tree_add: Popup = $TreeAddPopup
 @onready var popup_userdata_edit: Popup = $UserdataEditPopup
 @onready var popup_macros: Popup = $MacroPopup
@@ -58,8 +59,6 @@ func _input(event: InputEvent):
 		match event.as_text():
 			"Ctrl+S", "Command+S", "F5", "F6":
 				save()
-			"Ctrl+M":
-				popup_macros.popup()
 			"Delete":
 				var item: TreeItem = tree.get_next_selected(null)
 				while item != null:
@@ -69,18 +68,19 @@ func _input(event: InputEvent):
 				save()
 				get_viewport().set_input_as_handled()
 
-# When clicking a cell, update the the column headers
 func _tree_cell_clicked():
 	var select: TreeItem = tree.get_next_selected(null)
 	var column: int = tree.get_selected_column()
 	
 	if select:
+		# Update columns from metadata
 		var column_1_title: String = select.get_metadata(EventConst.EditorColumn.VARIABLE)
 		tree.set_column_title(EventConst.EditorColumn.VARIABLE, column_1_title)
 		
 		var column_2_title: String = select.get_metadata(EventConst.EditorColumn.USERDATA)
 		tree.set_column_title(EventConst.EditorColumn.USERDATA, column_2_title)
 	else:
+		# Clear column names
 		tree.set_column_title(EventConst.EditorColumn.VARIABLE, "None")
 		tree.set_column_title(EventConst.EditorColumn.USERDATA, "None")
 
@@ -285,4 +285,11 @@ func _macro_create():
 	var child_data: Array[Dictionary] = _build_dict_from_tree(selection)
 	popup_macros.write_macro(self_data, child_data)
 
+func _on_macro_menu_index_pressed(index):
+	match(index):
+		0:
+			popup_macros.check_is_tree_have_selected()
+			popup_macros.popup()
+
 #endregion
+

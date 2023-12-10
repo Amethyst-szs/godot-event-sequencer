@@ -2,7 +2,12 @@
 
 extends Popup
 
+# Macro Data
 var macro_create_data: Dictionary = {}
+const required_macro_data_keys: Array[String] = [
+	"name",
+	"category"
+]
 
 # Node references
 var parent: Control = null
@@ -25,10 +30,16 @@ func _ready():
 	
 	create_macro_button.pressed.connect(_pressed_macro_create_button)
 
-func popup(rect: Rect2i = Rect2i(0, 0, 0, 0)) -> void:
-	super(rect)
+func check_is_tree_have_selected():
+	macro_create_data = {}
 	
-	print("popup hi wave")
+	var selection: TreeItem = parent.tree.get_selected()
+	if not selection:
+		create_macro_button.text = "Select an item first!"
+		create_macro_button.disabled = true
+	else:
+		create_macro_button.text = "Create Macro"
+		create_macro_button.disabled = false
 
 func write_macro(self_data: Dictionary, child_data: Array[Dictionary]):
 	# Ensure a tree item is selected
@@ -60,12 +71,13 @@ func _create_field_edited(data: String, key: String):
 	macro_create_data[key] = data
 
 func _pressed_macro_create_button():
-	if not macro_create_data.has("name") or macro_create_data["name"].is_empty():
-		print("Macro must have a name!")
-		return
+	var is_all_required_set: bool = true
+	for key in required_macro_data_keys:
+		if not macro_create_data.has(key) or macro_create_data[key].is_empty():
+			is_all_required_set = false
+			print("New macro has required parameter \"%s\" not set!" % [key])
 	
-	if not macro_create_data.has("category") or macro_create_data["category"].is_empty():
-		print("Macro must have a category!")
+	if not is_all_required_set:
 		return
 	
 	request_macro_contents.emit()
@@ -77,7 +89,8 @@ func _pressed_macro_create_button():
 func disk_write(file_name: String, file_data: String):
 	ensure_macro_dir()
 	
-	var file_path = macro_path + file_name
+	var file_name_lower: StringName = file_name
+	var file_path = macro_path + file_name_lower.to_snake_case() + ".esmacro"
 	
 	# Attempt to open new file and print an error if it fails
 	var file = FileAccess.open(file_path, FileAccess.WRITE)
