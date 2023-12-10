@@ -20,6 +20,7 @@ var selected_node: EventNode = null
 
 # Reference to editor plugin
 var editor_plugin: EditorPlugin
+var undo_redo: EditorUndoRedoManager = null
 
 # Constants
 const default_item_name: String = "Start"
@@ -30,6 +31,8 @@ const default_item_path: String = "res://addons/event_sequence/item/general/comm
 func _enter_tree():
 	if not editor_plugin:
 		return
+	
+	undo_redo = editor_plugin.get_undo_redo()
 	
 	# Connect to editor interface's selection
 	var editor_selection := EditorInterface.get_selection()
@@ -132,7 +135,23 @@ func _process(delta: float) -> void:
 ## Write tree to selected node
 func save() -> void:
 	if selected_node:
-		selected_node.event_list = _build_dict_from_tree(tree.get_root())
+		# Create new event list from tree
+		var new_event_list := _build_dict_from_tree(tree.get_root())
+		
+		# Compare if the new and old dict are the same
+		if selected_node.event_list.hash() == new_event_list.hash():
+			return
+		
+		# Create new undo/redo action
+		undo_redo.create_action("Event Sequence Editor Saved")
+		undo_redo.add_do_property(selected_node, "event_list", new_event_list)
+		undo_redo.add_do_method(self, "_new_tree")
+		undo_redo.add_undo_property(selected_node, "event_list", selected_node.event_list)
+		undo_redo.add_undo_method(self, "_new_tree")
+		undo_redo.commit_action(false)
+		
+		# Set event list to new event list
+		selected_node.event_list = new_event_list
 
 ## Creates a default tree with one comment node
 func setup_default_tree(parent: TreeItem) -> void:
