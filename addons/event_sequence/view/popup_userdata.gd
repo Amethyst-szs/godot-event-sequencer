@@ -47,7 +47,12 @@ func build_menu(item: TreeItem, column: int):
 	for key in keys:
 		# Build header for key
 		var field_name: Label = Label.new()
-		field_name.text = (key["name"] as String).to_pascal_case()
+		
+		if key.has("display_name"):
+			field_name.text = key["display_name"]
+		else:
+			field_name.text = (key["name"] as String).to_pascal_case()
+		
 		field_name.tooltip_text = key["desc"]
 		field_name.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		
