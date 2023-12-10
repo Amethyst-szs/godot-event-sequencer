@@ -2,7 +2,10 @@
 extends EventItemBase
 
 func get_name() -> String:
-	return "Call Method (No Args)"
+	return "Call Method (No Args, No Return)"
+
+func get_description() -> String:
+	return "Call method on object/node or list of objects/nodes without arguments or saving the return value"
 
 func get_editor_tab() -> EventConst.EditorDialogTab:
 	return EventConst.EditorDialogTab.Method
