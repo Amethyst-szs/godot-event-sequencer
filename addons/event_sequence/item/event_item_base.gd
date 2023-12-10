@@ -103,6 +103,7 @@ func add_to_tree(parent: TreeItem, editor: Control, is_macro: bool) -> TreeItem:
 	var texture = load(get_icon_path())
 	var image: Image = texture.get_image()
 	item.set_icon(EventConst.EditorColumn.NAME, ImageTexture.create_from_image(image))
+	item.set_icon_modulate(EventConst.EditorColumn.NAME, get_color())
 	
 	var bg_color: Color = get_color()
 	if is_macro: bg_color = bg_color.darkened(0.65)

@@ -24,4 +24,4 @@ func get_color() -> Color:
 	return Color.LIGHT_BLUE
 
 func get_icon_path() -> String:
-	return "res://addons/event_sequence/test-icon.svg"
+	return "res://addons/event_sequence/icon/EventItem-Comment.svg"

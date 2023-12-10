@@ -25,8 +25,7 @@ signal request_macro_contents
 const macro_path: String = "res://addons/event_sequence/macro/"
 
 func _ready():
-	macro_create_data = {}
-	target_item = null
+	_reset()
 	
 	parent = get_parent()
 	name_line_edit.text_changed.connect(_create_field_edited.bind("name"))
@@ -78,12 +77,16 @@ func write_macro(self_data: Dictionary, child_data: Array[Dictionary]):
 	var json_string: String = JSON.stringify(macro_dict, "\t")
 	disk_write(macro_create_data["name"], json_string)
 	
-	# Reset self
+	_reset()
+	
+	visible = false
+
+func _reset():
 	macro_create_data = {}
 	name_line_edit.clear()
 	category_line_edit.clear()
-	
-	visible = false
+	desc_edit.clear()
+	target_item = null
 
 #region Signal Functions
 

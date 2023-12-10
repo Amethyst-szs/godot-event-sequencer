@@ -4,6 +4,9 @@
 # Remove testing folder
 test/
 
+# Remove macros
+addons/event_sequence/macro/
+
 # Godot-specific ignores
 .import/
 export.cfg

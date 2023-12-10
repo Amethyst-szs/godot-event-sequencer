@@ -134,19 +134,26 @@ func _create_macro_category(container: TabContainer, category: String):
 	container.add_child(box)
 
 func _pressed_macro_button(path: String, macro_name: String):
+	# Ensure dict in inspector is up to date with tree
+	root.save()
+	
+	# Get the selected event node
 	var event_node: EventNode = root.selected_node
 	if not event_node:
 		printerr("Could not find selected event node to add macro to!")
 		return
 	
+	# Get data from macro file
 	var data: Dictionary = _read_macro_file(path)
 	if not data.has("self"):
 		printerr("Bad macro data! (Missing \"self\" key)")
 		return
 	
+	# Override the first item name with the macro name
 	data["self"]["name"] = macro_name
-	event_node.event_list.push_back(data)
 	
+	# Add data into node dict and reload tree
+	event_node.event_list.push_back(data)
 	root._new_tree()
 
 func _read_macro_file(path: String) -> Dictionary:
