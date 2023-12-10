@@ -21,7 +21,7 @@ const item_key_userdata_generic: String = "input"
 # Folders to scan for scripts in the "add tree item" dialog
 const ScriptScanFolders: Array[String] = [
 	"res://addons/event_sequence/item/general/",
-	"res://addons/event_sequence/item/fetch/",
+	"res://addons/event_sequence/item/var/",
 	"res://addons/event_sequence/item/method/",
 	"res://addons/event_sequence/item/flow/",
 ]
@@ -31,7 +31,7 @@ const ScriptMacroFolder: String = "res://addons/event_sequence/macro/"
 # Editor add new tree item dialog
 enum EditorDialogTab {
 	General,
-	Fetch,
+	Variable,
 	Method,
 	Flow,
 }

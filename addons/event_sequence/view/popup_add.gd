@@ -155,6 +155,10 @@ func _pressed_macro_button(path: String, macro_name: String):
 	# Add data into node dict and reload tree
 	event_node.event_list.push_back(data)
 	root._new_tree()
+	
+	# Hide menu and scroll to new macro
+	root.tree.scroll_to_item(root.tree.get_root().get_child(-1), true)
+	visible = false
 
 func _read_macro_file(path: String) -> Dictionary:
 	# Get the content of the path

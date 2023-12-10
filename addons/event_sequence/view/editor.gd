@@ -141,7 +141,7 @@ func setup_default_tree(parent: TreeItem) -> void:
 	
 	default_item.name = default_item_name
 	default_item.script_path = default_item_path
-	default_item.add_to_tree(parent, self)
+	default_item.add_to_tree(parent, self, false)
 
 # Destroy the current tree and try to build a new tree, updating UI visiblity in process
 func _new_tree() -> void:

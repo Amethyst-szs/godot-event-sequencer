@@ -139,7 +139,15 @@ func _setup_column_config(item: TreeItem, column: EventConst.EditorColumn, confi
 			if userdata.has(EventConst.item_key_userdata_generic):
 				item.set_range(column, userdata[EventConst.item_key_userdata_generic])
 		TreeItem.CELL_MODE_CUSTOM:
-			item.add_button(EventConst.EditorColumn.USERDATA, NoiseTexture2D.new())
+			var texture = load("res://addons/event_sequence/icon/Interface-UserdataEdit.svg")
+			var image: Image = texture.get_image()
+			var img_tex := ImageTexture.create_from_image(image)
+			
+			item.add_button(EventConst.EditorColumn.USERDATA, img_tex)
+			item.set_custom_as_button(EventConst.EditorColumn.USERDATA, true)
+			item.set_expand_right(EventConst.EditorColumn.USERDATA, true)
+			item.set_button_color(EventConst.EditorColumn.USERDATA, 0, get_color())
+			
 			for idx in range(userdata.size()):
 				item.set_meta(userdata.keys()[idx], userdata.values()[idx])
 			
@@ -178,7 +186,7 @@ func is_valid_event_variable(event_node: EventNode, is_fetching: bool) -> bool:
 		warn("Variable Name isn't set!")
 		return false
 	
-	if not is_fetching and not event_node.fetch_database.has(event_variable):
+	if not is_fetching and not event_node.var_database.has(event_variable):
 		warn("Cannot use variable \"%s\" as it hasn't been set yet." % [event_variable])
 		return false
 	

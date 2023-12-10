@@ -1,11 +1,11 @@
 @tool
-extends EventItemFetchBase
+extends EventItemVarBase
 
 func get_name() -> String:
-	return "Fetch Nodes by Group"
+	return "Get First Node in Group"
 
 func get_description() -> String:
-	return "Get an array of nodes in a group, and add it to your event variables"
+	return "Get the first node in a group, and add it to your event variables"
 
 func is_allow_in_editor() -> bool:
 	return true
@@ -21,9 +21,9 @@ func run(event_node: EventNode) -> EventConst.ItemResponseType:
 	if not is_valid_generic(event_node, true):
 		return EventConst.ItemResponseType.OK
 	
-	# Get array of nodes
+	# Get the first node in the group
 	var group_name: String = userdata[EventConst.item_key_userdata_generic]
-	var nodes: Array[Node] = event_node.get_tree().get_nodes_in_group(group_name)
-	event_node.fetch_database[event_variable] = nodes
+	var node: Node = event_node.get_tree().get_first_node_in_group(group_name)
+	event_node.var_database[event_variable] = node
 	
 	return EventConst.ItemResponseType.OK

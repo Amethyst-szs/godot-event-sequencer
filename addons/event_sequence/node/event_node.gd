@@ -5,7 +5,7 @@ class_name EventNode
 
 @export var event_list: Array[Dictionary] = []
 @export var script_list: Array[Script] = []
-@export var fetch_database: Dictionary = {}
+@export var var_database: Dictionary = {}
 
 @export var is_terminating: bool = false
 
@@ -71,5 +71,5 @@ func _run_dictionary_list(list: Array[Dictionary], is_first_recursion: bool = fa
 	
 	# Once iterating through events is complete
 	if is_first_recursion:
-		fetch_database.clear()
+		var_database.clear()
 		is_terminating = false

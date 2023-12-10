@@ -1,8 +1,8 @@
 @tool
-extends EventItemFetchBase
+extends EventItemVarBase
 
 func get_name() -> String:
-	return "Fetch Singleton"
+	return "Get Singleton"
 
 func get_description() -> String:
 	return "Get the root node of a singleton by name, and add it to your event variables"
@@ -26,10 +26,10 @@ func run(event_node: EventNode) -> EventConst.ItemResponseType:
 	
 	for node in tree_root.get_children():
 		if singleton_name == node.name:
-			event_node.fetch_database[event_variable] = node
+			event_node.var_database[event_variable] = node
 			return EventConst.ItemResponseType.OK
 	
-	warn("EventNode tried to fetch Singleton/Autoload \"%s\" but couldn't find it!"
+	warn("EventNode tried to get Singleton/Autoload \"%s\" but couldn't find it!"
 			% [singleton_name])
 	
 	return EventConst.ItemResponseType.OK
