@@ -19,9 +19,6 @@ var selected_node: EventNode = null
 # Reference to editor plugin
 var editor_plugin: EditorPlugin
 
-# Additonal tools and scripts
-@onready var macro_tool := EventSequenceMacroEditor.new(self, popup_macros)
-
 # Constants
 const default_item_name: String = "Start"
 const default_item_path: String = "res://addons/event_sequence/item/general/comment.gd"
@@ -38,15 +35,15 @@ func _enter_tree():
 
 # When the node is fully ready, connect to every other important signal
 func _ready():
-	# Connect clicking on a tree item to a function
+	# Connect to various tree signals for editor functionality
 	tree.cell_selected.connect(_tree_cell_clicked)
-	
 	tree.button_clicked.connect(_tree_button_pressed)
-	
 	tree.item_mouse_selected.connect(_tree_item_clicked)
 	tree.empty_clicked.connect(_tree_empty_clicked)
-	
 	tree.refresh_tree.connect(_tree_refresh)
+	
+	# Connect to macro signals
+	popup_macros.request_macro_contents.connect(_macro_create)
 
 #endregion
 
@@ -62,7 +59,7 @@ func _input(event: InputEvent):
 			"Ctrl+S", "Command+S", "F5", "F6":
 				save()
 			"Ctrl+M":
-				macro_create()
+				popup_macros.popup()
 			"Delete":
 				var item: TreeItem = tree.get_next_selected(null)
 				while item != null:
@@ -277,12 +274,15 @@ func _get_selected_node() -> EventNode:
 
 #region Macro Integration
 
-func macro_create():
+func _macro_create():
 	var selection: TreeItem = tree.get_selected()
-	if not selection: return
+	if not selection:
+		var arugment: Array[Dictionary] = [{}]
+		popup_macros.write_macro({}, arugment)
+		return
 	
 	var self_data: Dictionary = _build_dict_from_item(selection)
 	var child_data: Array[Dictionary] = _build_dict_from_tree(selection)
-	macro_tool.write_macro("item.json", self_data, child_data)
+	popup_macros.write_macro(self_data, child_data)
 
 #endregion
