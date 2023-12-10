@@ -54,9 +54,11 @@ prefer_global_menu = false
 
 [node name="Macros" type="PopupMenu" parent="TreeContainer/VBox/Header/HeaderMenu"]
 disable_3d = true
-item_count = 1
+item_count = 2
 item_0/text = "Create Macro"
 item_0/id = 0
+item_1/text = "Delete Macros"
+item_1/id = 1
 
 [node name="Tree" type="Tree" parent="TreeContainer/VBox"]
 unique_name_in_owner = true
@@ -81,7 +83,7 @@ script = ExtResource("2_gw54i")
 disable_3d = true
 transparent_bg = true
 position = Vector2i(50, 50)
-size = Vector2i(400, 400)
+size = Vector2i(433, 400)
 transparent = true
 script = ExtResource("2_06btc")
 
@@ -149,7 +151,8 @@ size_flags_vertical = 3
 disable_3d = true
 transparent_bg = true
 initial_position = 4
-size = Vector2i(500, 400)
+size = Vector2i(500, 325)
+visible = true
 transparent = true
 script = ExtResource("6_xaigg")
 
@@ -164,7 +167,7 @@ theme = ExtResource("4_vdnhk")
 [node name="VBox" type="VBoxContainer" parent="MacroPopup/Panel"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="MacroPopup/Panel/VBox"]
+[node name="Header" type="Label" parent="MacroPopup/Panel/VBox"]
 layout_mode = 2
 text = "Create new Macro"
 horizontal_alignment = 1
@@ -188,7 +191,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Name"
 alignment = 1
-max_length = 16
+max_length = 28
 clear_button_enabled = true
 right_icon = SubResource("PlaceholderTexture2D_gx2uq")
 
@@ -203,14 +206,45 @@ layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Category"
 alignment = 1
-max_length = 16
+max_length = 12
 clear_button_enabled = true
 right_icon = SubResource("PlaceholderTexture2D_kuwjo")
 
+[node name="MacroDesc" type="Label" parent="MacroPopup/Panel/VBox/Settings"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 6
+text = "Macro Desciption:"
+horizontal_alignment = 1
+
+[node name="MacroDescEdit" type="TextEdit" parent="MacroPopup/Panel/VBox/Settings"]
+layout_mode = 2
+size_flags_vertical = 3
+placeholder_text = "Description for your macro, shown in tooltips (Optional) "
+wrap_mode = 1
+scroll_fit_content_height = true
+
+[node name="TreeItemInfo" type="Label" parent="MacroPopup/Panel/VBox"]
+layout_mode = 2
+size_flags_vertical = 8
+horizontal_alignment = 1
+clip_text = true
+text_overrun_behavior = 3
+
 [node name="CreateButton" type="Button" parent="MacroPopup/Panel/VBox"]
 layout_mode = 2
-size_flags_vertical = 10
+size_flags_vertical = 8
 text = "Create"
+
+[node name="MacroDeleteWindow" type="FileDialog" parent="."]
+disable_3d = true
+title = "Open File(s)"
+initial_position = 4
+size = Vector2i(392, 475)
+ok_button_text = "Open"
+dialog_hide_on_ok = true
+file_mode = 1
+root_subfolder = "res://addons/event_sequence/macro/"
 
 [node name="NoTree" type="MarginContainer" parent="."]
 visible = false
@@ -232,3 +266,4 @@ horizontal_alignment = 1
 
 [connection signal="index_pressed" from="TreeContainer/VBox/Header/HeaderMenu/Macros" to="." method="_on_macro_menu_index_pressed"]
 [connection signal="pressed" from="TreeAddPopup/ScrollContainer/VBox/HBoxContainer/Button" to="TreeAddPopup" method="_on_debug_refresh_pressed"]
+[connection signal="files_selected" from="MacroDeleteWindow" to="." method="_on_macro_delete_window_files_selected"]

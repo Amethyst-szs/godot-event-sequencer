@@ -26,6 +26,8 @@ const ScriptScanFolders: Array[String] = [
 	"res://addons/event_sequence/item/flow/",
 ]
 
+const ScriptMacroFolder: String = "res://addons/event_sequence/macro/"
+
 # Editor add new tree item dialog
 enum EditorDialogTab {
 	General,
