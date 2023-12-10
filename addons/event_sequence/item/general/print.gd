@@ -21,7 +21,7 @@ func get_color() -> Color:
 	return Color.LIGHT_BLUE
 
 func get_icon_path() -> String:
-	return "res://addons/event_sequence/test-icon.svg"
+	return "res://addons/event_sequence/icon/EventItem-Print.svg"
 
 func run(event_node: EventNode) -> EventConst.ItemResponseType:
 	if not event_variable.is_empty():

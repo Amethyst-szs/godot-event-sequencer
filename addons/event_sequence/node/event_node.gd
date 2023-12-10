@@ -69,7 +69,6 @@ func _run_dictionary_list(list: Array[Dictionary], is_first_recursion: bool = fa
 			EventConst.ItemResponseType.TERMINATE:
 				is_terminating = true
 	
-	
 	# Once iterating through events is complete
 	if is_first_recursion:
 		fetch_database.clear()

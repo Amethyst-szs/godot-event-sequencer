@@ -9,9 +9,11 @@ var save_timer: float = -1.0
 @onready var notree_screen: MarginContainer = $NoTree
 
 @onready var tree: Tree = %Tree
+@onready var tree_header_menu: MenuBar = %HeaderMenu
 @onready var popup_tree_add: Popup = $TreeAddPopup
 @onready var popup_userdata_edit: Popup = $UserdataEditPopup
 @onready var popup_macros: Popup = $MacroPopup
+@onready var popup_macro_delete: FileDialog = $MacroDeleteWindow
 @onready var userdata_edit_list := $UserdataEditPopup/Scroll/List
 
 var selected_node: EventNode = null
@@ -58,8 +60,6 @@ func _input(event: InputEvent):
 		match event.as_text():
 			"Ctrl+S", "Command+S", "F5", "F6":
 				save()
-			"Ctrl+M":
-				popup_macros.popup()
 			"Delete":
 				var item: TreeItem = tree.get_next_selected(null)
 				while item != null:
@@ -69,18 +69,19 @@ func _input(event: InputEvent):
 				save()
 				get_viewport().set_input_as_handled()
 
-# When clicking a cell, update the the column headers
 func _tree_cell_clicked():
 	var select: TreeItem = tree.get_next_selected(null)
 	var column: int = tree.get_selected_column()
 	
 	if select:
+		# Update columns from metadata
 		var column_1_title: String = select.get_metadata(EventConst.EditorColumn.VARIABLE)
 		tree.set_column_title(EventConst.EditorColumn.VARIABLE, column_1_title)
 		
 		var column_2_title: String = select.get_metadata(EventConst.EditorColumn.USERDATA)
 		tree.set_column_title(EventConst.EditorColumn.USERDATA, column_2_title)
 	else:
+		# Clear column names
 		tree.set_column_title(EventConst.EditorColumn.VARIABLE, "None")
 		tree.set_column_title(EventConst.EditorColumn.USERDATA, "None")
 
@@ -179,7 +180,11 @@ func _try_build_tree(parent: TreeItem = null, dict_list: Array = []) -> bool:
 			continue
 		
 		# Create a new tree item and add it using the current parent and dictionary
-		var item: TreeItem = _build_item_from_dict(parent, event_dict[EventConst.item_key_self])
+		var item: TreeItem = _build_item_from_dict(parent, event_dict[EventConst.item_key_self], event_dict.has("macro"))
+		
+		# If this dict marks itself as a macro, add metadata to tree item
+		var is_macro_root: bool = event_dict.has("macro")
+		item.set_meta("is_macro_root", is_macro_root)
 		
 		# Check if this dictionary has children
 		if not event_dict.has(EventConst.item_key_child):
@@ -190,7 +195,7 @@ func _try_build_tree(parent: TreeItem = null, dict_list: Array = []) -> bool:
 	
 	return true
 
-func _build_item_from_dict(parent_item: TreeItem, dict: Dictionary) -> TreeItem:
+func _build_item_from_dict(parent_item: TreeItem, dict: Dictionary, is_macro: bool) -> TreeItem:
 	# Load in the item's script
 	var script: Script = ResourceLoader.load(dict[EventConst.item_key_script], "Script")
 	var script_instance = script.new()
@@ -198,7 +203,7 @@ func _build_item_from_dict(parent_item: TreeItem, dict: Dictionary) -> TreeItem:
 	# Parse the current dictionary and let it add itself to the list
 	script_instance.script_path = dict[EventConst.item_key_script]
 	script_instance.parse_dict(dict)
-	return script_instance.add_to_tree(parent_item, self)
+	return script_instance.add_to_tree(parent_item, self, is_macro)
 
 func _build_dict_from_tree(root: TreeItem) -> Array[Dictionary]:
 	if not root:
@@ -210,6 +215,9 @@ func _build_dict_from_tree(root: TreeItem) -> Array[Dictionary]:
 	for child in children:
 		var dict: Dictionary = {}
 		dict[EventConst.item_key_self] = _build_dict_from_item(child)
+		
+		if child.has_meta("is_macro_root") and child.get_meta("is_macro_root"):
+			dict["macro"] = true
 		
 		if child.get_child_count() > 0:
 			dict[EventConst.item_key_child] = _build_dict_from_tree(child)
@@ -283,6 +291,26 @@ func _macro_create():
 	
 	var self_data: Dictionary = _build_dict_from_item(selection)
 	var child_data: Array[Dictionary] = _build_dict_from_tree(selection)
-	popup_macros.write_macro(self_data, child_data)
+	await popup_macros.write_macro(self_data, child_data)
+	
+	popup_tree_add._ready()
+
+func _on_macro_menu_index_pressed(index):
+	match(index):
+		0:
+			popup_macros.check_is_tree_have_selected()
+			popup_macros.popup()
+		1:
+			popup_macro_delete.title = "Select macros to delete"
+			popup_macro_delete.ok_button_text = "Delete Macro(s)"
+			popup_macro_delete.popup()
+
+func _on_macro_delete_window_files_selected(paths: PackedStringArray):
+	for path in paths:
+		var error := DirAccess.remove_absolute(path)
+		if error != OK:
+			printerr("Deleting macro failed: %s (%s)" % [error, path])
+	
+	popup_tree_add._ready()
 
 #endregion
