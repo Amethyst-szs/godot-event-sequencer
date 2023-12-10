@@ -23,6 +23,7 @@ const ScriptScanFolders: Array[String] = [
 	"res://addons/event_sequence/item/general/",
 	"res://addons/event_sequence/item/var/",
 	"res://addons/event_sequence/item/method/",
+	"res://addons/event_sequence/item/set/",
 	"res://addons/event_sequence/item/flow/",
 ]
 
@@ -33,7 +34,9 @@ enum EditorDialogTab {
 	General,
 	Variable,
 	Method,
+	Set,
 	Flow,
+	Plugin,
 }
 
 # Editor tree columns

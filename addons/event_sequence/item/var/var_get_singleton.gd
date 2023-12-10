@@ -5,7 +5,7 @@ func get_name() -> String:
 	return "Get Singleton"
 
 func get_description() -> String:
-	return "Get the root node of a singleton by name, and add it to your event variables"
+	return "Get the root node of an autoload/singleton by name, and add it to your event variables"
 
 func is_allow_in_editor() -> bool:
 	return true
@@ -16,6 +16,9 @@ func get_second_column_config() -> Dictionary:
 		"editable": true,
 		"cell_mode": TreeItem.CELL_MODE_STRING
 	}
+
+func get_icon_path() -> String:
+	return "res://addons/event_sequence/icon/EventItem-GetSingleton.svg"
 
 func run(event_node: EventNode) -> EventConst.ItemResponseType:
 	if not is_valid_generic(event_node, true):

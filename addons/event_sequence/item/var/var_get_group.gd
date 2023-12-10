@@ -10,6 +10,9 @@ func get_description() -> String:
 func is_allow_in_editor() -> bool:
 	return true
 
+func get_icon_path() -> String:
+	return "res://addons/event_sequence/icon/EventItem-GetGroup.svg"
+
 func get_second_column_config() -> Dictionary:
 	return {
 		"name": "Group Name",

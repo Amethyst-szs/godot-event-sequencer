@@ -19,8 +19,7 @@ func _ready():
 	
 	# Add all built-in buttons into interface
 	for path in EventConst.ScriptScanFolders:
-		if not DirAccess.dir_exists_absolute(path):
-			continue
+		DirAccess.make_dir_recursive_absolute(path)
 		
 		var dir: DirAccess = DirAccess.open(path)
 		for file in dir.get_files():

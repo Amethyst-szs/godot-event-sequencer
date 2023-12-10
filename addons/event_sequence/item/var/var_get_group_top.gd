@@ -17,6 +17,9 @@ func get_second_column_config() -> Dictionary:
 		"cell_mode": TreeItem.CELL_MODE_STRING
 	}
 
+func get_icon_path() -> String:
+	return "res://addons/event_sequence/icon/EventItem-GetGroupFirst.svg"
+
 func run(event_node: EventNode) -> EventConst.ItemResponseType:
 	if not is_valid_generic(event_node, true):
 		return EventConst.ItemResponseType.OK

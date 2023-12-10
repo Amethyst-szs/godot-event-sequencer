@@ -1,11 +1,16 @@
 @tool
 extends EventItemBase
 
+var return_data
+
+#region Config
+
 func get_name() -> String:
-	return "Call Method (No Args, No Return)"
+	return "Call Method (Get Return)"
 
 func get_description() -> String:
-	return "Call method on object/node or list of objects/nodes without arguments or saving the return value"
+	return "Call method on object/node or list of objects/nodes and save the return (no arguments)
+		If multiple objects are passed in, new variable will be array of returns from each obj."
 
 func get_editor_tab() -> EventConst.EditorDialogTab:
 	return EventConst.EditorDialogTab.Method
@@ -15,8 +20,8 @@ func is_allow_in_editor() -> bool:
 
 func get_first_column_config() -> Dictionary:
 	return {
-		"name": "None",
-		"editable": false,
+		"name": "New Variable Name",
+		"editable": true,
 		"cell_mode": TreeItem.CELL_MODE_STRING
 	}
 
@@ -50,6 +55,8 @@ func get_color() -> Color:
 func get_icon_path() -> String:
 	return "res://icon.svg"
 
+#endregion
+
 func run(event_node: EventNode) -> EventConst.ItemResponseType:
 	if not is_valid_userdata("object") or not is_valid_userdata("method"):
 		return EventConst.ItemResponseType.OK
@@ -63,21 +70,28 @@ func run(event_node: EventNode) -> EventConst.ItemResponseType:
 	# Call method on object or array of object
 	match(typeof(data)):
 		TYPE_OBJECT:
-			call_on_object(data as Object)
+			call_on_object(data as Object, false)
 		TYPE_ARRAY:
+			return_data = Array()
 			for item in data:
 				if typeof(item) == TYPE_OBJECT:
-					call_on_object(item as Object)
+					call_on_object(item as Object, true)
 		_:
-			warn("Data in variable \"%s\" isn't an object or array" % userdata["object"])
+			warn("Data in variable \"%s\" isn't an object or array" % [userdata["object"]])
 			return EventConst.ItemResponseType.OK
+	
+	if return_data and not event_variable.is_empty():
+		event_node.var_database[event_variable] = return_data
 	
 	return EventConst.ItemResponseType.OK
 
-func call_on_object(object: Object):
+func call_on_object(object: Object, is_part_of_array: bool):
 	if not object.has_method(userdata["method"]):
 		warn("Object in variable \"%s\" doesn't have method \"%s\"" % [userdata["object"], userdata["method"]])
 		return
 	
 	var call := Callable(object, userdata["method"])
-	call.call()
+	if not is_part_of_array:
+		return_data = call.call()
+	else:
+		return_data.push_back(call.call())
