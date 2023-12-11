@@ -15,7 +15,7 @@ func _exit_tree():
 func _close_menu():
 	target_item = null
 
-func build_menu(item: TreeItem, column: int):
+func build_menu(item: TreeItem, column: int, open_menu: bool = true):
 	# Copy tree item reference
 	target_item = item
 	
@@ -69,59 +69,121 @@ func build_menu(item: TreeItem, column: int):
 			data = item.get_meta(key["name"])
 		
 		# Build edit field based on type
-		match(key["type"]):
-			TYPE_STRING:
-				var edit
-				if key.has("type_hint") and key["type_hint"] == "text_edit":
-					edit = CodeEdit.new()
-					edit.custom_minimum_size = Vector2(325, 250)
-					edit.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY
-					edit.gutters_draw_line_numbers = true
-					edit.text_changed.connect(_field_edited.bind(edit, key))
-				else:
-					edit = LineEdit.new()
-					edit.text_changed.connect(_field_edited.bind(key))
-				
-				edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-				edit.placeholder_text = key["desc"]
-				
-				if data and typeof(data) == TYPE_STRING:
-					edit.text = data
-				
-				
-				grid.add_child(edit)
-			TYPE_INT, TYPE_FLOAT:
-				var spin_box := SpinBox.new()
-				spin_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-				spin_box.allow_greater = true
-				spin_box.allow_lesser = true
-				spin_box.update_on_text_changed = true
-				spin_box.step = 0
-				if key["type"] == TYPE_INT:
-					spin_box.rounded = true
-				
-				if data and (typeof(data) == TYPE_INT or typeof(data) == TYPE_FLOAT):
-					spin_box.value = data
-				
-				spin_box.value_changed.connect(_field_edited.bind(key))
-				grid.add_child(spin_box)
-			TYPE_BOOL:
-				var button := CheckButton.new()
-				button.text = key["desc"]
-				
-				if data and typeof(data) == TYPE_BOOL:
-					button.button_pressed = data
-				
-				button.toggled.connect(_field_edited.bind(key))
-				grid.add_child(button)
+		if not key["type"] == TYPE_ARRAY:
+			_add_field(grid, key, key["type"], data)
+		else:
+			# Create button
+			var button := Button.new()
+			button.text = "Add Array Item"
+			button.pressed.connect(_add_item_to_array.bind(key, column))
+			grid.add_child(button)
+			
+			# If this array doesn't have a meta key, add it
+			if not item.has_meta(key["name"]):
+				item.set_meta(key["name"], [])
+			
+			for array_index in range(item.get_meta(key["name"]).size()):
+				_add_field(grid, key, key["type_array"], data, array_index)
 	
 	# Spawn window
-	popup()
-	position = DisplayServer.mouse_get_position()
-	position.x -= size.x / 2
+	if open_menu:
+		popup()
+		position = DisplayServer.mouse_get_position()
+		position.x -= size.x / 2
 
-func _field_edited(data, key: Dictionary):
+func _add_field(container: Control, key: Dictionary, type: Variant.Type, data, array_index: int = -1):
+	# If adding an array, add a remove button to the layout firest
+	if array_index > -1:
+		var remove := Button.new()
+		remove.text = "Remove Item"
+		remove.flat = true
+		remove.alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		remove.pressed.connect(_remove_item_from_array.bind(key, array_index))
+		container.add_child(remove)
+	
+	match(type):
+		TYPE_STRING:
+			var edit
+			if key.has("type_hint") and key["type_hint"] == "text_edit":
+				edit = CodeEdit.new()
+				edit.custom_minimum_size = Vector2(325, 250)
+				edit.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY
+				edit.gutters_draw_line_numbers = true
+				edit.text_changed.connect(_field_edited.bind(edit, key, array_index))
+			else:
+				edit = LineEdit.new()
+				edit.text_changed.connect(_field_edited.bind(key, array_index))
+			
+			edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			edit.placeholder_text = key["desc"]
+			
+			if data and typeof(data) == TYPE_STRING:
+				edit.text = data
+			
+			if data and typeof(data) == TYPE_ARRAY and typeof(data[array_index]) != TYPE_NIL:
+				edit.text = data[array_index]
+			
+			container.add_child(edit)
+		TYPE_INT, TYPE_FLOAT:
+			var spin_box := SpinBox.new()
+			spin_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			spin_box.allow_greater = true
+			spin_box.allow_lesser = true
+			spin_box.update_on_text_changed = true
+			spin_box.step = 0
+			if key["type"] == TYPE_INT:
+				spin_box.rounded = true
+			
+			if data and (typeof(data) == TYPE_INT or typeof(data) == TYPE_FLOAT):
+				spin_box.value = data
+			
+			if data and typeof(data) == TYPE_ARRAY and typeof(data[array_index]) != TYPE_NIL:
+				spin_box.value = data[array_index]
+			
+			spin_box.value_changed.connect(_field_edited.bind(key, array_index))
+			container.add_child(spin_box)
+		TYPE_BOOL:
+			var button := CheckButton.new()
+			button.text = key["desc"]
+			
+			if data and typeof(data) == TYPE_BOOL:
+				button.button_pressed = data
+			
+			if data and typeof(data) == TYPE_ARRAY and typeof(data[array_index]) != TYPE_NIL:
+				button.button_pressed = data[array_index]
+			
+			button.toggled.connect(_field_edited.bind(key, array_index))
+			container.add_child(button)
+
+func _add_item_to_array(key: Dictionary, column: int):
+	var meta = target_item.get_meta(key["name"])
+	meta.push_back(null)
+	target_item.set_meta(key["name"], meta)
+	
+	build_menu(target_item, column, false)
+
+func _remove_item_from_array(key: Dictionary, array_index: int):
+	var meta = target_item.get_meta(key["name"])
+	meta.remove_at(array_index)
+	target_item.set_meta(key["name"], meta)
+	
+	build_menu(target_item, EventConst.EditorColumn.USERDATA, false)
+
+func _field_edited(data, key: Dictionary, array_index: int):
 	if not target_item: return
+	
+	# If this is an array, handle seperately
+	if array_index > -1:
+		var array: Array = target_item.get_meta(key["name"])
+		if not array:
+			return
+		
+		if not data is TextEdit:
+			array[array_index] = data
+		else:
+			array[array_index] = data.text
+
+		return
 	
 	if not data is TextEdit:
 		target_item.set_meta(key["name"], data)
