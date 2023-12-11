@@ -50,6 +50,7 @@ func _build_and_run_script(event_node: EventNode):
 	# Simple search and replace throughout the condition in userdata
 	userdata["code"] = userdata["code"].replace("\n", "\n\t")
 	userdata["code"] = userdata["code"].replace("input", "_input")
+	userdata["code"] = userdata["code"].replace("__input", "_input")
 	
 	if userdata["code"].is_empty():
 		error("No code has been set up! Write a script first!")

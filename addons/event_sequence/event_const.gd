@@ -10,6 +10,7 @@ enum ItemResponseType {
 	JUMP,
 	JUMP_AND_RETURN,
 	LOOP_FOR,
+	LOOP_WHILE,
 	TERMINATE,
 }
 

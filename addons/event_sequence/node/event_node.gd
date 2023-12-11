@@ -15,6 +15,10 @@ class_name EventNode
 @export var label_jump_target: String = ""
 @export var new_for_loop_length: int = -1
 
+# While loop condition
+@export var while_loop_condition_script: GDScript = null
+@export var while_loop_condition_input: String = ""
+
 func _ready():
 	if not Engine.is_editor_hint():
 		preload_scripts_and_labels(event_list)
@@ -121,13 +125,29 @@ func _run_dictionary_list(list: Array[Dictionary], is_first_recursion: bool = fa
 			EventConst.ItemResponseType.LOOP_FOR:
 				if event_root.has(EventConst.item_key_child):
 					await _run_dictionary_list(event_root[EventConst.item_key_child], false, 0, new_for_loop_length)
+			EventConst.ItemResponseType.LOOP_WHILE:
+				if event_root.has(EventConst.item_key_child):
+					await _run_dictionary_list(event_root[EventConst.item_key_child])
 			EventConst.ItemResponseType.TERMINATE:
 				is_terminating = true
 		
-		# If at the end of a for loop, restart here
-		if idx >= list.size() and loop_count > 0:
+		# If not at the final local child, continue here
+		if idx < list.size():
+			continue
+		
+		# If still in for loop, restart here
+		if loop_count > 0:
 			loop_count -= 1
 			idx = start_idx
+		
+		# If in while loop, check condition here
+		if while_loop_condition_script:
+			var inst := while_loop_condition_script.new()
+			if inst.execute(var_database[while_loop_condition_input]):
+				idx = start_idx
+			else:
+				while_loop_condition_script = null
+				while_loop_condition_input = ""
 	
 	# Once iterating through events is complete, cleanup
 	if is_first_recursion and label_jump_target.is_empty():
