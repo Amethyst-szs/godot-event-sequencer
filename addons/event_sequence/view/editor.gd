@@ -205,6 +205,9 @@ func _try_build_tree(parent: TreeItem = null, dict_list: Array = []) -> bool:
 		var is_macro_root: bool = event_dict.has("macro")
 		item.set_meta("is_macro_root", is_macro_root)
 		
+		# If this dict is a label marker, add label metadata tag
+		item.set_meta("is_label", event_dict.has("is_label"))
+		
 		# Check if this dictionary has children
 		if not event_dict.has(EventConst.item_key_child):
 			continue
@@ -237,6 +240,9 @@ func _build_dict_from_tree(root: TreeItem) -> Array[Dictionary]:
 		
 		if child.has_meta("is_macro_root") and child.get_meta("is_macro_root"):
 			dict["macro"] = true
+		
+		if child.has_meta("is_label") and child.get_meta("is_label"):
+			dict["is_label"] = true
 		
 		if child.get_child_count() > 0:
 			dict[EventConst.item_key_child] = _build_dict_from_tree(child)

@@ -5,6 +5,8 @@ class_name EventConst
 enum ItemResponseType {
 	OK,
 	SKIP_CHILDREN,
+	JUMP,
+	JUMP_AND_RETURN,
 	TERMINATE,
 }
 

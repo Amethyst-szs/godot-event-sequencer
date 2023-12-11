@@ -42,6 +42,9 @@ func is_second_column_editable() -> bool:
 func is_comment() -> bool:
 	return false
 
+func is_label() -> bool:
+	return false
+
 func get_color() -> Color:
 	return Color.RED
 
@@ -86,11 +89,14 @@ func _ready():
 func add_to_tree(parent: TreeItem, editor: Control, is_macro: bool) -> TreeItem:
 	var item: TreeItem = parent.create_child()
 	
+	# Mark as label if is label
+	if is_label():
+		item.set_meta("is_label", true)
+	
 	# Name column
 	if name.is_empty():
 		name = get_name()
 	
-	# Name column
 	item.set_text(EventConst.EditorColumn.NAME, name)
 	item.set_metadata(EventConst.EditorColumn.NAME, script_path)
 	

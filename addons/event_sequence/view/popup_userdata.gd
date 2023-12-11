@@ -66,7 +66,7 @@ func build_menu(item: TreeItem, column: int):
 		# Get data from tree item metadata
 		var data
 		if item.has_meta(key["name"]):
-			data =item.get_meta(key["name"])
+			data = item.get_meta(key["name"])
 		
 		# Build edit field based on type
 		match(key["type"]):
