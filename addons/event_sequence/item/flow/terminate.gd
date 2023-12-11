@@ -7,6 +7,9 @@ func get_name() -> String:
 func get_description() -> String:
 	return "End sequence here, with an optional error message"
 
+func get_editor_tab() -> EventConst.EditorDialogTab:
+	return EventConst.EditorDialogTab.Flow
+
 func is_allow_in_editor() -> bool:
 	return true
 
