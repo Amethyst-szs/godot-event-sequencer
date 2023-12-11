@@ -7,7 +7,7 @@ func _ready():
 	# Setup column expanding for each column
 	set_column_expand(EventConst.EditorColumn.NAME, true)
 	set_column_expand(EventConst.EditorColumn.VARIABLE, true)
-	set_column_expand(EventConst.EditorColumn.USERDATA, true)
+	set_column_expand(EventConst.EditorColumn.USERDATA, false)
 	
 	# Set default names for each column
 	set_column_title(EventConst.EditorColumn.NAME, "Name")

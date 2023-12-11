@@ -7,7 +7,7 @@ func get_name() -> String:
 	return "If Condition"
 
 func get_description() -> String:
-	return "Only play this item's children if this variable name matches a condition"
+	return "Only play this item's children if this variable matches a condition"
 
 func is_allow_in_editor() -> bool:
 	return true
