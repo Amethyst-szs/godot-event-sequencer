@@ -74,7 +74,7 @@ func build_menu(item: TreeItem, column: int):
 				var edit
 				if key.has("type_hint") and key["type_hint"] == "text_edit":
 					edit = CodeEdit.new()
-					edit.custom_minimum_size = Vector2(325, 300)
+					edit.custom_minimum_size = Vector2(325, 250)
 					edit.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY
 					edit.gutters_draw_line_numbers = true
 					edit.text_changed.connect(_field_edited.bind(edit, key))

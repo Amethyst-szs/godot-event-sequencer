@@ -1,5 +1,5 @@
 @tool
-extends EventItemFlowBase
+extends EventItemScriptBase
 
 #region Config
 
@@ -9,27 +9,23 @@ func get_name() -> String:
 func get_description() -> String:
 	return "Only play this item's children if this variable matches a condition"
 
+func get_editor_tab() -> EventConst.EditorDialogTab:
+	return EventConst.EditorDialogTab.Flow
+
 func is_allow_in_editor() -> bool:
 	return true
-
-func get_first_column_config() -> Dictionary:
-	return {
-		"name": "Variable Name",
-		"editable": true,
-		"cell_mode": TreeItem.CELL_MODE_STRING
-	}
-
-func get_second_column_config() -> Dictionary:
-	return {
-		"name": "Config",
-		"editable": true,
-		"cell_mode": TreeItem.CELL_MODE_CUSTOM
-	}
 
 func get_userdata_keys() -> Array[Dictionary]:
 	return [
 		{
-			"name": "condition",
+			"name": "input",
+			"display_name": "Input Variable",
+			"desc": "Variable to pass into function",
+			"type": TYPE_STRING,
+			"require": false,
+		},
+		{
+			"name": "code",
 			"display_name": "Condition",
 			"desc": "Write GDScript here for your condition. Use \"input\" to access variable. Return true/false for if the condition was successful.",
 			"type": TYPE_STRING,
@@ -38,40 +34,19 @@ func get_userdata_keys() -> Array[Dictionary]:
 		}
 	]
 
+func get_color() -> Color:
+	return Color.MEDIUM_PURPLE.lightened(0.3)
+
 func get_icon_path() -> String:
 	return "res://addons/event_sequence/icon/EventItem-FlowIfCondition.svg"
 
 #endregion
 
 func run(event_node: EventNode) -> EventConst.ItemResponseType:
-	if not is_valid_event_variable(event_node, false) or not is_valid_userdata("condition"):
-		return EventConst.ItemResponseType.OK
+	var result = _build_and_run_script(event_node)
 	
-	# Simple search and replace throughout the condition in userdata
-	userdata["condition"] = userdata["condition"].replace("\n", "\n\t")
-	userdata["condition"] = userdata["condition"].replace("input", "_input")
-	
-	if userdata["condition"].is_empty():
-		error("No condition has been set up! Write a script first!")
-		return EventConst.ItemResponseType.TERMINATE
-	
-	# Generate GDScript file at runtime
-	var script := GDScript.new()
-	script.source_code = "func condition(_input):\n\t%s" % [userdata["condition"]]
-	var error: Error = script.reload()
-	
-	# Ensure script was compiled correctly
-	if error != OK:
-		error("Condition failed to parse correctly, check your GDScript!")
-		return EventConst.ItemResponseType.TERMINATE
-	
-	# Call generated function
-	var obj = script.new()
-	var result = obj.condition(event_node.var_database[event_variable])
-	
-	# Ensure result is boolean
 	if typeof(result) != TYPE_BOOL:
-		error("Condition returned non-bool value, check your GDScript!\nValue: %s" % result)
+		error("Failed to run, did not recieve boolean from script execution!")
 		return EventConst.ItemResponseType.TERMINATE
 	
 	if result == true:

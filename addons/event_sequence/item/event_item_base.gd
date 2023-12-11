@@ -33,12 +33,6 @@ func get_second_column_config() -> Dictionary:
 func get_userdata_keys() -> Array[Dictionary]:
 	return []
 
-func is_first_column_editable() -> bool:
-	return false
-
-func is_second_column_editable() -> bool:
-	return false
-
 func is_comment() -> bool:
 	return false
 
@@ -137,8 +131,9 @@ func _setup_column_config(item: TreeItem, column: EventConst.EditorColumn, confi
 	
 	match(item.get_cell_mode(column)):
 		TreeItem.CELL_MODE_STRING:
-			if column == EventConst.EditorColumn.VARIABLE and event_variable:
-				item.set_text(column, event_variable)
+			if column == EventConst.EditorColumn.VARIABLE:
+				if event_variable:
+					item.set_text(column, event_variable)
 			else: if userdata.has(EventConst.item_key_userdata_generic):
 				item.set_text(column, userdata[EventConst.item_key_userdata_generic])
 		TreeItem.CELL_MODE_RANGE:
