@@ -1,4 +1,5 @@
 @tool
+@icon("res://icon.svg")
 
 extends Node
 class_name EventNode

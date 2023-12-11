@@ -5,7 +5,8 @@ func get_name() -> String:
 	return "Jump to Label"
 
 func get_description() -> String:
-	return "Jump to a label anywhere in the tree by name"
+	return "Jump to a label anywhere in the tree by name.
+		Will perform jump on application's next process frame."
 
 func get_editor_tab() -> EventConst.EditorDialogTab:
 	return EventConst.EditorDialogTab.Flow

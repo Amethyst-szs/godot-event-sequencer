@@ -24,7 +24,7 @@ func get_userdata_keys() -> Array[Dictionary]:
 	return [
 		{
 			"name": "state",
-			"desc": "True/False",
+			"desc": "False/True",
 			"type": TYPE_BOOL,
 			"require": true,
 		}

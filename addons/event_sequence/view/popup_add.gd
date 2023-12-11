@@ -96,7 +96,11 @@ func _button_pressed(script_path: String):
 	var tree_item: TreeItem = item.add_to_tree(tree.get_root(), root, false)
 	
 	if tree.get_selected():
-		tree_item.move_after(tree.get_selected())
+		if not Input.is_key_pressed(KEY_SHIFT):
+			tree_item.move_after(tree.get_selected())
+		else:
+			tree_item.get_parent().remove_child(tree_item)
+			tree.get_selected().add_child(tree_item)
 	
 	tree.set_selected(tree_item, 0)
 	

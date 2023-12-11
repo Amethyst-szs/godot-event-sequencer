@@ -71,20 +71,30 @@ func build_menu(item: TreeItem, column: int):
 		# Build edit field based on type
 		match(key["type"]):
 			TYPE_STRING:
-				var line_edit := LineEdit.new()
-				line_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-				line_edit.placeholder_text = key["desc"]
+				var edit
+				if key.has("type_hint") and key["type_hint"] == "text_edit":
+					edit = TextEdit.new()
+					edit.custom_minimum_size = Vector2(325, 300)
+					edit.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY
+					edit.text_changed.connect(_field_edited.bind(edit, key))
+				else:
+					edit = LineEdit.new()
+					edit.text_changed.connect(_field_edited.bind(key))
+				
+				edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+				edit.placeholder_text = key["desc"]
 				
 				if data and typeof(data) == TYPE_STRING:
-					line_edit.text = data
+					edit.text = data
 				
-				line_edit.text_changed.connect(_field_edited.bind(key))
-				grid.add_child(line_edit)
+				
+				grid.add_child(edit)
 			TYPE_INT, TYPE_FLOAT:
 				var spin_box := SpinBox.new()
 				spin_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 				spin_box.allow_greater = true
 				spin_box.allow_lesser = true
+				spin_box.update_on_text_changed = true
 				spin_box.step = 0
 				if key["type"] == TYPE_INT:
 					spin_box.rounded = true
@@ -111,4 +121,8 @@ func build_menu(item: TreeItem, column: int):
 
 func _field_edited(data, key: Dictionary):
 	if not target_item: return
-	target_item.set_meta(key["name"], data)
+	
+	if not data is TextEdit:
+		target_item.set_meta(key["name"], data)
+	else:
+		target_item.set_meta(key["name"], data.text)

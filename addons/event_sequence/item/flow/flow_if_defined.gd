@@ -38,7 +38,7 @@ func get_userdata_keys() -> Array[Dictionary]:
 	]
 
 func get_icon_path() -> String:
-	return "res://addons/event_sequence/icon/EventItem-FlowWaitSignalAny.svg"
+	return "res://addons/event_sequence/icon/EventItem-FlowIfDefined.svg"
 
 #endregion
 
