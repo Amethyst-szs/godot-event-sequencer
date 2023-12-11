@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://bx5hddkgml270"]
+[gd_scene load_steps=13 format=3 uid="uid://bx5hddkgml270"]
 
 [ext_resource type="Script" path="res://addons/event_sequence/view/editor.gd" id="1_xiffy"]
 [ext_resource type="Script" path="res://addons/event_sequence/view/popup_add.gd" id="2_06btc"]
@@ -9,14 +9,9 @@
 [ext_resource type="Script" path="res://addons/event_sequence/view/popup_macro.gd" id="6_xaigg"]
 [ext_resource type="Shader" path="res://addons/event_sequence/view/shader/idle_anim.gdshader" id="7_uk2by"]
 [ext_resource type="Texture2D" uid="uid://28if880u1ad1" path="res://icon.svg" id="8_eemvt"]
+[ext_resource type="Texture2D" uid="uid://l2h2thooxa1t" path="res://addons/event_sequence/icon/Required.svg" id="8_k7kc6"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_apxsf"]
-
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_gx2uq"]
-size = Vector2(20, 20)
-
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_kuwjo"]
-size = Vector2(20, 20)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_g4to1"]
 shader = ExtResource("7_uk2by")
@@ -250,7 +245,7 @@ placeholder_text = "Name"
 alignment = 1
 max_length = 28
 clear_button_enabled = true
-right_icon = SubResource("PlaceholderTexture2D_gx2uq")
+right_icon = ExtResource("8_k7kc6")
 
 [node name="MacroCategory" type="Label" parent="MacroPopup/Panel/VBox/Settings"]
 layout_mode = 2
@@ -265,7 +260,7 @@ placeholder_text = "Category"
 alignment = 1
 max_length = 12
 clear_button_enabled = true
-right_icon = SubResource("PlaceholderTexture2D_kuwjo")
+right_icon = ExtResource("8_k7kc6")
 
 [node name="MacroDesc" type="Label" parent="MacroPopup/Panel/VBox/Settings"]
 layout_mode = 2
@@ -304,6 +299,7 @@ file_mode = 1
 root_subfolder = "res://addons/event_sequence/macro/"
 
 [node name="NoTree" type="MarginContainer" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
