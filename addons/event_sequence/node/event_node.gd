@@ -95,7 +95,7 @@ func _run_dictionary_list(list: Array[Dictionary], is_first_recursion: bool = fa
 		idx += 1
 		
 		# Check if this is a comment type event, skip if so
-		if script_instance.is_comment():
+		if script_instance.is_comment() or script_instance.is_label():
 			if event_root.has(EventConst.item_key_child):
 				await _run_dictionary_list(event_root[EventConst.item_key_child])
 			

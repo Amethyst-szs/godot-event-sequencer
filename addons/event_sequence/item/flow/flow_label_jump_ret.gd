@@ -29,7 +29,7 @@ func get_second_column_config() -> Dictionary:
 	}
 
 func get_icon_path() -> String:
-	return "res://icon.svg"
+	return "res://addons/event_sequence/icon/EventItem-FlowLabelJumpRet.svg"
 
 func run(event_node: EventNode) -> EventConst.ItemResponseType:
 	if event_variable.is_empty() or not event_node.label_list.has(event_variable):
