@@ -8,6 +8,7 @@ func _ready():
 	set_column_expand(EventConst.EditorColumn.NAME, true)
 	set_column_expand(EventConst.EditorColumn.VARIABLE, true)
 	set_column_expand(EventConst.EditorColumn.USERDATA, false)
+	set_column_custom_minimum_width(EventConst.EditorColumn.USERDATA, 120)
 	
 	# Set default names for each column
 	set_column_title(EventConst.EditorColumn.NAME, "Name")

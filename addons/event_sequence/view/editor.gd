@@ -9,6 +9,7 @@ var save_timer: float = -1.0
 @onready var notree_screen: MarginContainer = $NoTree
 
 @onready var tree: Tree = %Tree
+@onready var copy_paste_tree: Tree = %CopyPasteDataTree
 @onready var tree_header_menu: MenuBar = %HeaderMenu
 @onready var popup_tree_add: Popup = $TreeAddPopup
 @onready var popup_userdata_edit: Popup = $UserdataEditPopup
@@ -59,18 +60,35 @@ func _input(event: InputEvent):
 	if not selected_node or not visible:
 		return
 	
+	# Check for actions built in to Godot
+	if Input.is_action_just_pressed("ui_cut"):
+		copy_paste_tree.cut()
+		get_viewport().set_input_as_handled()
+	
+	if Input.is_action_just_pressed("ui_copy"):
+		copy_paste_tree.copy()
+		get_viewport().set_input_as_handled()
+	
+	if Input.is_action_just_pressed("ui_paste"):
+		copy_paste_tree.paste()
+		get_viewport().set_input_as_handled()
+	
+	if Input.is_action_just_pressed("ui_graph_delete"):
+		var item: TreeItem = tree.get_next_selected(null)
+		while item != null:
+			item.free()
+			item = tree.get_next_selected(item)
+		
+		save()
+		get_viewport().set_input_as_handled()
+	
+	# Check for special events that aren't built into Godot
 	if event is InputEventKey and event.is_pressed():
 		match event.as_text():
 			"Ctrl+S", "Command+S", "F5", "F6":
 				save()
-			"Delete":
-				var item: TreeItem = tree.get_next_selected(null)
-				while item != null:
-					item.free()
-					item = tree.get_next_selected(item)
-				
-				save()
-				get_viewport().set_input_as_handled()
+			"Ctrl+M", "Command+M":
+				_set_macro_flag(true)
 
 func _tree_cell_clicked():
 	var select: TreeItem = tree.get_next_selected(null)
@@ -320,6 +338,38 @@ func _macro_create():
 	
 	popup_tree_add._ready()
 
+func _on_macro_delete_window_files_selected(paths: PackedStringArray):
+	for path in paths:
+		var error := DirAccess.remove_absolute(path)
+		if error != OK:
+			printerr("Deleting macro failed: %s (%s)" % [error, path])
+	
+	popup_tree_add._ready()
+
+func _set_macro_flag(is_toggle: bool, value: bool = false):
+	var item: TreeItem = tree.get_selected()
+	if item:
+		if not is_toggle:
+			item.set_meta(EventConst.item_key_flag_macro, value)
+		else:
+			var old: bool = item.get_meta(EventConst.item_key_flag_macro)
+			item.set_meta(EventConst.item_key_flag_macro, not old)
+		
+		_tree_refresh()
+
+#endregion
+
+#region Top-bar menu buttons pressed
+
+func _on_edit_index_pressed(index):
+	match(index):
+		0:
+			copy_paste_tree.copy(true)
+		1:
+			copy_paste_tree.copy(false)
+		2:
+			copy_paste_tree.paste()
+
 func _on_macro_menu_index_pressed(index):
 	match(index):
 		0:
@@ -330,22 +380,8 @@ func _on_macro_menu_index_pressed(index):
 			popup_macro_delete.ok_button_text = "Delete Macro(s)"
 			popup_macro_delete.popup()
 		3:
-			var item: TreeItem = tree.get_selected()
-			if item:
-				item.set_meta(EventConst.item_key_flag_macro, true)
-				_tree_refresh()
+			_set_macro_flag(false, true)
 		4:
-			var item: TreeItem = tree.get_selected()
-			if item:
-				item.set_meta(EventConst.item_key_flag_macro, false)
-				_tree_refresh()
-
-func _on_macro_delete_window_files_selected(paths: PackedStringArray):
-	for path in paths:
-		var error := DirAccess.remove_absolute(path)
-		if error != OK:
-			printerr("Deleting macro failed: %s (%s)" % [error, path])
-	
-	popup_tree_add._ready()
+			_set_macro_flag(false, false)
 
 #endregion

@@ -1,8 +1,9 @@
-[gd_scene load_steps=13 format=3 uid="uid://bx5hddkgml270"]
+[gd_scene load_steps=14 format=3 uid="uid://bx5hddkgml270"]
 
 [ext_resource type="Script" path="res://addons/event_sequence/view/editor.gd" id="1_xiffy"]
 [ext_resource type="Script" path="res://addons/event_sequence/view/popup_add.gd" id="2_06btc"]
 [ext_resource type="Script" path="res://addons/event_sequence/view/event_tree.gd" id="2_gw54i"]
+[ext_resource type="Script" path="res://addons/event_sequence/view/copy_paste_tree.gd" id="3_dhmyj"]
 [ext_resource type="Script" path="res://addons/event_sequence/view/popup_userdata.gd" id="4_fx4fc"]
 [ext_resource type="Theme" uid="uid://bf6cuebgrordf" path="res://addons/event_sequence/view/theme/event_edit_dark.theme" id="4_xs70i"]
 [ext_resource type="Script" path="res://addons/event_sequence/view/popup_macro.gd" id="6_xaigg"]
@@ -57,6 +58,16 @@ size_flags_vertical = 0
 flat = true
 prefer_global_menu = false
 
+[node name="Edit" type="PopupMenu" parent="TreeContainer/VBox/Header/HeaderMenu"]
+disable_3d = true
+item_count = 3
+item_0/text = "Cut (Ctrl+X)"
+item_0/id = 0
+item_1/text = "Copy (Ctrl+C)"
+item_1/id = 1
+item_2/text = "Paste (Ctrl+V)"
+item_2/id = 2
+
 [node name="Macros" type="PopupMenu" parent="TreeContainer/VBox/Header/HeaderMenu"]
 disable_3d = true
 item_count = 5
@@ -68,15 +79,19 @@ item_2/text = ""
 item_2/id = 2
 item_2/disabled = true
 item_2/separator = true
-item_3/text = "Add Macro Tag to Selected"
+item_3/text = "Add Macro Tag to Selected (Ctrl+M)"
 item_3/id = 3
-item_4/text = "Remove Macro Tag from Selected"
+item_4/text = "Remove Macro Tag from Selected (Ctrl+M)"
 item_4/id = 4
 
-[node name="Tree" type="Tree" parent="TreeContainer/VBox"]
-unique_name_in_owner = true
+[node name="TreeAligner" type="HBoxContainer" parent="TreeContainer/VBox"]
 layout_mode = 2
 size_flags_vertical = 3
+
+[node name="Tree" type="Tree" parent="TreeContainer/VBox/TreeAligner"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/v_separation = 8
 theme_override_constants/draw_relationship_lines = 1
 theme_override_constants/relationship_line_width = 2
@@ -92,12 +107,41 @@ select_mode = 2
 scroll_horizontal_enabled = false
 script = ExtResource("2_gw54i")
 
+[node name="CopyPasteTreeAligner" type="VBoxContainer" parent="TreeContainer/VBox/TreeAligner"]
+layout_mode = 2
+
+[node name="Header" type="Label" parent="TreeContainer/VBox/TreeAligner/CopyPasteTreeAligner"]
+layout_mode = 2
+text = "Copy Preview"
+horizontal_alignment = 1
+
+[node name="CopyPasteDataTree" type="Tree" parent="TreeContainer/VBox/TreeAligner/CopyPasteTreeAligner"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/v_separation = 8
+theme_override_constants/draw_relationship_lines = 1
+theme_override_constants/relationship_line_width = 2
+theme_override_constants/parent_hl_line_width = 2
+theme_override_constants/children_hl_line_width = 2
+theme_override_constants/icon_max_width = 28
+theme_override_constants/scrollbar_margin_right = 15
+columns = 3
+allow_search = false
+hide_folding = true
+enable_recursive_folding = false
+hide_root = true
+select_mode = 2
+scroll_horizontal_enabled = false
+scroll_vertical_enabled = false
+script = ExtResource("3_dhmyj")
+
 [node name="TreeAddPopup" type="Popup" parent="."]
 disable_3d = true
 transparent_bg = true
 position = Vector2i(50, 50)
 size = Vector2i(508, 400)
-visible = true
 transparent = true
 script = ExtResource("2_06btc")
 
@@ -287,6 +331,7 @@ layout_mode = 2
 texture = ExtResource("8_eemvt")
 stretch_mode = 1
 
+[connection signal="index_pressed" from="TreeContainer/VBox/Header/HeaderMenu/Edit" to="." method="_on_edit_index_pressed"]
 [connection signal="index_pressed" from="TreeContainer/VBox/Header/HeaderMenu/Macros" to="." method="_on_macro_menu_index_pressed"]
 [connection signal="pressed" from="TreeAddPopup/ScrollContainer/VBox/Button" to="TreeAddPopup" method="_on_debug_refresh_pressed"]
 [connection signal="files_selected" from="MacroDeleteWindow" to="." method="_on_macro_delete_window_files_selected"]
