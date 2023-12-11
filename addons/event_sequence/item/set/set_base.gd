@@ -9,7 +9,7 @@ func get_editor_tab() -> EventConst.EditorDialogTab:
 	return EventConst.EditorDialogTab.Set
 
 func is_allow_in_editor() -> bool:
-	return true
+	return false
 
 func get_first_column_config() -> Dictionary:
 	return {
