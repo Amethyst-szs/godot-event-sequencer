@@ -194,7 +194,7 @@ func is_valid_event_variable(event_node: EventNode, is_fetching: bool) -> bool:
 
 func is_valid_userdata(key: String) -> bool:
 	if not userdata.has(key):
-		warn("Value wasn't set in data! Double-check your sequence.")
+		warn("\"%s\" value wasn't set in editor!" % [key])
 		return false
 	
 	return true

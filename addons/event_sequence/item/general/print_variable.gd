@@ -25,6 +25,6 @@ func get_icon_path() -> String:
 
 func run(event_node: EventNode) -> EventConst.ItemResponseType:
 	if not event_variable.is_empty() and event_node.var_database.has(event_variable):
-		print(event_node.var_database[event_variable])
+		print("%s: %s" % [name, event_node.var_database[event_variable]])
 	
 	return EventConst.ItemResponseType.OK
