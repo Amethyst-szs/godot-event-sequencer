@@ -9,6 +9,7 @@ enum ItemResponseType {
 	SKIP_CHILDREN,
 	JUMP,
 	JUMP_AND_RETURN,
+	LOOP_FOR,
 	TERMINATE,
 }
 

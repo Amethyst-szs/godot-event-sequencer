@@ -13,6 +13,7 @@ class_name EventNode
 # Status
 @export var is_terminating: bool = false
 @export var label_jump_target: String = ""
+@export var new_for_loop_length: int = -1
 
 func _ready():
 	if not Engine.is_editor_hint():
@@ -73,8 +74,9 @@ func start_from_label(label: String, is_external_call: bool = true):
 	label_jump_target = ""
 	await _run_dictionary_list(dict, is_external_call, idx_path.back())
 
-func _run_dictionary_list(list: Array[Dictionary], is_first_recursion: bool = false, start_idx: int = 0):
+func _run_dictionary_list(list: Array[Dictionary], is_first_recursion: bool = false, start_idx: int = 0, loop_count: int = -1):
 	var idx: int = start_idx
+	var loops: int = loop_count
 	
 	while idx < list.size():
 		# Leave here if terminating or jumping to label
@@ -116,8 +118,16 @@ func _run_dictionary_list(list: Array[Dictionary], is_first_recursion: bool = fa
 				continue
 			EventConst.ItemResponseType.JUMP_AND_RETURN:
 				await start_from_label(label_jump_target, false)
+			EventConst.ItemResponseType.LOOP_FOR:
+				if event_root.has(EventConst.item_key_child):
+					await _run_dictionary_list(event_root[EventConst.item_key_child], false, 0, new_for_loop_length)
 			EventConst.ItemResponseType.TERMINATE:
 				is_terminating = true
+		
+		# If at the end of a for loop, restart here
+		if idx >= list.size() and loop_count > 0:
+			loop_count -= 1
+			idx = start_idx
 	
 	# Once iterating through events is complete, cleanup
 	if is_first_recursion and label_jump_target.is_empty():
