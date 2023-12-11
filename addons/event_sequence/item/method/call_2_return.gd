@@ -53,7 +53,7 @@ func get_color() -> Color:
 	return Color.LIME_GREEN
 
 func get_icon_path() -> String:
-	return "res://icon.svg"
+	return "res://addons/event_sequence/icon/EventItem-MethodCallRet.svg"
 
 #endregion
 

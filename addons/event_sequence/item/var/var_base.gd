@@ -27,6 +27,3 @@ func get_second_column_config() -> Dictionary:
 
 func get_color() -> Color:
 	return Color.GOLD.darkened(0.2)
-
-func get_icon_path() -> String:
-	return "res://icon.svg"

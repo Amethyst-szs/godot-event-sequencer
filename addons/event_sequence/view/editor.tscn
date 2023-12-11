@@ -83,7 +83,7 @@ script = ExtResource("2_gw54i")
 disable_3d = true
 transparent_bg = true
 position = Vector2i(50, 50)
-size = Vector2i(433, 400)
+size = Vector2i(508, 400)
 transparent = true
 script = ExtResource("2_06btc")
 

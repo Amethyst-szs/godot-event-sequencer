@@ -48,7 +48,7 @@ func get_color() -> Color:
 	return Color.LIME_GREEN
 
 func get_icon_path() -> String:
-	return "res://icon.svg"
+	return "res://addons/event_sequence/icon/EventItem-MethodCall.svg"
 
 func run(event_node: EventNode) -> EventConst.ItemResponseType:
 	if not is_valid_userdata("object") or not is_valid_userdata("method"):
