@@ -132,7 +132,7 @@ func _tree_refresh():
 	if not selected_node:
 		return
 	
-	selected_node.event_list = _build_dict_from_tree(tree.get_root())
+	save()
 	_new_tree()
 
 #endregion
