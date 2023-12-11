@@ -54,11 +54,19 @@ prefer_global_menu = false
 
 [node name="Macros" type="PopupMenu" parent="TreeContainer/VBox/Header/HeaderMenu"]
 disable_3d = true
-item_count = 2
-item_0/text = "Create Macro"
+item_count = 5
+item_0/text = "Create Macro from Selected"
 item_0/id = 0
 item_1/text = "Delete Macros"
 item_1/id = 1
+item_2/text = ""
+item_2/id = 2
+item_2/disabled = true
+item_2/separator = true
+item_3/text = "Add Macro Tag to Selected"
+item_3/id = 3
+item_4/text = "Remove Macro Tag from Selected"
+item_4/id = 4
 
 [node name="Tree" type="Tree" parent="TreeContainer/VBox"]
 unique_name_in_owner = true

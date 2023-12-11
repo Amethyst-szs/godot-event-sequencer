@@ -24,8 +24,8 @@ const item_key_userdata_generic: String = "input"
 const ScriptScanFolders: Array[String] = [
 	"res://addons/event_sequence/item/general/",
 	"res://addons/event_sequence/item/var/",
-	"res://addons/event_sequence/item/method/",
 	"res://addons/event_sequence/item/set/",
+	"res://addons/event_sequence/item/method/",
 	"res://addons/event_sequence/item/flow/",
 ]
 
@@ -35,8 +35,8 @@ const ScriptMacroFolder: String = "res://addons/event_sequence/macro/"
 enum EditorDialogTab {
 	General,
 	Variable,
-	Method,
 	Set,
+	Method,
 	Flow,
 	Plugin,
 }

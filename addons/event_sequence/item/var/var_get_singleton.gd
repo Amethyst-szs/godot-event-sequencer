@@ -35,4 +35,5 @@ func run(event_node: EventNode) -> EventConst.ItemResponseType:
 	warn("EventNode tried to get Singleton/Autoload \"%s\" but couldn't find it!"
 			% [singleton_name])
 	
+	event_node.var_database[event_variable] = null
 	return EventConst.ItemResponseType.OK

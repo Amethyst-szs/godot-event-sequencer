@@ -329,6 +329,16 @@ func _on_macro_menu_index_pressed(index):
 			popup_macro_delete.title = "Select macros to delete"
 			popup_macro_delete.ok_button_text = "Delete Macro(s)"
 			popup_macro_delete.popup()
+		3:
+			var item: TreeItem = tree.get_selected()
+			if item:
+				item.set_meta("is_macro_root", true)
+				_tree_refresh()
+		4:
+			var item: TreeItem = tree.get_selected()
+			if item:
+				item.set_meta("is_macro_root", false)
+				_tree_refresh()
 
 func _on_macro_delete_window_files_selected(paths: PackedStringArray):
 	for path in paths:
