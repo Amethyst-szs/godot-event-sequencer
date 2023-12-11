@@ -58,7 +58,6 @@ func run(event_node: EventNode) -> EventConst.ItemResponseType:
 	# Generate GDScript file at runtime
 	var script := GDScript.new()
 	script.source_code = "func condition(_input):\n\t%s" % [userdata["condition"]]
-	print(script.source_code)
 	var error: Error = script.reload()
 	
 	# Ensure script was compiled correctly
@@ -75,5 +74,7 @@ func run(event_node: EventNode) -> EventConst.ItemResponseType:
 		error("Condition returned non-bool value, check your GDScript!\nValue: %s" % result)
 		return EventConst.ItemResponseType.TERMINATE
 	
-	print(result)
-	return EventConst.ItemResponseType.OK
+	if result == true:
+		return EventConst.ItemResponseType.OK
+	else:
+		return EventConst.ItemResponseType.SKIP_CHILDREN
