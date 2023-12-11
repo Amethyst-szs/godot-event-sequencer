@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bx5hddkgml270"]
+[gd_scene load_steps=14 format=3 uid="uid://bx5hddkgml270"]
 
 [ext_resource type="Script" path="res://addons/event_sequence/view/editor.gd" id="1_xiffy"]
 [ext_resource type="Script" path="res://addons/event_sequence/view/popup_add.gd" id="2_06btc"]
@@ -10,6 +10,7 @@
 [ext_resource type="Shader" path="res://addons/event_sequence/view/shader/idle_anim.gdshader" id="7_uk2by"]
 [ext_resource type="Texture2D" uid="uid://28if880u1ad1" path="res://icon.svg" id="8_eemvt"]
 [ext_resource type="Texture2D" uid="uid://l2h2thooxa1t" path="res://addons/event_sequence/icon/Required.svg" id="8_k7kc6"]
+[ext_resource type="Script" path="res://addons/event_sequence/view/popup_plugin.gd" id="9_6h4ls"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_apxsf"]
 
@@ -78,6 +79,12 @@ item_3/text = "Add Macro Tag to Selected (Ctrl+M)"
 item_3/id = 3
 item_4/text = "Remove Macro Tag from Selected (Ctrl+M)"
 item_4/id = 4
+
+[node name="Plugins" type="PopupMenu" parent="TreeContainer/VBox/Header/HeaderMenu"]
+disable_3d = true
+item_count = 1
+item_0/text = "Open Plugin Manager"
+item_0/id = 0
 
 [node name="TreeAligner" type="HBoxContainer" parent="TreeContainer/VBox"]
 layout_mode = 2
@@ -288,6 +295,33 @@ layout_mode = 2
 size_flags_vertical = 8
 text = "Create"
 
+[node name="PluginInstallerPopup" type="Popup" parent="."]
+disable_3d = true
+title = "Event Sequencer Plugin Manager"
+initial_position = 1
+size = Vector2i(600, 300)
+wrap_controls = false
+unresizable = false
+borderless = false
+script = ExtResource("9_6h4ls")
+
+[node name="Panel" type="PanelContainer" parent="PluginInstallerPopup"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+
+[node name="VBox" type="VBoxContainer" parent="PluginInstallerPopup/Panel"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PluginInstallerPopup/Panel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+text = "Placeholder :)"
+
 [node name="MacroDeleteWindow" type="FileDialog" parent="."]
 disable_3d = true
 title = "Open File(s)"
@@ -331,5 +365,6 @@ stretch_mode = 1
 
 [connection signal="index_pressed" from="TreeContainer/VBox/Header/HeaderMenu/Edit" to="." method="_on_edit_index_pressed"]
 [connection signal="index_pressed" from="TreeContainer/VBox/Header/HeaderMenu/Macros" to="." method="_on_macro_menu_index_pressed"]
+[connection signal="index_pressed" from="TreeContainer/VBox/Header/HeaderMenu/Plugins" to="." method="_on_plugins_index_pressed"]
 [connection signal="pressed" from="TreeAddPopup/ScrollContainer/VBox/Button" to="TreeAddPopup" method="_on_debug_refresh_pressed"]
 [connection signal="files_selected" from="MacroDeleteWindow" to="." method="_on_macro_delete_window_files_selected"]

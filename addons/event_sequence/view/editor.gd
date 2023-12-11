@@ -11,11 +11,13 @@ var save_timer: float = -1.0
 @onready var tree: Tree = %Tree
 @onready var copy_paste_tree: Tree = %CopyPasteDataTree
 @onready var tree_header_menu: MenuBar = %HeaderMenu
+
 @onready var popup_tree_add: Popup = $TreeAddPopup
 @onready var popup_userdata_edit: Popup = $UserdataEditPopup
 @onready var popup_macros: Popup = $MacroPopup
 @onready var popup_macro_delete: FileDialog = $MacroDeleteWindow
 @onready var userdata_edit_list := $UserdataEditPopup/Scroll/List
+@onready var popup_plugin_installer: Popup = $PluginInstallerPopup
 
 var selected_node: EventNode = null
 
@@ -384,4 +386,11 @@ func _on_macro_menu_index_pressed(index):
 		4:
 			_set_macro_flag(false, false)
 
+func _on_plugins_index_pressed(index):
+	match(index):
+		0:
+			popup_plugin_installer.popup()
+
 #endregion
+
+
