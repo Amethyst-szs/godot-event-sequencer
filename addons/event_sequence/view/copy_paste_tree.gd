@@ -39,6 +39,8 @@ func copy(is_cut: bool = false):
 				parent.remove_child(selection)
 			
 			selection = next
+		
+		editor._tree_refresh()
 
 func paste():
 	duplicate_and_move(self, main_tree, false)
