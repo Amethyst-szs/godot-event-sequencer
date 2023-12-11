@@ -199,14 +199,14 @@ func _try_build_tree(parent: TreeItem = null, dict_list: Array = []) -> bool:
 			continue
 		
 		# Create a new tree item and add it using the current parent and dictionary
-		var item: TreeItem = _build_item_from_dict(parent, event_dict[EventConst.item_key_self], event_dict.has("macro"))
+		var item := _build_item_from_dict(parent, event_dict[EventConst.item_key_self], event_dict.has(EventConst.item_key_macro))
 		
 		# If this dict marks itself as a macro, add metadata to tree item
-		var is_macro_root: bool = event_dict.has("macro")
-		item.set_meta("is_macro_root", is_macro_root)
+		var is_macro_root: bool = event_dict.has(EventConst.item_key_macro)
+		item.set_meta(EventConst.item_key_flag_macro, is_macro_root)
 		
 		# If this dict is a label marker, add label metadata tag
-		item.set_meta("is_label", event_dict.has("is_label"))
+		item.set_meta(EventConst.item_key_flag_label, event_dict.has(EventConst.item_key_flag_label))
 		
 		# Check if this dictionary has children
 		if not event_dict.has(EventConst.item_key_child):
@@ -238,11 +238,11 @@ func _build_dict_from_tree(root: TreeItem) -> Array[Dictionary]:
 		var dict: Dictionary = {}
 		dict[EventConst.item_key_self] = _build_dict_from_item(child)
 		
-		if child.has_meta("is_macro_root") and child.get_meta("is_macro_root"):
-			dict["macro"] = true
+		if child.has_meta(EventConst.item_key_flag_macro) and child.get_meta(EventConst.item_key_flag_macro):
+			dict[EventConst.item_key_macro] = true
 		
-		if child.has_meta("is_label") and child.get_meta("is_label"):
-			dict["is_label"] = true
+		if child.has_meta(EventConst.item_key_flag_label) and child.get_meta(EventConst.item_key_flag_label):
+			dict[EventConst.item_key_flag_label] = true
 		
 		if child.get_child_count() > 0:
 			dict[EventConst.item_key_child] = _build_dict_from_tree(child)
@@ -332,12 +332,12 @@ func _on_macro_menu_index_pressed(index):
 		3:
 			var item: TreeItem = tree.get_selected()
 			if item:
-				item.set_meta("is_macro_root", true)
+				item.set_meta(EventConst.item_key_flag_macro, true)
 				_tree_refresh()
 		4:
 			var item: TreeItem = tree.get_selected()
 			if item:
-				item.set_meta("is_macro_root", false)
+				item.set_meta(EventConst.item_key_flag_macro, false)
 				_tree_refresh()
 
 func _on_macro_delete_window_files_selected(paths: PackedStringArray):

@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://addons/event_sequence/view/popup_add.gd" id="2_06btc"]
 [ext_resource type="Script" path="res://addons/event_sequence/view/event_tree.gd" id="2_gw54i"]
 [ext_resource type="Script" path="res://addons/event_sequence/view/popup_userdata.gd" id="4_fx4fc"]
-[ext_resource type="Theme" uid="uid://bf6cuebgrordf" path="res://addons/event_sequence/view/event_edit_dark.theme" id="4_vdnhk"]
+[ext_resource type="Theme" uid="uid://bf6cuebgrordf" path="res://addons/event_sequence/view/theme/event_edit_dark.theme" id="4_xs70i"]
 [ext_resource type="Script" path="res://addons/event_sequence/view/popup_macro.gd" id="6_xaigg"]
 [ext_resource type="Shader" path="res://addons/event_sequence/view/shader/idle_anim.gdshader" id="7_uk2by"]
 [ext_resource type="Texture2D" uid="uid://28if880u1ad1" path="res://icon.svg" id="8_eemvt"]
@@ -108,7 +108,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 3
-theme = ExtResource("4_vdnhk")
+theme = ExtResource("4_xs70i")
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 2
 
@@ -148,7 +148,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("4_vdnhk")
+theme = ExtResource("4_xs70i")
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 2
 metadata/_edit_use_anchors_ = true
@@ -172,7 +172,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("4_vdnhk")
+theme = ExtResource("4_xs70i")
 
 [node name="VBox" type="VBoxContainer" parent="MacroPopup/Panel"]
 layout_mode = 2

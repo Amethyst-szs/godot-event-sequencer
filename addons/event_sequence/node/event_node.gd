@@ -40,7 +40,7 @@ func preload_scripts_and_labels(dict_list: Array[Dictionary], index_path: Array[
 		self_index_path.push_back(dict_list.find(event))
 		
 		# If this event is a label marker, add to label list
-		if event.has("is_label"):
+		if event.has(EventConst.item_key_flag_label):
 			var label_name: String = event[EventConst.item_key_self][EventConst.item_key_name]
 			if label_list.has(label_name):
 				push_warning("EventNode \"%s\" has multiple labels with name \"%s\"" % [name, label_name])

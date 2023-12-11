@@ -5,7 +5,7 @@ class_name EventItemBase
 #region Overridable Config
 
 func get_name() -> String:
-	return "Event Item Base"
+	return "EventItemBase"
 
 func get_description() -> String:
 	return "Base class for all event items"
@@ -43,7 +43,7 @@ func get_color() -> Color:
 	return Color.RED
 
 func get_icon_path() -> String:
-	return "res://icon.svg"
+	return "res://addons/event_sequence/icon/IconFlat.svg"
 
 #endregion
 
@@ -85,7 +85,7 @@ func add_to_tree(parent: TreeItem, editor: Control, is_macro: bool) -> TreeItem:
 	
 	# Mark as label if is label
 	if is_label():
-		item.set_meta("is_label", true)
+		item.set_meta(EventConst.item_key_flag_label, true)
 	
 	# Name column
 	if name.is_empty():
@@ -160,7 +160,12 @@ func build_userdata_from_tree(item: TreeItem) -> Dictionary:
 	userdata = {}
 	
 	for meta in item.get_meta_list():
+		# Ensure this isn't an internal value we shouldn't read
 		if meta.begins_with("__"):
+			continue
+		
+		# Ensure we aren't reading the flags, those aren't part of regular userdata
+		if meta == EventConst.item_key_flag_macro or meta == EventConst.item_key_flag_label:
 			continue
 		
 		userdata[meta] = item.get_meta(meta)
@@ -195,7 +200,7 @@ func is_valid_event_variable(event_node: EventNode, is_fetching: bool) -> bool:
 
 func is_valid_userdata(key: String) -> bool:
 	if not userdata.has(key):
-		warn("\"%s\" value wasn't set in editor!" % [key])
+		warn("\"%s\" value wasn't set in editor!" % [get_second_column_config()["name"]])
 		return false
 	
 	return true

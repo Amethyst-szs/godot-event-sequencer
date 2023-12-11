@@ -7,7 +7,9 @@ func get_name() -> String:
 	return "If Condition"
 
 func get_description() -> String:
-	return "Only play this item's children if this variable matches a condition"
+	return "Only play this item's children if this variable matches a condition
+		The code is compiled at runtime, making this not performance friendly.
+		Try to avoid writing more than a couple simple lines."
 
 func get_editor_tab() -> EventConst.EditorDialogTab:
 	return EventConst.EditorDialogTab.Flow

@@ -45,7 +45,11 @@ func _ready():
 		if macro.is_empty():
 			continue
 		
-		var macro_meta: Dictionary = macro["macro"]
+		if not macro.has(EventConst.item_key_macro):
+			push_warning("Macro \"%s\" is corrupted, skipping." % [file])
+			continue
+		
+		var macro_meta: Dictionary = macro[EventConst.item_key_macro]
 		
 		if not macro_tabs.has_node(macro_meta["category"]):
 			_create_macro_category(macro_tabs, macro_meta["category"])
@@ -148,12 +152,12 @@ func _pressed_macro_button(path: String, macro_name: String):
 	
 	# Get data from macro file
 	var data: Dictionary = _read_macro_file(path)
-	if not data.has("self"):
-		printerr("Bad macro data! (Missing \"self\" key)")
+	if not data.has(EventConst.item_key_self):
+		printerr("Bad macro data! (Missing \"%s\" key)" % [EventConst.item_key_self])
 		return
 	
 	# Override the first item name with the macro name
-	data["self"]["name"] = macro_name
+	data[EventConst.item_key_self][EventConst.item_key_name] = macro_name
 	
 	# Add data into node dict and reload tree
 	event_node.event_list.push_back(data)

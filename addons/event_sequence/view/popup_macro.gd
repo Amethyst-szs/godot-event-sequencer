@@ -71,7 +71,7 @@ func write_macro(self_data: Dictionary, child_data: Array[Dictionary]):
 	var macro_dict: Dictionary = {}
 	macro_dict[EventConst.item_key_self] = self_data
 	macro_dict[EventConst.item_key_child] = child_data
-	macro_dict["macro"] = macro_create_data
+	macro_dict[EventConst.item_key_macro] = macro_create_data
 	
 	# Write JSON to disk
 	var json_string: String = JSON.stringify(macro_dict, "\t")

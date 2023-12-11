@@ -1,6 +1,8 @@
 @tool
 class_name EventConst
 
+#region EventItem constants
+
 # EventItem run response types
 enum ItemResponseType {
 	OK,
@@ -11,14 +13,22 @@ enum ItemResponseType {
 }
 
 # EventItem dictionary keys
-const item_key_self: String = "self"
-const item_key_child: String = "children"
+const item_key_self: String = "s"
+const item_key_child: String = "c"
 
-const item_key_name: String = "name"
-const item_key_script: String = "script"
+const item_key_name: String = "n"
+const item_key_script: String = "src"
+const item_key_macro: String = "m"
 const item_key_variable: String = "v"
 const item_key_userdata: String = "u"
-const item_key_userdata_generic: String = "input"
+const item_key_userdata_generic: String = "i"
+
+const item_key_flag_macro: String = "f_macro"
+const item_key_flag_label: String = "f_label"
+
+#endregion
+
+#region Editor Constants
 
 # Folders to scan for scripts in the "add tree item" dialog
 const ScriptScanFolders: Array[String] = [
@@ -47,3 +57,5 @@ enum EditorColumn {
 	VARIABLE,
 	USERDATA,
 }
+
+#endregion
