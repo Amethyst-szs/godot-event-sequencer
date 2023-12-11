@@ -109,9 +109,11 @@ script = ExtResource("2_gw54i")
 
 [node name="CopyPasteTreeAligner" type="VBoxContainer" parent="TreeContainer/VBox/TreeAligner"]
 layout_mode = 2
+size_flags_horizontal = 8
 
 [node name="Header" type="Label" parent="TreeContainer/VBox/TreeAligner/CopyPasteTreeAligner"]
 layout_mode = 2
+size_flags_horizontal = 4
 text = "Copy Preview"
 horizontal_alignment = 1
 
@@ -119,6 +121,7 @@ horizontal_alignment = 1
 unique_name_in_owner = true
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
+size_flags_horizontal = 8
 size_flags_vertical = 3
 theme_override_constants/v_separation = 8
 theme_override_constants/draw_relationship_lines = 1
