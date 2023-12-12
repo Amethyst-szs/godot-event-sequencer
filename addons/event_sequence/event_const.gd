@@ -50,7 +50,6 @@ enum EditorDialogTab {
 	Set,
 	Method,
 	Flow,
-	Plugin,
 }
 
 # Editor tree columns

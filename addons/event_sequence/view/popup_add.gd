@@ -6,6 +6,9 @@ extends Popup
 @onready var tree: Tree = %Tree
 @onready var tabs: TabContainer = %AddPopupTabs
 
+# Constants
+const plugin_folder: String = "res://addons/event_sequence/plugin/"
+
 func _ready():
 	# Destroy any pre-existing tabs
 	for item in tabs.get_children():
@@ -24,6 +27,19 @@ func _ready():
 		var dir: DirAccess = DirAccess.open(path)
 		for file in dir.get_files():
 			_create_button(path + file)
+	
+	# Add plugin tab to interface
+	var plugin_container: VBoxContainer = VBoxContainer.new()
+	plugin_container.name = "Plugins"
+	tabs.add_child(plugin_container)
+	
+	# Create new menu tab container for each plugin
+	var plugin_tabs: TabContainer = TabContainer.new()
+	plugin_tabs.clip_tabs = false
+	plugin_container.add_child(plugin_tabs)
+	
+	# Add all enabled plugin buttons to interface
+	_setup_plugins(plugin_tabs)
 	
 	# Fetch macro directory and add new menu tab
 	DirAccess.make_dir_recursive_absolute(EventConst.ScriptMacroFolder)
@@ -59,7 +75,7 @@ func _ready():
 
 #region Built-in button methods
 
-func _create_button(script_path: String) -> void:
+func _create_button(script_path: String, custom_container: Control = null) -> void:
 	if not script_path.ends_with(".gd"):
 		return
 	
@@ -85,8 +101,11 @@ func _create_button(script_path: String) -> void:
 	button.add_theme_constant_override("font_size", 22)
 	
 	# Add button to parent tab
-	var parent: VBoxContainer = tabs.get_child(item.get_editor_tab())
-	parent.add_child(button)
+	if not custom_container:
+		var parent: VBoxContainer = tabs.get_child(item.get_editor_tab())
+		parent.add_child(button)
+	else:
+		custom_container.add_child(button)
 	
 	# Connect button to signal function
 	button.pressed.connect(_button_pressed.bind(script_path))
@@ -113,6 +132,51 @@ func _button_pressed(script_path: String):
 
 func _on_debug_refresh_pressed():
 	_ready()
+
+#endregion
+
+#region Plugin Methids
+
+func _setup_plugins(container: TabContainer):
+	# Load plugins directory
+	var plugin_dir := DirAccess.open(plugin_folder)
+	if plugin_dir.get_open_error() != OK:
+		printerr("EventNode couldn't open plugins folder")
+		return
+	
+	# For each directory in plugins dir, try to create a new panel
+	for dir in plugin_dir.get_directories():
+		var dir_access := DirAccess.open(plugin_folder + dir)
+		if dir_access.get_open_error() != OK:
+			printerr("EventNode couldn't open %s plugin" % [dir])
+			return
+		
+		# Ensure the directory has a config file
+		if not dir_access.file_exists("esplugin.cfg"):
+			continue
+		
+		# Load configuration
+		var config = ConfigFile.new()
+		config.load(plugin_folder + dir + "/esplugin.cfg")
+		
+		# Check if config is active, and skip if not
+		if not config.get_value("enabled", "is_enabled", false):
+			continue
+		
+		# Create VBox
+		var list := _create_plugin_category(container, config.get_value("esplugin", "name_short", "NoName"))
+		
+		var script_dir_name: String = config.get_value("esplugin", "script_dir", "script")
+		var script_dir := dir_access.open(plugin_folder + dir + "/" + script_dir_name)
+		for item in script_dir.get_files():
+			var button_script := "%s%s/%s/%s" % [plugin_folder, dir, script_dir_name, item]
+			_create_button(button_script, list)
+
+func _create_plugin_category(container: TabContainer, category: String) -> VBoxContainer:
+	var box := VBoxContainer.new()
+	box.name = category
+	container.add_child(box)
+	return box
 
 #endregion
 

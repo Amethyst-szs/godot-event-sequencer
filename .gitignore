@@ -2,7 +2,7 @@
 .godot/
 
 # Remove testing folder
-test/
+/test/
 
 # Remove macros
 addons/event_sequence/macro/

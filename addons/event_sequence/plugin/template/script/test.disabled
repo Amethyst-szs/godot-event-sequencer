@@ -1,0 +1,52 @@
+@tool
+extends EventItemBase
+
+func get_name() -> String:
+	return "Example Item"
+
+func get_description() -> String:
+	return "A test item provived by the example plugin"
+
+func is_allow_in_editor() -> bool:
+	return true
+
+func get_first_column_config() -> Dictionary:
+	return {
+		"name": "None",
+		"editable": false,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_second_column_config() -> Dictionary:
+	return {
+		"name": "Config",
+		"editable": true,
+		"cell_mode": TreeItem.CELL_MODE_CUSTOM
+	}
+
+func get_userdata_keys() -> Array[Dictionary]:
+	return [
+		{
+			"name": "config1",
+			"display_name": "First Config",
+			"desc": "Editable Value",
+			"type": TYPE_STRING,
+			"require": true,
+		},
+		{
+			"name": "config2",
+			"desc": "Other editable Value",
+			"type": TYPE_FLOAT,
+			"require": true,
+		},
+	]
+
+func get_color() -> Color:
+	return Color.HOT_PINK
+
+func get_icon_path() -> String:
+	return "res://addons/event_sequence/icon/IconFlat.svg"
+
+func run(event_node: EventNode) -> EventConst.ItemResponseType:
+	print("Example item code!")
+	return EventConst.ItemResponseType.OK
