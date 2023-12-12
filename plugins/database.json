@@ -11,6 +11,196 @@
 			"files": [
 				"test_item.gd"
 			],
-		}
+		},
+		{
+			"path": "test_plugin",
+			"name": "Test Plugin",
+			"desc": "Test out the plugin system",
+			"icon": "icon.svg",
+			"prerequisites": [],
+			"files": [
+				"test_item.gd"
+			],
+		},
+		{
+			"path": "test_plugin",
+			"name": "Test Plugin",
+			"desc": "Test out the plugin system",
+			"icon": "icon.svg",
+			"prerequisites": [],
+			"files": [
+				"test_item.gd"
+			],
+		},
+		{
+			"path": "test_plugin",
+			"name": "Test Plugin",
+			"desc": "Test out the plugin system",
+			"icon": "icon.svg",
+			"prerequisites": [],
+			"files": [
+				"test_item.gd"
+			],
+		},
+		{
+			"path": "test_plugin",
+			"name": "Test Plugin",
+			"desc": "Test out the plugin system",
+			"icon": "icon.svg",
+			"prerequisites": [],
+			"files": [
+				"test_item.gd"
+			],
+		},
+		{
+			"path": "test_plugin",
+			"name": "Test Plugin",
+			"desc": "Test out the plugin system",
+			"icon": "icon.svg",
+			"prerequisites": [],
+			"files": [
+				"test_item.gd"
+			],
+		},
+		{
+			"path": "test_plugin",
+			"name": "Test Plugin",
+			"desc": "Test out the plugin system",
+			"icon": "icon.svg",
+			"prerequisites": [],
+			"files": [
+				"test_item.gd"
+			],
+		},
+		{
+			"path": "test_plugin",
+			"name": "Test Plugin",
+			"desc": "Test out the plugin system",
+			"icon": "icon.svg",
+			"prerequisites": [],
+			"files": [
+				"test_item.gd"
+			],
+		},
+		{
+			"path": "test_plugin",
+			"name": "Test Plugin",
+			"desc": "Test out the plugin system",
+			"icon": "icon.svg",
+			"prerequisites": [],
+			"files": [
+				"test_item.gd"
+			],
+		},
+		{
+			"path": "test_plugin",
+			"name": "Test Plugin",
+			"desc": "Test out the plugin system",
+			"icon": "icon.svg",
+			"prerequisites": [],
+			"files": [
+				"test_item.gd"
+			],
+		},
+		{
+			"path": "test_plugin",
+			"name": "Test Plugin",
+			"desc": "Test out the plugin system",
+			"icon": "icon.svg",
+			"prerequisites": [],
+			"files": [
+				"test_item.gd"
+			],
+		},
+		{
+			"path": "test_plugin",
+			"name": "Test Plugin",
+			"desc": "Test out the plugin system",
+			"icon": "icon.svg",
+			"prerequisites": [],
+			"files": [
+				"test_item.gd"
+			],
+		},
+		{
+			"path": "test_plugin",
+			"name": "Test Plugin",
+			"desc": "Test out the plugin system",
+			"icon": "icon.svg",
+			"prerequisites": [],
+			"files": [
+				"test_item.gd"
+			],
+		},
+		{
+			"path": "test_plugin",
+			"name": "Test Plugin",
+			"desc": "Test out the plugin system",
+			"icon": "icon.svg",
+			"prerequisites": [],
+			"files": [
+				"test_item.gd"
+			],
+		},
+		{
+			"path": "test_plugin",
+			"name": "Test Plugin",
+			"desc": "Test out the plugin system",
+			"icon": "icon.svg",
+			"prerequisites": [],
+			"files": [
+				"test_item.gd"
+			],
+		},
+		{
+			"path": "test_plugin",
+			"name": "Test Plugin",
+			"desc": "Test out the plugin system",
+			"icon": "icon.svg",
+			"prerequisites": [],
+			"files": [
+				"test_item.gd"
+			],
+		},
+		{
+			"path": "test_plugin",
+			"name": "Test Plugin",
+			"desc": "Test out the plugin system",
+			"icon": "icon.svg",
+			"prerequisites": [],
+			"files": [
+				"test_item.gd"
+			],
+		},
+		{
+			"path": "test_plugin",
+			"name": "Test Plugin",
+			"desc": "Test out the plugin system",
+			"icon": "icon.svg",
+			"prerequisites": [],
+			"files": [
+				"test_item.gd"
+			],
+		},
+		{
+			"path": "test_plugin",
+			"name": "Test Plugin",
+			"desc": "Test out the plugin system",
+			"icon": "icon.svg",
+			"prerequisites": [],
+			"files": [
+				"test_item.gd"
+			],
+		},
+		{
+			"path": "test_plugin",
+			"name": "Test Plugin",
+			"desc": "Test out the plugin system",
+			"icon": "icon.svg",
+			"prerequisites": [],
+			"files": [
+				"test_item.gd"
+			],
+		},
 	],
 }
