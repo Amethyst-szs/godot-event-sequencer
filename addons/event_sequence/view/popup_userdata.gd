@@ -156,6 +156,18 @@ func _add_field(container: Control, key: Dictionary, type: Variant.Type, data, a
 			
 			button.toggled.connect(_field_edited.bind(key, array_index))
 			container.add_child(button)
+		TYPE_COLOR:
+			var button := ColorPickerButton.new()
+			button.text = key["desc"]
+			
+			if data and typeof(data) == TYPE_COLOR:
+				button.color = data
+			
+			if data and typeof(data) == TYPE_ARRAY and typeof(data[array_index]) != TYPE_NIL:
+				button.color = data[array_index]
+			
+			button.color_changed.connect(_field_edited.bind(key, array_index))
+			container.add_child(button)
 
 func _add_item_to_array(key: Dictionary, column: int):
 	var meta = target_item.get_meta(key["name"])

@@ -1,0 +1,44 @@
+@tool
+extends EventItemWipeToolConfigure
+
+func get_name() -> String:
+	return "Create Wipe Preset"
+
+func get_description() -> String:
+	return "Configure and create a new WipeTool preset"
+
+func get_first_column_config() -> Dictionary:
+	return {
+		"name": "Preset Name",
+		"editable": true,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_userdata_keys() -> Array[Dictionary]:
+	var base: Array[Dictionary] = super()
+	base.push_front({
+		"name": "auto",
+		"display_name": "Auto-Apply Preset",
+		"desc": "",
+		"type": TYPE_BOOL,
+		"require": false,
+		"default": false,
+	})
+	
+	return base
+
+func get_icon_path() -> String:
+	return "res://addons/event_sequence/icon/IconFlat.svg"
+
+func run(event_node: EventNode) -> EventConst.ItemResponseType:
+	if event_variable.is_empty():
+		warn("Cannot create WipeTool preset cause no name was set!")
+		return EventConst.ItemResponseType.OK
+	
+	var params := make_params()
+	WipeTool.preset_add(event_variable, params)
+	
+	if userdata.has("auto") and userdata["auto"]:
+		WipeTool.preset_apply(event_variable)
+	
+	return EventConst.ItemResponseType.OK

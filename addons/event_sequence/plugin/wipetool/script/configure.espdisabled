@@ -1,0 +1,133 @@
+@tool
+extends EventItemBase
+class_name EventItemWipeToolConfigure
+
+func get_name() -> String:
+	return "Configure Wipe Params"
+
+func get_description() -> String:
+	return "Configure the current wipe tool parameters"
+
+func is_allow_in_editor() -> bool:
+	return true
+
+func get_first_column_config() -> Dictionary:
+	return {
+		"name": "None",
+		"editable": false,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_second_column_config() -> Dictionary:
+	return {
+		"name": "Config",
+		"editable": true,
+		"cell_mode": TreeItem.CELL_MODE_CUSTOM
+	}
+
+func get_userdata_keys() -> Array[Dictionary]:
+	return [
+		{
+			"name": "in_type",
+			"display_name": "Wipe Close Type",
+			"desc": "Input enum key name",
+			"type": TYPE_STRING,
+			"require": false,
+		},
+		{
+			"name": "out_type",
+			"display_name": "Wipe Open Type",
+			"desc": "Input enum key name",
+			"type": TYPE_STRING,
+			"require": false,
+		},
+		{
+			"name": "duration",
+			"desc": "Length in Seconds",
+			"type": TYPE_FLOAT,
+			"require": false,
+			"default": 1.0,
+		},
+		{
+			"name": "color",
+			"desc": "",
+			"type": TYPE_COLOR,
+			"require": false,
+			"default": Color.BLACK,
+		},
+		{
+			"name": "circle_ix",
+			"display_name": "Circle In X",
+			"desc": "0-1 range",
+			"type": TYPE_FLOAT,
+			"require": false,
+			"default": 0.5,
+		},
+		{
+			"name": "circle_iy",
+			"display_name": "Circle In Y",
+			"desc": "0-1 range",
+			"type": TYPE_FLOAT,
+			"require": false,
+			"default": 0.5,
+		},
+		{
+			"name": "circle_ox",
+			"display_name": "Circle Out X",
+			"desc": "0-1 range",
+			"type": TYPE_FLOAT,
+			"require": false,
+			"default": 0.5,
+		},
+		{
+			"name": "circle_oy",
+			"display_name": "Circle Out Y",
+			"desc": "0-1 range",
+			"type": TYPE_FLOAT,
+			"require": false,
+			"default": 0.5,
+		},
+	]
+
+func get_color() -> Color:
+	return Color.GRAY
+
+func get_icon_path() -> String:
+	return "res://addons/event_sequence/icon/IconFlat.svg"
+
+func run(event_node: EventNode) -> EventConst.ItemResponseType:
+	WipeTool.param = make_params()
+	return EventConst.ItemResponseType.OK
+
+func make_params() -> WipeParams:
+	var params := WipeParams.new()
+	
+	set_wipe_type_id(params, "wipe_in_type", "in_type")
+	set_wipe_type_id(params, "wipe_out_type", "out_type")
+	
+	if userdata.has("duration"):
+		params.wipe_duration = userdata["duration"]
+	if userdata.has("color"):
+		params.wipe_color = userdata["color"]
+	if userdata.has("circle_ix"):
+		params.wipe_circle_in_pos.x = userdata["circle_ix"]
+	if userdata.has("circle_iy"):
+		params.wipe_circle_in_pos.y = userdata["circle_iy"]
+	if userdata.has("circle_ox"):
+		params.wipe_circle_out_pos.x = userdata["circle_ox"]
+	if userdata.has("circle_oy"):
+		params.wipe_circle_out_pos.y = userdata["circle_oy"]
+	
+	return params
+
+func set_wipe_type_id(params: WipeParams, property: String, key: String) -> void:
+	if not userdata.has(key):
+		return
+	
+	if not Wipe.Type.keys().has(userdata[key]):
+		warn("Close transition type \"%s\" doesn't exist!" % [userdata[key]])
+		return
+	
+	var id: int = Wipe.Type.keys().find(userdata[key])
+	params.set(property, id)
+	return

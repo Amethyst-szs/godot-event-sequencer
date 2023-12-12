@@ -5,7 +5,7 @@ func get_name() -> String:
 	return "Apply Wipe Preset"
 
 func get_description() -> String:
-	return "Set the current wipe mode to a specific preset name"
+	return "Set the current wipe params to a preset"
 
 func is_allow_in_editor() -> bool:
 	return true

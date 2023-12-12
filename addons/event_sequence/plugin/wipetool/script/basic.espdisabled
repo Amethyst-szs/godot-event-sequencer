@@ -5,7 +5,7 @@ func get_name() -> String:
 	return "Close/Open Wipe"
 
 func get_description() -> String:
-	return "Start and/or end the currently active wipe transition"
+	return "Start and/or end a wipe transition"
 
 func is_allow_in_editor() -> bool:
 	return true

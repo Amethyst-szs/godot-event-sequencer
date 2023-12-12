@@ -1,0 +1,40 @@
+@tool
+extends EventItemBase
+
+func get_name() -> String:
+	return "Remove Wipe Preset"
+
+func get_description() -> String:
+	return "Remove a wipe preset by name"
+
+func is_allow_in_editor() -> bool:
+	return true
+
+func get_first_column_config() -> Dictionary:
+	return {
+		"name": "Preset Name",
+		"editable": true,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_second_column_config() -> Dictionary:
+	return {
+		"name": "None",
+		"editable": false,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_color() -> Color:
+	return Color.GRAY
+
+func get_icon_path() -> String:
+	return "res://addons/event_sequence/icon/IconFlat.svg"
+
+func run(event_node: EventNode) -> EventConst.ItemResponseType:
+	if event_variable.is_empty():
+		warn("Cannot apply WipeTool preset cause no name was set!")
+		return EventConst.ItemResponseType.OK
+	
+	WipeTool.preset_remove(event_variable)
+	
+	return EventConst.ItemResponseType.OK

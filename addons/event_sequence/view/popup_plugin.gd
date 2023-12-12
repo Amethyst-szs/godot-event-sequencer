@@ -142,9 +142,9 @@ func _toggle_button_hit(state: bool, dir: String):
 		var new_name: String = item
 		
 		if not state:
-			new_name = new_name.replace(".gd", ".disabled")
+			new_name = new_name.replace(".gd", ".espdisabled")
 		else:
-			new_name = new_name.replace(".disabled", ".gd")
+			new_name = new_name.replace(".espdisabled", ".gd")
 		
 		dir_access.rename(item, new_name)
 	
