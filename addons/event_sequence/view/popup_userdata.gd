@@ -53,7 +53,9 @@ func build_menu(item: TreeItem, column: int, open_menu: bool = true):
 		else:
 			field_name.text = (key["name"] as String).to_pascal_case()
 		
-		field_name.tooltip_text = key["desc"]
+		if key.has("desc"):
+			field_name.tooltip_text = key["desc"]
+		
 		field_name.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		
 		if key["require"]:
@@ -117,7 +119,9 @@ func _add_field(container: Control, key: Dictionary, type: Variant.Type, data, a
 				edit.text_changed.connect(_field_edited.bind(key, array_index))
 			
 			edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			edit.placeholder_text = key["desc"]
+			
+			if key.has("desc"):
+				edit.placeholder_text = key["desc"]
 			
 			if data and typeof(data) == TYPE_STRING:
 				edit.text = data
@@ -146,7 +150,8 @@ func _add_field(container: Control, key: Dictionary, type: Variant.Type, data, a
 			container.add_child(spin_box)
 		TYPE_BOOL:
 			var button := CheckButton.new()
-			button.text = key["desc"]
+			if key.has("desc"):
+				button.text = key["desc"]
 			
 			if data and typeof(data) == TYPE_BOOL:
 				button.button_pressed = data
@@ -158,7 +163,6 @@ func _add_field(container: Control, key: Dictionary, type: Variant.Type, data, a
 			container.add_child(button)
 		TYPE_COLOR:
 			var button := ColorPickerButton.new()
-			button.text = key["desc"]
 			
 			if data and typeof(data) == TYPE_COLOR:
 				button.color = data

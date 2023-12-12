@@ -1,0 +1,53 @@
+@tool
+extends EventItemBase
+
+func get_name() -> String:
+	return "Wait for Wipe Signal"
+
+func get_description() -> String:
+	return "Wait at this point for a specific signal from WipeTool"
+
+func is_allow_in_editor() -> bool:
+	return true
+
+func get_first_column_config() -> Dictionary:
+	return {
+		"name": "None",
+		"editable": false,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_second_column_config() -> Dictionary:
+	return {
+		"name": "Config",
+		"editable": true,
+		"cell_mode": TreeItem.CELL_MODE_CUSTOM
+	}
+
+func get_userdata_keys() -> Array[Dictionary]:
+	return [
+		{
+			"name": "type",
+			"display_name": "Wait Type",
+			"desc": "Close Finished/Open Finished",
+			"type": TYPE_BOOL,
+			"require": true,
+			"default": true,
+		},
+	]
+
+func get_color() -> Color:
+	return Color.GRAY
+
+func get_icon_path() -> String:
+	return "res://addons/event_sequence/icon/IconFlat.svg"
+
+func run(event_node: EventNode) -> EventConst.ItemResponseType:
+	var is_wait_open: bool = not userdata.has("type") or userdata["type"]
+	
+	if is_wait_open:
+		await WipeTool.wipe_out_finished
+	else:
+		await WipeTool.wipe_in_finished
+	
+	return EventConst.ItemResponseType.OK

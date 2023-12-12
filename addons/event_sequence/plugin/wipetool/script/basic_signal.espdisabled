@@ -1,0 +1,69 @@
+@tool
+extends EventItemBase
+
+func get_name() -> String:
+	return "Close & Open Wipe + Await Signal"
+
+func get_description() -> String:
+	return "Start and end a wipe transition, but wait for a signal from a node before opening"
+
+func is_allow_in_editor() -> bool:
+	return true
+
+func get_first_column_config() -> Dictionary:
+	return {
+		"name": "None",
+		"editable": false,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_second_column_config() -> Dictionary:
+	return {
+		"name": "Config",
+		"editable": true,
+		"cell_mode": TreeItem.CELL_MODE_CUSTOM
+	}
+
+func get_userdata_keys() -> Array[Dictionary]:
+	return [
+		{
+			"name": "obj",
+			"display_name": "Node Variable",
+			"desc": "Variable Name w/ Node",
+			"type": TYPE_STRING,
+			"require": true,
+		},
+		{
+			"name": "signal",
+			"display_name": "Signal Name",
+			"type": TYPE_STRING,
+			"require": true,
+		}
+	]
+
+func get_color() -> Color:
+	return Color.GRAY
+
+func get_icon_path() -> String:
+	return "res://addons/event_sequence/icon/IconFlat.svg"
+
+func run(event_node: EventNode) -> EventConst.ItemResponseType:
+	if not is_valid_userdata("obj") or not is_valid_userdata("signal"):
+		warn("Missing node variable name or signal name!")
+		return EventConst.ItemResponseType.OK
+	
+	if not event_node.var_database.has(userdata["obj"]):
+		warn("No variable in event declared with name %s" % [userdata["obj"]])
+		return EventConst.ItemResponseType.OK
+	
+	var obj = event_node.var_database[userdata["obj"]]
+	var signal_name: String = userdata["signal"]
+	
+	if not obj is Node:
+		warn("Variable \"%s\" must contain a singular node" % [userdata["obj"]])
+		return EventConst.ItemResponseType.OK
+	
+	print((obj as Node).get_signal_list())
+	#WipeTool.wipe_with_signal(obj.)
+	
+	return EventConst.ItemResponseType.OK
