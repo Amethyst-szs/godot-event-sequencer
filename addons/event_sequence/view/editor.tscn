@@ -297,12 +297,14 @@ text = "Create"
 
 [node name="PluginInstallerPopup" type="Popup" parent="."]
 disable_3d = true
+transparent_bg = true
 title = "Event Sequencer Plugin Manager"
 initial_position = 1
-size = Vector2i(600, 300)
+size = Vector2i(700, 375)
+visible = true
 wrap_controls = false
 unresizable = false
-borderless = false
+transparent = true
 script = ExtResource("9_6h4ls")
 
 [node name="Panel" type="PanelContainer" parent="PluginInstallerPopup"]
@@ -312,15 +314,41 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
+theme = ExtResource("4_xs70i")
 
-[node name="VBox" type="VBoxContainer" parent="PluginInstallerPopup/Panel"]
+[node name="Interface" type="SplitContainer" parent="PluginInstallerPopup/Panel"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="PluginInstallerPopup/Panel/VBox"]
+[node name="PluginScroll" type="ScrollContainer" parent="PluginInstallerPopup/Panel/Interface"]
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 6
-text = "Placeholder :)"
+size_flags_horizontal = 3
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 2
+
+[node name="Plugins" type="GridContainer" parent="PluginInstallerPopup/Panel/Interface/PluginScroll"]
+layout_mode = 2
+size_flags_horizontal = 6
+columns = 2
+
+[node name="Info" type="VBoxContainer" parent="PluginInstallerPopup/Panel/Interface"]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 0
+
+[node name="Label" type="Label" parent="PluginInstallerPopup/Panel/Interface/Info"]
+layout_mode = 2
+text = "Plugin Info:"
+horizontal_alignment = 1
+
+[node name="DownloadingIdle" type="CenterContainer" parent="PluginInstallerPopup/Panel"]
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PluginInstallerPopup/Panel/DownloadingIdle"]
+layout_mode = 2
+text = "Please wait!
+Currently downloading the latest plugin information..."
+horizontal_alignment = 1
 
 [node name="MacroDeleteWindow" type="FileDialog" parent="."]
 disable_3d = true
