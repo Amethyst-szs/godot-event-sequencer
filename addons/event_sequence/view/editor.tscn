@@ -146,7 +146,8 @@ script = ExtResource("3_dhmyj")
 disable_3d = true
 transparent_bg = true
 position = Vector2i(50, 50)
-size = Vector2i(508, 400)
+size = Vector2i(519, 400)
+visible = true
 transparent = true
 script = ExtResource("2_06btc")
 
@@ -301,7 +302,6 @@ transparent_bg = true
 title = "Event Sequencer Plugin Manager"
 initial_position = 1
 size = Vector2i(600, 500)
-visible = true
 wrap_controls = false
 unresizable = false
 transparent = true

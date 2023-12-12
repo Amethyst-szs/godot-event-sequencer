@@ -7,6 +7,14 @@
 # Remove macros
 addons/event_sequence/macro/
 
+# Ignore specific files installed as addons for plugin system
+/project.godot
+addons/dialogue_manager/
+addons/camera_action/
+addons/wipetool/
+addons/savedata-dx/
+addons/sound_manager/
+
 # Godot-specific ignores
 .import/
 export.cfg
