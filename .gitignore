@@ -8,7 +8,7 @@
 addons/event_sequence/macro/
 
 # Ignore specific files installed as addons for plugin system
-/project.godot
+project.godot
 addons/dialogue_manager/
 addons/camera_action/
 addons/wipetool/

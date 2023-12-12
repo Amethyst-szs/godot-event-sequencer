@@ -67,6 +67,8 @@ func build_menu(item: TreeItem, column: int, open_menu: bool = true):
 		var data
 		if item.has_meta(key["name"]):
 			data = item.get_meta(key["name"])
+		else: if key.has("default"):
+			data = key["default"]
 		
 		# Build edit field based on type
 		if not key["type"] == TYPE_ARRAY:

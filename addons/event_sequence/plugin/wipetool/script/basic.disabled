@@ -1,0 +1,64 @@
+@tool
+extends EventItemBase
+
+func get_name() -> String:
+	return "Close/Open Wipe"
+
+func get_description() -> String:
+	return "Start and/or end the currently active wipe transition"
+
+func is_allow_in_editor() -> bool:
+	return true
+
+func get_first_column_config() -> Dictionary:
+	return {
+		"name": "None",
+		"editable": false,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_second_column_config() -> Dictionary:
+	return {
+		"name": "Config",
+		"editable": true,
+		"cell_mode": TreeItem.CELL_MODE_CUSTOM
+	}
+
+func get_userdata_keys() -> Array[Dictionary]:
+	return [
+		{
+			"name": "open",
+			"display_name": "Wipe Open",
+			"desc": "Play animation?",
+			"type": TYPE_BOOL,
+			"require": false,
+			"default": true,
+		},
+		{
+			"name": "close",
+			"display_name": "Wipe Close",
+			"desc": "Play animation?",
+			"type": TYPE_BOOL,
+			"require": false,
+			"default": true,
+		},
+	]
+
+func get_color() -> Color:
+	return Color.GRAY
+
+func get_icon_path() -> String:
+	return "res://addons/event_sequence/icon/IconFlat.svg"
+
+func run(event_node: EventNode) -> EventConst.ItemResponseType:
+	var is_open: bool = not userdata.has("open") or userdata["open"]
+	var is_close: bool = not userdata.has("close") or userdata["close"]
+	
+	if is_open and is_close:
+		WipeTool.wipe_close_and_open()
+	else: if is_open:
+		WipeTool.wipe_open()
+	else: if is_close:
+		WipeTool.wipe_close()
+	
+	return EventConst.ItemResponseType.OK
