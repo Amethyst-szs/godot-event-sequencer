@@ -15,10 +15,6 @@ config/tags=PackedStringArray("plugin")
 config/features=PackedStringArray("4.2", "Mobile")
 config/icon="res://icon.svg"
 
-[autoload]
-
-Autoload="*res://test/autoload.tscn"
-
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/event_sequence/plugin.cfg")
