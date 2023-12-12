@@ -117,7 +117,9 @@ func _add_prerequest_data(container: Control, config: ConfigFile, plugin_list: P
 	return true
 
 func close():
-	pass
+	# Destroy current panels
+	for item in item_list.get_children():
+		item_list.remove_child(item)
 
 #endregion
 
