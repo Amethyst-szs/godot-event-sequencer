@@ -90,7 +90,7 @@ func _ready():
 		return
 	
 	# Create an instance of every script item and create label index list
-	preload_scripts_and_labels(event_list)
+	_preload_scripts_and_labels(event_list)
 	
 	if autostart:
 		start()
@@ -108,7 +108,7 @@ func _validate_property(property):
 
 #region Implementation
 
-func preload_scripts_and_labels(dict_list: Array[Dictionary], index_path: Array[int] = []):
+func _preload_scripts_and_labels(dict_list: Array[Dictionary], index_path: Array[int] = []):
 	# Never ever do this in the editor
 	if Engine.is_editor_hint():
 		return
@@ -142,7 +142,7 @@ func preload_scripts_and_labels(dict_list: Array[Dictionary], index_path: Array[
 		
 		# If this event has children, look through them recursively as well
 		if event.has(EventConst.item_key_child):
-			preload_scripts_and_labels(event[EventConst.item_key_child], self_index_path)
+			_preload_scripts_and_labels(event[EventConst.item_key_child], self_index_path)
 
 func _run_dictionary_list(list: Array[Dictionary], is_first_recursion: bool = false, start_idx: int = 0, loop_count: int = -1):
 	var idx: int = start_idx

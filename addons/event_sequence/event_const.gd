@@ -1,16 +1,25 @@
 @tool
+
+## List of constants used by EventNodes and the Event Editor
 class_name EventConst
 
 #region EventItem constants
 
-# EventItem run response types
+## Different responses an EventItem can return to the EventNode
 enum ItemResponseType {
+	## Nothing the event node should worry about, continue on to the next item
 	OK,
+	## Skip this item's children and move on to the next item after it
 	SKIP_CHILDREN,
+	## Jump to a label. Which label to jump to should be set by the EventItem
 	JUMP,
+	## Jump to a label and return to this item afterwards.
 	JUMP_AND_RETURN,
+	## Start a for loop over this item's children a specific number of times
 	LOOP_FOR,
+	## Start a conditional loop over this item's children, repeating until condition is false
 	LOOP_WHILE,
+	## End EventNode early, stopping all future EventItems from running
 	TERMINATE,
 }
 
