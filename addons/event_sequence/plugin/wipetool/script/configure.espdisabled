@@ -1,6 +1,5 @@
 @tool
 extends EventItemBase
-class_name EventItemWipeToolConfigure
 
 func get_name() -> String:
 	return "Configure Wipe Params"
@@ -93,7 +92,7 @@ func get_color() -> Color:
 	return Color.GRAY
 
 func get_icon_path() -> String:
-	return "res://addons/event_sequence/icon/IconFlat.svg"
+	return "res://addons/event_sequence/plugin/wipetool/icon/Configure.svg"
 
 func run(event_node: EventNode) -> EventConst.ItemResponseType:
 	WipeTool.param = make_params()

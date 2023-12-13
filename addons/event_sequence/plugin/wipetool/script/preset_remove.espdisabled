@@ -28,7 +28,7 @@ func get_color() -> Color:
 	return Color.GRAY
 
 func get_icon_path() -> String:
-	return "res://addons/event_sequence/icon/IconFlat.svg"
+	return "res://addons/event_sequence/plugin/wipetool/icon/PresetRemove.svg"
 
 func run(event_node: EventNode) -> EventConst.ItemResponseType:
 	if event_variable.is_empty():

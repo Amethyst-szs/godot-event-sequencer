@@ -1,11 +1,14 @@
 @tool
 extends EventItemBase
 
+signal event_triggered
+
 func get_name() -> String:
 	return "Close & Open Wipe + Await Signal"
 
 func get_description() -> String:
-	return "Start and end a wipe transition, but wait for a signal from a node before opening"
+	return "Start and end a wipe transition, but wait for a signal from a node before
+		opening wipe and continuing past this item."
 
 func is_allow_in_editor() -> bool:
 	return true
@@ -27,6 +30,14 @@ func get_second_column_config() -> Dictionary:
 func get_userdata_keys() -> Array[Dictionary]:
 	return [
 		{
+			"name": "wait_mode",
+			"display_name": "Wait for",
+			"desc": "Wipe Closed/Input Signal",
+			"type": TYPE_BOOL,
+			"require": false,
+			"default": true,
+		},
+		{
 			"name": "obj",
 			"display_name": "Node Variable",
 			"desc": "Variable Name w/ Node",
@@ -38,14 +49,14 @@ func get_userdata_keys() -> Array[Dictionary]:
 			"display_name": "Signal Name",
 			"type": TYPE_STRING,
 			"require": true,
-		}
+		},
 	]
 
 func get_color() -> Color:
 	return Color.GRAY
 
 func get_icon_path() -> String:
-	return "res://addons/event_sequence/icon/IconFlat.svg"
+	return "res://addons/event_sequence/plugin/wipetool/icon/BasicSignal.svg"
 
 func run(event_node: EventNode) -> EventConst.ItemResponseType:
 	if not is_valid_userdata("obj") or not is_valid_userdata("signal"):
@@ -63,7 +74,20 @@ func run(event_node: EventNode) -> EventConst.ItemResponseType:
 		warn("Variable \"%s\" must contain a singular node" % [userdata["obj"]])
 		return EventConst.ItemResponseType.OK
 	
-	print((obj as Node).get_signal_list())
-	#WipeTool.wipe_with_signal(obj.)
+	if not obj.has_signal(signal_name):
+		warn("Node in variable does not have signal %s" % [signal_name])
+		return EventConst.ItemResponseType.OK
+	
+	obj.connect(signal_name, _event_trigger)
+	WipeTool.wipe_with_signal(event_triggered)
+	
+	if not userdata.has("wait_mode") or userdata["wait_mode"]:
+		WipeTool.set_meta("signal_script_ref", self)
+		await WipeTool.wipe_in_finished
+	else:
+		await event_triggered
 	
 	return EventConst.ItemResponseType.OK
+
+func _event_trigger():
+	event_triggered.emit()

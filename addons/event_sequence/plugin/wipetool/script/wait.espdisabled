@@ -40,7 +40,7 @@ func get_color() -> Color:
 	return Color.GRAY
 
 func get_icon_path() -> String:
-	return "res://addons/event_sequence/icon/IconFlat.svg"
+	return "res://addons/event_sequence/plugin/wipetool/icon/Wait.svg"
 
 func run(event_node: EventNode) -> EventConst.ItemResponseType:
 	var is_wait_open: bool = not userdata.has("type") or userdata["type"]
