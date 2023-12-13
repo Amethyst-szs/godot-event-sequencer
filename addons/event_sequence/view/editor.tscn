@@ -333,6 +333,19 @@ horizontal_alignment = 1
 layout_mode = 2
 size_flags_vertical = 3
 
+[node name="WarnReload" type="PanelContainer" parent="PluginInstallerPopup/Panel"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="Label" type="Label" parent="PluginInstallerPopup/Panel/WarnReload"]
+custom_minimum_size = Vector2(600, 35)
+layout_mode = 2
+text = "Project will need to reload when closing menu! Changes will be saved."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
 [node name="MacroDeleteWindow" type="FileDialog" parent="."]
 disable_3d = true
 title = "Open File(s)"

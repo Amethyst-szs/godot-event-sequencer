@@ -37,7 +37,7 @@ func get_userdata_keys() -> Array[Dictionary]:
 	]
 
 func get_color() -> Color:
-	return Color.MEDIUM_PURPLE.lightened(0.3)
+	return Color.ORANGE_RED.lightened(0.2)
 
 func get_icon_path() -> String:
 	return "res://addons/event_sequence/icon/EventItem-FlowIfCondition.svg"

@@ -1,12 +1,20 @@
 @tool
 extends Popup
 
+# State
+var changes_made: bool = false:
+	set(value):
+		changes_made = value
+		if reload_warn:
+			reload_warn.visible = changes_made
+
 # Constants
 const plugin_folder: String = "res://addons/event_sequence/plugin/"
 
 # Node references
 @onready var editor: Control = $"../"
 @onready var item_list: VBoxContainer = $Panel/Scroll/List/Items
+@onready var reload_warn: Container = $Panel/WarnReload
 
 #region Initalization and Close
 
@@ -15,6 +23,9 @@ func _ready():
 	popup_hide.connect(close)
 
 func open():
+	# Reset changes flag
+	changes_made = false
+	
 	# Destroy current panels
 	for item in item_list.get_children():
 		item_list.remove_child(item)
@@ -103,7 +114,7 @@ func _add_prerequest_data(container: Control, config: ConfigFile, plugin_list: P
 	
 	var is_valid := _is_active_plugin(plugin_list, config.get_value("prerequest", "name", "NONE"))
 	if is_valid:
-		label_prerequest.text = "Your project supports this plugin"
+		label_prerequest.text = "Your project has required prerequest for this plugin"
 		label_prerequest.add_theme_color_override("font_color", Color.GRAY)
 		return false
 	
@@ -120,6 +131,10 @@ func close():
 	# Destroy current panels
 	for item in item_list.get_children():
 		item_list.remove_child(item)
+	
+	# Restart editor if needed
+	if changes_made:
+		editor.editor_plugin.get_editor_interface().restart_editor(true)
 
 #endregion
 
@@ -152,8 +167,8 @@ func _toggle_button_hit(state: bool, dir: String):
 	config.set_value("enabled", "is_enabled", state)
 	config.save(plugin_folder + dir + "/esplugin.cfg")
 	
-	# Reload add panel
-	editor.popup_tree_add._ready()
+	# Set changes made flag
+	changes_made = true
 
 #endregion
 
