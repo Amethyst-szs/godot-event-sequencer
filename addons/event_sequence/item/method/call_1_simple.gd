@@ -40,7 +40,7 @@ func get_userdata_keys() -> Array[Dictionary]:
 			EventConst.userdata_key_name: "method",
 			EventConst.userdata_key_desc: "Name of method to call",
 			EventConst.userdata_key_type: TYPE_STRING,
-			EventConst.userdata_key_require: false,
+			EventConst.userdata_key_require: true,
 		},
 	]
 

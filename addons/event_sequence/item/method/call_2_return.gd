@@ -83,9 +83,7 @@ func run(event_node: EventNode) -> EventConst.ItemResponseType:
 			warn("Data in variable \"%s\" isn't an object or array" % [userdata["object"]])
 			return EventConst.ItemResponseType.OK
 	
-	if return_data and not event_variable.is_empty():
-		event_node.var_database[event_variable] = return_data
-	
+	event_node.var_database[event_variable] = return_data
 	return EventConst.ItemResponseType.OK
 
 func call_on_object(object: Object, is_part_of_array: bool):
