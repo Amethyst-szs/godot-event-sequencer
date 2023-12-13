@@ -80,7 +80,7 @@ func _ready():
 	if name.is_empty():
 		name = get_name()
 
-func add_to_tree(parent: TreeItem, editor: Control, is_macro: bool) -> TreeItem:
+func add_to_tree(parent: TreeItem, editor: Control, is_macro: bool, is_collapsed: bool = false) -> TreeItem:
 	var item: TreeItem = parent.create_child()
 	
 	# Mark as label if is label
@@ -115,8 +115,8 @@ func add_to_tree(parent: TreeItem, editor: Control, is_macro: bool) -> TreeItem:
 	_setup_column_config(item, EventConst.EditorColumn.VARIABLE, get_first_column_config())
 	_setup_column_config(item, EventConst.EditorColumn.USERDATA, get_second_column_config())
 	
-	# Automatically collapse macro items
-	if is_macro: item.collapsed = true
+	# Automatically collapse items
+	item.collapsed = is_collapsed
 	
 	return item
 
@@ -165,7 +165,7 @@ func build_userdata_from_tree(item: TreeItem) -> Dictionary:
 			continue
 		
 		# Ensure we aren't reading the flags, those aren't part of regular userdata
-		if meta == EventConst.item_key_flag_macro or meta == EventConst.item_key_flag_label:
+		if meta == EventConst.item_key_flag_macro or meta == EventConst.item_key_flag_label or meta == EventConst.item_key_flag_collapsed:
 			continue
 		
 		userdata[meta] = item.get_meta(meta)

@@ -1,3 +1,4 @@
+@tool
 @icon("res://icon.svg")
 
 extends Node
@@ -72,6 +73,9 @@ func end_force():
 #region Virtual Functions
 
 func _ready():
+	if Engine.is_editor_hint():
+		return
+	
 	# Create an instance of every script item and create label index list
 	preload_scripts_and_labels(event_list)
 	

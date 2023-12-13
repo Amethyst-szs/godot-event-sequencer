@@ -234,12 +234,18 @@ func _try_build_tree(parent: TreeItem = null, dict_list: Array = []) -> bool:
 		if not event_dict.has(EventConst.item_key_self):
 			continue
 		
-		# Create a new tree item and add it using the current parent and dictionary
-		var item := _build_item_from_dict(parent, event_dict[EventConst.item_key_self], event_dict.has(EventConst.item_key_macro))
-		
-		# If this dict marks itself as a macro, add metadata to tree item
+		# Setup macro and collapsed flags
 		var is_macro_root: bool = event_dict.has(EventConst.item_key_macro)
+		var is_collapsed: bool = event_dict.has(EventConst.item_key_flag_collapsed)
+		if is_collapsed:
+			is_collapsed = event_dict[EventConst.item_key_flag_collapsed]
+		
+		# Create a new tree item and add it using the current parent and dictionary
+		var item := _build_item_from_dict(parent, event_dict[EventConst.item_key_self], is_macro_root, is_collapsed)
+		
+		# Add flag metadata
 		item.set_meta(EventConst.item_key_flag_macro, is_macro_root)
+		item.set_meta(EventConst.item_key_flag_collapsed, is_collapsed)
 		
 		# If this dict is a label marker, add label metadata tag
 		item.set_meta(EventConst.item_key_flag_label, event_dict.has(EventConst.item_key_flag_label))
@@ -253,7 +259,7 @@ func _try_build_tree(parent: TreeItem = null, dict_list: Array = []) -> bool:
 	
 	return true
 
-func _build_item_from_dict(parent_item: TreeItem, dict: Dictionary, is_macro: bool) -> TreeItem:
+func _build_item_from_dict(parent_item: TreeItem, dict: Dictionary, is_macro: bool, is_collapsed: bool = false) -> TreeItem:
 	# Load in the item's script
 	var script: Script = ResourceLoader.load(dict[EventConst.item_key_script], "Script")
 	var script_instance = script.new()
@@ -261,7 +267,7 @@ func _build_item_from_dict(parent_item: TreeItem, dict: Dictionary, is_macro: bo
 	# Parse the current dictionary and let it add itself to the list
 	script_instance.script_path = dict[EventConst.item_key_script]
 	script_instance.parse_dict(dict)
-	return script_instance.add_to_tree(parent_item, self, is_macro)
+	return script_instance.add_to_tree(parent_item, self, is_macro, is_collapsed)
 
 func _build_dict_from_tree(root: TreeItem) -> Array[Dictionary]:
 	if not root:
@@ -279,6 +285,8 @@ func _build_dict_from_tree(root: TreeItem) -> Array[Dictionary]:
 		
 		if child.has_meta(EventConst.item_key_flag_label) and child.get_meta(EventConst.item_key_flag_label):
 			dict[EventConst.item_key_flag_label] = true
+		
+		dict[EventConst.item_key_flag_collapsed] = child.collapsed
 		
 		if child.get_child_count() > 0:
 			dict[EventConst.item_key_child] = _build_dict_from_tree(child)

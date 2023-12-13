@@ -26,8 +26,9 @@ const item_key_variable: String = "v"
 const item_key_userdata: String = "u"
 const item_key_userdata_generic: String = "i"
 
-const item_key_flag_macro: String = "f_macro"
-const item_key_flag_label: String = "f_label"
+const item_key_flag_macro: String = "fm"
+const item_key_flag_collapsed: String = "fc"
+const item_key_flag_label: String = "fl"
 
 #endregion
 
