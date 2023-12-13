@@ -1,0 +1,52 @@
+@tool
+extends EventItemBase
+
+signal tag_found
+
+func get_name() -> String:
+	return "Wait for Dialogue Tag"
+
+func get_description() -> String:
+	return "Wait at this point until the dialogue line has a specific tag"
+
+func is_allow_in_editor() -> bool:
+	return true
+
+func get_first_column_config() -> Dictionary:
+	return {
+		"name": "Tag Name",
+		"editable": true,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_second_column_config() -> Dictionary:
+	return {
+		"name": "None",
+		"editable": false,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_color() -> Color:
+	return Color.hex(0xBD93F9FF)
+
+func get_icon_path() -> String:
+	return "res://addons/event_sequence/plugin/dialogue/icon/WaitTag.svg"
+
+func run(event_node: EventNode) -> EventConst.ItemResponseType:
+	if event_variable.is_empty():
+		warn("No tag set to wait for!")
+		return EventConst.ItemResponseType.OK
+	
+	DialogueManager.got_dialogue.connect(_check_tag)
+	await tag_found
+	
+	return EventConst.ItemResponseType.OK
+
+func _check_tag(line: DialogueLine):
+	if not line.tags.has(event_variable):
+		return
+	
+	if DialogueManager.got_dialogue.is_connected(_check_tag):
+		DialogueManager.got_dialogue.disconnect(_check_tag)
+	
+	tag_found.emit()

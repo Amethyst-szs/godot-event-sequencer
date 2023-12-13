@@ -1,0 +1,35 @@
+@tool
+extends EventItemBase
+
+func get_name() -> String:
+	return "Wait for Dialogue to Finish"
+
+func get_description() -> String:
+	return "Wait at this point for the dialogue balloon to close"
+
+func is_allow_in_editor() -> bool:
+	return true
+
+func get_first_column_config() -> Dictionary:
+	return {
+		"name": "None",
+		"editable": false,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_second_column_config() -> Dictionary:
+	return {
+		"name": "None",
+		"editable": false,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_color() -> Color:
+	return Color.hex(0xBD93F9FF)
+
+func get_icon_path() -> String:
+	return "res://addons/event_sequence/plugin/dialogue/icon/WaitTop.svg"
+
+func run(event_node: EventNode) -> EventConst.ItemResponseType:
+	await DialogueManager.dialogue_ended
+	return EventConst.ItemResponseType.OK

@@ -19,6 +19,13 @@ func get_first_column_config() -> Dictionary:
 		"cell_mode": TreeItem.CELL_MODE_STRING
 	}
 
+func get_second_column_config() -> Dictionary:
+	return {
+		"name": "None",
+		"editable": false,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
 func get_icon_path() -> String:
 	return "res://addons/event_sequence/icon/EventItem-FlowFor.svg"
 

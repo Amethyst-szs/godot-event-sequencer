@@ -1,0 +1,40 @@
+@tool
+extends EventItemBase
+
+func get_name() -> String:
+	return "Change Dialogue Balloon Scene"
+
+func get_description() -> String:
+	return "Change the scene used for your dialogue balloons"
+
+func is_allow_in_editor() -> bool:
+	return true
+
+func get_first_column_config() -> Dictionary:
+	return {
+		"name": ".tscn Path",
+		"editable": true,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_second_column_config() -> Dictionary:
+	return {
+		"name": "None",
+		"editable": false,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_color() -> Color:
+	return Color.hex(0xBD93F9FF)
+
+func get_icon_path() -> String:
+	return "res://addons/event_sequence/plugin/dialogue/icon/ChangeBalloon.svg"
+
+func run(event_node: EventNode) -> EventConst.ItemResponseType:
+	if is_valid_event_variable(event_node, true):
+		var key: String = "balloon_path"
+		var default: String = DialogueManager.DialogueSettings.DEFAULT_SETTINGS[key]
+		ProjectSettings.set_setting("dialogue_manager/general/%s" % key, event_variable)
+		ProjectSettings.set_initial_value("dialogue_manager/general/%s" % key, default)
+	
+	return EventConst.ItemResponseType.OK

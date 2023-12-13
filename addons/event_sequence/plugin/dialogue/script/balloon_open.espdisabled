@@ -5,7 +5,8 @@ func get_name() -> String:
 	return "Open Dialogue Balloon"
 
 func get_description() -> String:
-	return "Opens the current dialogue balloon scene and starts using a resource and title"
+	return "Opens the current dialogue balloon scene and starts using a resource and title
+		NOTE: Uses call_deferred, meaning the balloon will open on the next process frame"
 
 func is_allow_in_editor() -> bool:
 	return true
