@@ -1,0 +1,35 @@
+@tool
+extends EventItemBase
+
+func get_name() -> String:
+	return "Save to Active Slot"
+
+func get_description() -> String:
+	return "Write the current save data to the active save slot"
+
+func is_allow_in_editor() -> bool:
+	return true
+
+func get_first_column_config() -> Dictionary:
+	return {
+		"name": "None",
+		"editable": false,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_second_column_config() -> Dictionary:
+	return {
+		"name": "None",
+		"editable": false,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_color() -> Color:
+	return Color.DODGER_BLUE
+
+func get_icon_path() -> String:
+	return "res://addons/event_sequence/plugin/savedata-dx/icon/WriteActive.svg"
+
+func run(event_node: EventNode) -> EventConst.ItemResponseType:
+	SaveAccessor.write_active_slot()
+	return EventConst.ItemResponseType.OK

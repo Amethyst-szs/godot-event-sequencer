@@ -1,0 +1,39 @@
+@tool
+extends EventItemBase
+
+func get_name() -> String:
+	return "If Save Thread isn't Busy"
+
+func get_description() -> String:
+	return "Only run this item's children if the save/load thread is not currently busy
+		NOTE: SaveAccessor runs on a different thread, meaning that using this check right after
+		starting a save/load can have inconsistent results."
+
+func is_allow_in_editor() -> bool:
+	return true
+
+func get_first_column_config() -> Dictionary:
+	return {
+		"name": "None",
+		"editable": false,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_second_column_config() -> Dictionary:
+	return {
+		"name": "None",
+		"editable": false,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_color() -> Color:
+	return Color.DODGER_BLUE
+
+func get_icon_path() -> String:
+	return "res://addons/event_sequence/plugin/savedata-dx/icon/VerifyThread.svg"
+
+func run(event_node: EventNode) -> EventConst.ItemResponseType:
+	if SaveAccessor.is_thread_busy:
+		return EventConst.ItemResponseType.SKIP_CHILDREN
+	
+	return EventConst.ItemResponseType.OK

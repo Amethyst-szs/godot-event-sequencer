@@ -1,0 +1,35 @@
+@tool
+extends EventItemBase
+
+func get_name() -> String:
+	return "Load from Autosave Slot"
+
+func get_description() -> String:
+	return "Load the current save data from the autosave slot"
+
+func is_allow_in_editor() -> bool:
+	return true
+
+func get_first_column_config() -> Dictionary:
+	return {
+		"name": "None",
+		"editable": false,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_second_column_config() -> Dictionary:
+	return {
+		"name": "None",
+		"editable": false,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_color() -> Color:
+	return Color.DODGER_BLUE
+
+func get_icon_path() -> String:
+	return "res://addons/event_sequence/plugin/savedata-dx/icon/ReadAuto.svg"
+
+func run(event_node: EventNode) -> EventConst.ItemResponseType:
+	SaveAccessor.read_autosave_slot()
+	return EventConst.ItemResponseType.OK

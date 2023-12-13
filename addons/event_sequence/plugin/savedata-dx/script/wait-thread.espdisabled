@@ -1,0 +1,37 @@
+@tool
+extends EventItemBase
+
+func get_name() -> String:
+	return "Wait for Save Thread"
+
+func get_description() -> String:
+	return "Waits at this item for the Save Accessor to emit \"thread_complete\"
+		NOTE: Requires at least one process frame due to signal being emitted with call_deferred"
+
+func is_allow_in_editor() -> bool:
+	return true
+
+func get_first_column_config() -> Dictionary:
+	return {
+		"name": "None",
+		"editable": false,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_second_column_config() -> Dictionary:
+	return {
+		"name": "None",
+		"editable": false,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_color() -> Color:
+	return Color.DODGER_BLUE
+
+func get_icon_path() -> String:
+	return "res://addons/event_sequence/plugin/savedata-dx/icon/WaitThread.svg"
+
+func run(event_node: EventNode) -> EventConst.ItemResponseType:
+	await SaveAccessor.thread_complete
+	
+	return EventConst.ItemResponseType.OK
