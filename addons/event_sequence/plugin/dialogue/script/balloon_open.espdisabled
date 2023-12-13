@@ -28,18 +28,18 @@ func get_second_column_config() -> Dictionary:
 func get_userdata_keys() -> Array[Dictionary]:
 	return [
 		{
-			"name": "res",
-			"display_name": "Script Resource",
-			"desc": "res://path/here/",
-			"type": TYPE_STRING,
-			"require": true,
+			EventConst.userdata_key_name: "res",
+			EventConst.userdata_key_display: "Script Resource",
+			EventConst.userdata_key_desc: "res://path/here/",
+			EventConst.userdata_key_type: TYPE_STRING,
+			EventConst.userdata_key_require: true,
 		},
 		{
-			"name": "title",
-			"display_name": "Starting Title",
-			"desc": "title_name_here",
-			"type": TYPE_STRING,
-			"require": false,
+			EventConst.userdata_key_name: "title",
+			EventConst.userdata_key_display: "Starting Title",
+			EventConst.userdata_key_desc: "title_name_here",
+			EventConst.userdata_key_type: TYPE_STRING,
+			EventConst.userdata_key_require: false,
 		},
 	]
 

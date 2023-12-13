@@ -27,20 +27,20 @@ func get_second_column_config() -> Dictionary:
 func get_userdata_keys() -> Array[Dictionary]:
 	return [
 		{
-			"name": "open",
-			"display_name": "Wipe Open",
-			"desc": "Play animation?",
-			"type": TYPE_BOOL,
-			"require": false,
-			"default": true,
+			EventConst.userdata_key_name: "open",
+			EventConst.userdata_key_display: "Wipe Open",
+			EventConst.userdata_key_desc: "Play animation?",
+			EventConst.userdata_key_type: TYPE_BOOL,
+			EventConst.userdata_key_require: false,
+			EventConst.userdata_key_default: true,
 		},
 		{
-			"name": "close",
-			"display_name": "Wipe Close",
-			"desc": "Play animation?",
-			"type": TYPE_BOOL,
-			"require": false,
-			"default": true,
+			EventConst.userdata_key_name: "close",
+			EventConst.userdata_key_display: "Wipe Close",
+			EventConst.userdata_key_desc: "Play animation?",
+			EventConst.userdata_key_type: TYPE_BOOL,
+			EventConst.userdata_key_require: false,
+			EventConst.userdata_key_default: true,
 		},
 	]
 

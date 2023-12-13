@@ -27,12 +27,12 @@ func get_second_column_config() -> Dictionary:
 func get_userdata_keys() -> Array[Dictionary]:
 	return [
 		{
-			"name": "type",
-			"display_name": "Wait Type",
-			"desc": "Close Finished/Open Finished",
-			"type": TYPE_BOOL,
-			"require": true,
-			"default": true,
+			EventConst.userdata_key_name: "type",
+			EventConst.userdata_key_display: "Wait Type",
+			EventConst.userdata_key_desc: "Close Finished/Open Finished",
+			EventConst.userdata_key_type: TYPE_BOOL,
+			EventConst.userdata_key_require: true,
+			EventConst.userdata_key_default: true,
 		},
 	]
 

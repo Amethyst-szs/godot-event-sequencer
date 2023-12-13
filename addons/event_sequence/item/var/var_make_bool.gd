@@ -23,10 +23,10 @@ func get_second_column_config() -> Dictionary:
 func get_userdata_keys() -> Array[Dictionary]:
 	return [
 		{
-			"name": "state",
-			"desc": "False/True",
-			"type": TYPE_BOOL,
-			"require": true,
+			EventConst.userdata_key_name: "state",
+			EventConst.userdata_key_desc: "False/True",
+			EventConst.userdata_key_type: TYPE_BOOL,
+			EventConst.userdata_key_require: true,
 		}
 	]
 

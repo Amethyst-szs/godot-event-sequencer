@@ -27,17 +27,17 @@ func get_second_column_config() -> Dictionary:
 func get_userdata_keys() -> Array[Dictionary]:
 	return [
 		{
-			"name": "config1",
-			"display_name": "First Config",
-			"desc": "Editable Value",
-			"type": TYPE_STRING,
-			"require": true,
+			EventConst.userdata_key_name: "config1",
+			EventConst.userdata_key_display: "First Config",
+			EventConst.userdata_key_desc: "Editable Value",
+			EventConst.userdata_key_type: TYPE_STRING,
+			EventConst.userdata_key_require: true,
 		},
 		{
-			"name": "config2",
-			"desc": "Other editable Value",
-			"type": TYPE_FLOAT,
-			"require": true,
+			EventConst.userdata_key_name: "config2",
+			EventConst.userdata_key_desc: "Other editable Value",
+			EventConst.userdata_key_type: TYPE_FLOAT,
+			EventConst.userdata_key_require: true,
 		},
 	]
 

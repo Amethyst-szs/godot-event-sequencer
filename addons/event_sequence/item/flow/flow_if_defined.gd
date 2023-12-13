@@ -29,11 +29,11 @@ func get_second_column_config() -> Dictionary:
 func get_userdata_keys() -> Array[Dictionary]:
 	return [
 		{
-			"name": "invert",
-			"display_name": "Run if NOT true",
-			"desc": "",
-			"type": TYPE_BOOL,
-			"require": false,
+			EventConst.userdata_key_name: "invert",
+			EventConst.userdata_key_display: "Run if NOT true",
+			EventConst.userdata_key_desc: "",
+			EventConst.userdata_key_type: TYPE_BOOL,
+			EventConst.userdata_key_require: false,
 		}
 	]
 
