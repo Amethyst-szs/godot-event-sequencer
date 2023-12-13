@@ -30,24 +30,24 @@ func get_second_column_config() -> Dictionary:
 func get_userdata_keys() -> Array[Dictionary]:
 	return [
 		{
-			"name": "object",
-			"display_name": "Object(s) / Node(s)",
-			"desc": "Variable with obj or array",
-			"type": TYPE_STRING,
-			"require": true,
+			EventConst.userdata_key_name: "object",
+			EventConst.userdata_key_display: "Object(s) / Node(s)",
+			EventConst.userdata_key_desc: "Variable with obj or array",
+			EventConst.userdata_key_type: TYPE_STRING,
+			EventConst.userdata_key_require: true,
 		},
 		{
-			"name": "method",
-			"desc": "Name of method to call",
-			"type": TYPE_STRING,
-			"require": true,
+			EventConst.userdata_key_name: "method",
+			EventConst.userdata_key_desc: "Name of method to call",
+			EventConst.userdata_key_type: TYPE_STRING,
+			EventConst.userdata_key_require: true,
 		},
 		{
-			"name": "args",
-			"desc": "Variable name with Argument",
-			"type": TYPE_ARRAY,
-			"type_array": TYPE_STRING,
-			"require": false,
+			EventConst.userdata_key_name: "args",
+			EventConst.userdata_key_desc: "Variable name with Argument",
+			EventConst.userdata_key_type: TYPE_ARRAY,
+			EventConst.userdata_key_type_array: TYPE_STRING,
+			EventConst.userdata_key_require: false,
 		},
 	]
 

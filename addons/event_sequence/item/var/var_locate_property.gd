@@ -23,17 +23,17 @@ func get_second_column_config() -> Dictionary:
 func get_userdata_keys() -> Array[Dictionary]:
 	return [
 		{
-			"name": "object",
-			"display_name": "Object/Node",
-			"desc": "Var name with object",
-			"type": TYPE_STRING,
-			"require": true,
+			EventConst.userdata_key_name: "object",
+			EventConst.userdata_key_display: "Object/Node",
+			EventConst.userdata_key_desc: "Var name with object",
+			EventConst.userdata_key_type: TYPE_STRING,
+			EventConst.userdata_key_require: true,
 		},
 		{
-			"name": "property",
-			"desc": "Name of property",
-			"type": TYPE_STRING,
-			"require": true,
+			EventConst.userdata_key_name: "property",
+			EventConst.userdata_key_desc: "Name of property",
+			EventConst.userdata_key_type: TYPE_STRING,
+			EventConst.userdata_key_require: true,
 		},
 	]
 

@@ -30,25 +30,25 @@ func get_second_column_config() -> Dictionary:
 func get_userdata_keys() -> Array[Dictionary]:
 	return [
 		{
-			"name": "wait_mode",
-			"display_name": "Wait for",
-			"desc": "Wipe Closed/Input Signal",
-			"type": TYPE_BOOL,
-			"require": false,
-			"default": true,
+			EventConst.userdata_key_name: "wait_mode",
+			EventConst.userdata_key_display: "Wait for",
+			EventConst.userdata_key_desc: "Wipe Closed/Input Signal",
+			EventConst.userdata_key_type: TYPE_BOOL,
+			EventConst.userdata_key_require: false,
+			EventConst.userdata_key_default: true,
 		},
 		{
-			"name": "obj",
-			"display_name": "Node Variable",
-			"desc": "Variable Name w/ Node",
-			"type": TYPE_STRING,
-			"require": true,
+			EventConst.userdata_key_name: "obj",
+			EventConst.userdata_key_display: "Node Variable",
+			EventConst.userdata_key_desc: "Variable Name w/ Node",
+			EventConst.userdata_key_type: TYPE_STRING,
+			EventConst.userdata_key_require: true,
 		},
 		{
-			"name": "signal",
-			"display_name": "Signal Name",
-			"type": TYPE_STRING,
-			"require": true,
+			EventConst.userdata_key_name: "signal",
+			EventConst.userdata_key_display: "Signal Name",
+			EventConst.userdata_key_type: TYPE_STRING,
+			EventConst.userdata_key_require: true,
 		},
 	]
 

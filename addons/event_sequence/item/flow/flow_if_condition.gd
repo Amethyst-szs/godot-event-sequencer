@@ -20,19 +20,19 @@ func is_allow_in_editor() -> bool:
 func get_userdata_keys() -> Array[Dictionary]:
 	return [
 		{
-			"name": "input",
-			"display_name": "Input Variable",
-			"desc": "Variable to pass into function",
-			"type": TYPE_STRING,
-			"require": false,
+			EventConst.userdata_key_name: "input",
+			EventConst.userdata_key_display: "Input Variable",
+			EventConst.userdata_key_desc: "Variable to pass into function",
+			EventConst.userdata_key_type: TYPE_STRING,
+			EventConst.userdata_key_require: false,
 		},
 		{
-			"name": "code",
-			"display_name": "Condition",
-			"desc": "Write GDScript here for your condition. Use \"input\" to access variable. Return true/false for if the condition was successful.",
-			"type": TYPE_STRING,
-			"type_hint": "text_edit",
-			"require": true,
+			EventConst.userdata_key_name: "code",
+			EventConst.userdata_key_display: "Condition",
+			EventConst.userdata_key_desc: "Write GDScript here for your condition. Use \"input\" to access variable. Return true/false for if the condition was successful.",
+			EventConst.userdata_key_type: TYPE_STRING,
+			EventConst.userdata_key_type_hint: "text_edit",
+			EventConst.userdata_key_require: true,
 		}
 	]
 

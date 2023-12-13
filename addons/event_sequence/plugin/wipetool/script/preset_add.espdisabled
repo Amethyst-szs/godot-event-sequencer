@@ -17,12 +17,12 @@ func get_first_column_config() -> Dictionary:
 func get_userdata_keys() -> Array[Dictionary]:
 	var base: Array[Dictionary] = super()
 	base.push_front({
-		"name": "auto",
-		"display_name": "Auto-Apply Preset",
-		"desc": "",
-		"type": TYPE_BOOL,
-		"require": false,
-		"default": false,
+		EventConst.userdata_key_name: "auto",
+		EventConst.userdata_key_display: "Auto-Apply Preset",
+		EventConst.userdata_key_desc: "",
+		EventConst.userdata_key_type: TYPE_BOOL,
+		EventConst.userdata_key_require: false,
+		EventConst.userdata_key_default: false,
 	})
 	
 	return base

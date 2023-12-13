@@ -23,10 +23,10 @@ func get_second_column_config() -> Dictionary:
 func get_userdata_keys() -> Array[Dictionary]:
 	return [
 		{
-			"name": "value",
-			"desc": "Value",
-			"type": TYPE_FLOAT,
-			"require": true,
+			EventConst.userdata_key_name: "value",
+			EventConst.userdata_key_desc: "Value",
+			EventConst.userdata_key_type: TYPE_FLOAT,
+			EventConst.userdata_key_require: true,
 		}
 	]
 

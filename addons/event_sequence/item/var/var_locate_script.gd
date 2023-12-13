@@ -32,18 +32,18 @@ func get_second_column_config() -> Dictionary:
 func get_userdata_keys() -> Array[Dictionary]:
 	return [
 		{
-			"name": "input",
-			"display_name": "Input Variable",
-			"desc": "Variable to pass into function",
-			"type": TYPE_STRING,
-			"require": false,
+			EventConst.userdata_key_name: "input",
+			EventConst.userdata_key_display: "Input Variable",
+			EventConst.userdata_key_desc: "Variable to pass into function",
+			EventConst.userdata_key_type: TYPE_STRING,
+			EventConst.userdata_key_require: false,
 		},
 		{
-			"name": "code",
-			"desc": "Write GDScript here. Use \"input\" to access variable. Return data to write to new variable.",
-			"type": TYPE_STRING,
-			"type_hint": "text_edit",
-			"require": true,
+			EventConst.userdata_key_name: "code",
+			EventConst.userdata_key_desc: "Write GDScript here. Use \"input\" to access variable. Return data to write to new variable.",
+			EventConst.userdata_key_type: TYPE_STRING,
+			EventConst.userdata_key_type_hint: "text_edit",
+			EventConst.userdata_key_require: true,
 		},
 	]
 

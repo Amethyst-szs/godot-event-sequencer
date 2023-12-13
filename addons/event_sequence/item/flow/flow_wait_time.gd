@@ -31,12 +31,12 @@ func get_second_column_config() -> Dictionary:
 func get_userdata_keys() -> Array[Dictionary]:
 	return [
 		{
-			"name": "dur",
-			"display_name": "Time in Seconds",
-			"desc": "",
-			"type": TYPE_FLOAT,
-			"require": false,
-			"default": 1.0,
+			EventConst.userdata_key_name: "dur",
+			EventConst.userdata_key_display: "Time in Seconds",
+			EventConst.userdata_key_desc: "",
+			EventConst.userdata_key_type: TYPE_FLOAT,
+			EventConst.userdata_key_require: false,
+			EventConst.userdata_key_default: 1.0,
 		},
 	]
 
