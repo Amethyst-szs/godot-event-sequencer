@@ -118,16 +118,32 @@ func _tree_button_pressed(item: TreeItem, column: int, id: int, mouse_button_ind
 func _tree_item_clicked(position: Vector2, mouse_button_index: int):
 	# If right clicked on a tree item, open the add popup
 	if mouse_button_index == 2:
-		popup_tree_add.popup()
-		popup_tree_add.position = DisplayServer.mouse_get_position()
+		_open_add_dialog()
 
 # When right clicking on nothing in the tree, deselect and open add popup on nothing
 func _tree_empty_clicked(position: Vector2, mouse_button_index: int):
 	# If right clicked on a tree item, open the add popup
 	if mouse_button_index == 2:
 		tree.deselect_all()
-		popup_tree_add.popup()
-		popup_tree_add.position = DisplayServer.mouse_get_position()
+		_open_add_dialog()
+		
+
+func _open_add_dialog():
+	popup_tree_add.popup()
+	
+	# Get a bunch of data about user's screens and mouse
+	var mouse_rect := Rect2(DisplayServer.mouse_get_position(), Vector2.ONE)
+	var screen_index = DisplayServer.get_screen_from_rect(mouse_rect)
+	var screen_pos := DisplayServer.screen_get_position(screen_index)
+	var screen_size := DisplayServer.screen_get_size(screen_index)
+	
+	# Calculate window position
+	var pos: Vector2i = mouse_rect.position
+	if pos.y + popup_tree_add.size.y > screen_pos.y + screen_size.y:
+		pos.y -= popup_tree_add.size.y - ((screen_pos.y + screen_size.y) - pos.y) + 25
+	
+	# Set window position
+	popup_tree_add.position = pos
 
 # Save the tree to node and rebuild tree
 func _tree_refresh():
