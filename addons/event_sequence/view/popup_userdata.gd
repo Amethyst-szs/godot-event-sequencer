@@ -212,7 +212,7 @@ func _setup_default_value(data, key: Dictionary, node: Control, property: String
 		node.set(property, data)
 		set_data = true
 			
-	if data and typeof(data) == key[EventConst.userdata_key_type] and typeof(data[array_index]) != key[EventConst.userdata_key_type]:
+	if data and typeof(data) == TYPE_ARRAY and typeof(data[array_index]) != TYPE_NIL:
 		var array: Array = node.get(property)
 		array[array_index] = data
 		set_data = true
