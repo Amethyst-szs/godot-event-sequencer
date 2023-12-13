@@ -194,9 +194,10 @@ func _add_field(container: Control, key: Dictionary, type: Variant.Type, data, a
 			spin_box.allow_greater = true
 			spin_box.allow_lesser = true
 			spin_box.update_on_text_changed = true
-			spin_box.step = 1
+			spin_box.step = 0.01
 			if key[EventConst.userdata_key_type] == TYPE_INT:
 				spin_box.rounded = true
+				spin_box.step = 1
 			
 			_setup_default_value(data, key, type, spin_box, "value", array_index)
 			
@@ -227,9 +228,11 @@ func _setup_default_value(data, key: Dictionary, type: Variant.Type, node: Contr
 	
 	if data and typeof(data) == type:
 		node.set(property, data)
-		if key.has(EventConst.userdata_key_default) and data != key[EventConst.userdata_key_default]:
+		if not key.has(EventConst.userdata_key_default):
 			set_data = true
-			
+		else: if data != key[EventConst.userdata_key_default]:
+			set_data = true
+	
 	if data and typeof(data) == TYPE_ARRAY and typeof(data[array_index]) != TYPE_NIL:
 		node.set(property, data[array_index])
 		return

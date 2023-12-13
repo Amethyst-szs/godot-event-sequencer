@@ -26,7 +26,7 @@ func get_userdata_keys() -> Array[Dictionary]:
 			EventConst.userdata_key_name: "value",
 			EventConst.userdata_key_desc: "Value",
 			EventConst.userdata_key_type: TYPE_INT,
-			EventConst.userdata_key_require: true,
+			EventConst.userdata_key_require: false,
 			EventConst.userdata_key_default: 0,
 		}
 	]
@@ -36,7 +36,7 @@ func run(event_node: EventNode) -> EventConst.ItemResponseType:
 		return EventConst.ItemResponseType.OK
 	
 	if not userdata.has("value"):
-		event_node.var_database[event_variable] = 0
+		event_node.var_database[event_variable] = int(0)
 		return EventConst.ItemResponseType.OK
 	
 	event_node.var_database[event_variable] = userdata["value"]

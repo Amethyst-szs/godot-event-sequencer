@@ -26,7 +26,7 @@ func get_userdata_keys() -> Array[Dictionary]:
 			EventConst.userdata_key_name: "state",
 			EventConst.userdata_key_desc: "False/True",
 			EventConst.userdata_key_type: TYPE_BOOL,
-			EventConst.userdata_key_require: true,
+			EventConst.userdata_key_require: false,
 			EventConst.userdata_key_default: false,
 		}
 	]
