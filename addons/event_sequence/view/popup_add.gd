@@ -126,6 +126,7 @@ func _button_pressed(script_path: String):
 			tree.get_selected().add_child(tree_item)
 	
 	tree.set_selected(tree_item, 0)
+	tree.scroll_to_item(tree_item, true)
 	
 	root.save()
 	visible = false
