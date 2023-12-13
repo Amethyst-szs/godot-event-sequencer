@@ -131,9 +131,6 @@ func _button_pressed(script_path: String):
 	root.save()
 	visible = false
 
-func _on_debug_refresh_pressed():
-	_ready()
-
 #endregion
 
 #region Plugin Methids

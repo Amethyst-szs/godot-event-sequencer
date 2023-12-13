@@ -173,15 +173,10 @@ size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxEmpty_apxsf")
 clip_tabs = false
 
-[node name="Button" type="Button" parent="TreeAddPopup/ScrollContainer/VBox"]
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 8
-text = "(DEBUG REFRESH BUTTON)"
-
 [node name="Label" type="Label" parent="TreeAddPopup/ScrollContainer/VBox"]
 layout_mode = 2
 text = "Hold shift to add as child of selection"
+horizontal_alignment = 1
 
 [node name="UserdataEditPopup" type="Popup" parent="."]
 disable_3d = true
@@ -390,5 +385,4 @@ stretch_mode = 1
 [connection signal="index_pressed" from="TreeContainer/VBox/Header/HeaderMenu/Edit" to="." method="_on_edit_index_pressed"]
 [connection signal="index_pressed" from="TreeContainer/VBox/Header/HeaderMenu/Macros" to="." method="_on_macro_menu_index_pressed"]
 [connection signal="index_pressed" from="TreeContainer/VBox/Header/HeaderMenu/Plugins" to="." method="_on_plugins_index_pressed"]
-[connection signal="pressed" from="TreeAddPopup/ScrollContainer/VBox/Button" to="TreeAddPopup" method="_on_debug_refresh_pressed"]
 [connection signal="files_selected" from="MacroDeleteWindow" to="." method="_on_macro_delete_window_files_selected"]
