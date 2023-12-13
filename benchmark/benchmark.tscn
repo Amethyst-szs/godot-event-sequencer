@@ -75,12 +75,6 @@ autofree = false
 event_list = Array[Dictionary]([{
 "fc": false,
 "s": {
-"n": "Start",
-"src": "res://addons/event_sequence/item/general/comment.gd"
-}
-}, {
-"fc": false,
-"s": {
 "n": "Create New Int",
 "src": "res://addons/event_sequence/item/var/var_make_int.gd",
 "u": {
@@ -114,12 +108,6 @@ script = ExtResource("2_schv6")
 autostart = false
 autofree = false
 event_list = Array[Dictionary]([{
-"fc": false,
-"s": {
-"n": "Start",
-"src": "res://addons/event_sequence/item/general/comment.gd"
-}
-}, {
 "fc": false,
 "s": {
 "n": "Create New Int",
@@ -157,12 +145,6 @@ autofree = false
 event_list = Array[Dictionary]([{
 "fc": false,
 "s": {
-"n": "Start",
-"src": "res://addons/event_sequence/item/general/comment.gd"
-}
-}, {
-"fc": false,
-"s": {
 "n": "Create New Int",
 "src": "res://addons/event_sequence/item/var/var_make_int.gd",
 "u": {
@@ -190,18 +172,17 @@ event_list = Array[Dictionary]([{
 }
 }])
 
+[node name="HSeparator" type="HSeparator" parent="EventList"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 4.0
+
 [node name="Custom Script 100 Times" type="Node" parent="EventList"]
 unique_name_in_owner = true
 script = ExtResource("2_schv6")
 autostart = false
 autofree = false
 event_list = Array[Dictionary]([{
-"fc": false,
-"s": {
-"n": "Start",
-"src": "res://addons/event_sequence/item/general/comment.gd"
-}
-}, {
 "fc": false,
 "s": {
 "n": "Create New Int",
@@ -239,12 +220,6 @@ autofree = false
 event_list = Array[Dictionary]([{
 "fc": false,
 "s": {
-"n": "Start",
-"src": "res://addons/event_sequence/item/general/comment.gd"
-}
-}, {
-"fc": false,
-"s": {
 "n": "Create New Int",
 "src": "res://addons/event_sequence/item/var/var_make_int.gd",
 "u": {
@@ -271,6 +246,94 @@ var _test: String = \"Test\""
 "v": "Loop Count"
 }
 }])
+
+[node name="HSeparator2" type="HSeparator" parent="EventList"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 4.0
+
+[node name="While Loop 100 Times" type="Node" parent="EventList"]
+unique_name_in_owner = true
+script = ExtResource("2_schv6")
+autostart = false
+autofree = false
+event_list = Array[Dictionary]([{
+"fc": false,
+"s": {
+"n": "Create New Int",
+"src": "res://addons/event_sequence/item/var/var_make_int.gd",
+"u": {
+"value": 0
+},
+"v": "Loop Count"
+}
+}, {
+"c": Array[Dictionary]([{
+"fc": false,
+"s": {
+"n": "Create with Script",
+"src": "res://addons/event_sequence/item/var/var_locate_script.gd",
+"u": {
+"code": "return input + 1",
+"input": "Loop Count"
+},
+"v": "Loop Count"
+}
+}]),
+"fc": false,
+"s": {
+"n": "While Condition",
+"src": "res://addons/event_sequence/item/flow/flow_int_while.gd",
+"u": {
+"code": "return input < 100",
+"input": "Loop Count"
+}
+}
+}])
+
+[node name="While Loop 10000 Times" type="Node" parent="EventList"]
+unique_name_in_owner = true
+script = ExtResource("2_schv6")
+autostart = false
+autofree = false
+event_list = Array[Dictionary]([{
+"fc": false,
+"s": {
+"n": "Create New Int",
+"src": "res://addons/event_sequence/item/var/var_make_int.gd",
+"u": {
+"value": 0
+},
+"v": "Loop Count"
+}
+}, {
+"c": Array[Dictionary]([{
+"fc": false,
+"s": {
+"n": "Create with Script",
+"src": "res://addons/event_sequence/item/var/var_locate_script.gd",
+"u": {
+"code": "return input + 1",
+"input": "Loop Count"
+},
+"v": "Loop Count"
+}
+}]),
+"fc": false,
+"s": {
+"n": "While Condition",
+"src": "res://addons/event_sequence/item/flow/flow_int_while.gd",
+"u": {
+"code": "return input < 10000",
+"input": "Loop Count"
+}
+}
+}])
+
+[node name="HSeparator4" type="HSeparator" parent="EventList"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 4.0
 
 [node name="Label Hop 100 Times" type="Node" parent="EventList"]
 unique_name_in_owner = true
@@ -378,18 +441,17 @@ event_list = Array[Dictionary]([{
 }
 }])
 
+[node name="HSeparator3" type="HSeparator" parent="EventList"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 4.0
+
 [node name="Label Hop And Return 100 Times" type="Node" parent="EventList"]
 unique_name_in_owner = true
 script = ExtResource("2_schv6")
 autostart = false
 autofree = false
 event_list = Array[Dictionary]([{
-"fc": false,
-"s": {
-"n": "Start",
-"src": "res://addons/event_sequence/item/general/comment.gd"
-}
-}, {
 "fc": false,
 "s": {
 "n": "Create New Int",
@@ -438,12 +500,6 @@ autofree = false
 event_list = Array[Dictionary]([{
 "fc": false,
 "s": {
-"n": "Start",
-"src": "res://addons/event_sequence/item/general/comment.gd"
-}
-}, {
-"fc": false,
-"s": {
 "n": "Create New Int",
 "src": "res://addons/event_sequence/item/var/var_make_int.gd",
 "u": {
@@ -481,6 +537,11 @@ event_list = Array[Dictionary]([{
 "src": "res://addons/event_sequence/item/flow/flow_label_add.gd"
 }
 }])
+
+[node name="HSeparator5" type="HSeparator" parent="EventList"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 4.0
 
 [node name="GenericNode" type="Node" parent="."]
 unique_name_in_owner = true

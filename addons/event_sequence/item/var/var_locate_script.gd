@@ -5,9 +5,7 @@ func get_name() -> String:
 	return "Create with Script"
 
 func get_description() -> String:
-	return "Create or get a variable using GDScript and add it to event variables.
-		The code is compiled at runtime, making this not performance friendly.
-		Try to avoid writing more than a couple simple lines."
+	return "Create or get a variable using GDScript and add it to event variables."
 
 func get_editor_tab() -> EventConst.EditorDialogTab:
 	return EventConst.EditorDialogTab.Variable
@@ -54,7 +52,7 @@ func get_icon_path() -> String:
 	return "res://addons/event_sequence/icon/EventItem-GetScript.svg"
 
 func run(event_node: EventNode) -> EventConst.ItemResponseType:
-	var result = _build_and_run_script(event_node)
+	var result = _run_script(event_node)
 	
 	if typeof(result) == TYPE_STRING and result == "__FAILED":
 		error("Failed to run, did not recieve return data from script execution!")

@@ -59,6 +59,9 @@ var userdata: Dictionary = {}
 
 #region App Functionality
 
+func prepare():
+	return
+
 func run(event_node: EventNode) -> EventConst.ItemResponseType:
 	print(name)
 	return EventConst.ItemResponseType.OK

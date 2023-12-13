@@ -2,6 +2,8 @@
 extends EventItemBase
 class_name EventItemScriptBase
 
+#region Configuration
+
 func get_name() -> String:
 	return "ScriptBase"
 
@@ -33,28 +35,24 @@ func get_userdata_keys() -> Array[Dictionary]:
 		},
 	]
 
-func run(event_node: EventNode) -> EventConst.ItemResponseType:
-	var result = _build_and_run_script(event_node)
-	return EventConst.ItemResponseType.OK
+#endregion
 
-func _build_and_run_script(event_node: EventNode):
-	if not is_valid_userdata("code"):
-		return "__FAILED"
-	
-	# If script uses "input" value, ensure it actually exists
-	if userdata["code"].contains("input"):
-		if not userdata.has("input") or not event_node.var_database.has(userdata["input"]):
-			error("Script uses input variable, but \"%s\" doesn't exist!" % [userdata["input"]])
-			return "__FAILED"
+#region Script Caching
+
+var user_script_inst = null
+
+func prepare():
+	_build_script()
+
+func _build_script():
+	# Ensure the code userdata key exists and is valid
+	if not is_valid_userdata("code") or userdata["code"].is_empty():
+		error("No code has been set up! Write a script first!")
+		return
 	
 	# Simple search and replace throughout the condition in userdata
 	userdata["code"] = userdata["code"].replace("\n", "\n\t")
 	userdata["code"] = userdata["code"].replace("input", "_input")
-	userdata["code"] = userdata["code"].replace("__input", "_input")
-	
-	if userdata["code"].is_empty():
-		error("No code has been set up! Write a script first!")
-		return "__FAILED"
 	
 	# Generate GDScript file at runtime
 	var script := GDScript.new()
@@ -64,15 +62,32 @@ func _build_and_run_script(event_node: EventNode):
 	# Ensure script was compiled correctly
 	if error != OK:
 		error("Code failed to parse correctly, check your GDScript!")
+		return
+	
+	# Generate instance of script
+	user_script_inst = script.new()
+
+#endregion
+
+func run(event_node: EventNode) -> EventConst.ItemResponseType:
+	var result = _run_script(event_node)
+	return EventConst.ItemResponseType.OK
+
+func _run_script(event_node: EventNode):
+	if not user_script_inst:
+		error("Skipping script, hasn't been precompiled!")
 		return "__FAILED"
 	
-	# Call generated function
-	var obj = script.new()
+	# If script uses "input" value, ensure it actually exists
+	if userdata["code"].contains("input"):
+		if not userdata.has("input") or not event_node.var_database.has(userdata["input"]):
+			error("Script uses input variable, but \"%s\" doesn't exist!" % [userdata["input"]])
+			return "__FAILED"
 	
 	var result
 	if userdata.has("input") and event_node.var_database.has(userdata["input"]):
-		result = obj.execute(event_node.var_database[userdata["input"]])
+		result = user_script_inst.execute(event_node.var_database[userdata["input"]])
 	else:
-		result = obj.execute()
+		result = user_script_inst.execute()
 	
 	return result

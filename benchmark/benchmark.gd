@@ -29,8 +29,14 @@ func _run_benchmark():
 	for item in result_container.get_children():
 		item.queue_free()
 	
+	result_container.add_child(HSeparator.new())
+	
 	var events: Array[Node] = %EventList.get_children()
 	for event in events:
+		if event is HSeparator:
+			result_container.add_child(HSeparator.new())
+			continue
+		
 		if not event is EventNode:
 			continue
 		

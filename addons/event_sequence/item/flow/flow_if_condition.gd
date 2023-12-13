@@ -7,9 +7,7 @@ func get_name() -> String:
 	return "If Condition"
 
 func get_description() -> String:
-	return "Only play this item's children if this variable matches a condition
-		The code is compiled at runtime, making this not performance friendly.
-		Try to avoid writing more than a couple simple lines."
+	return "Only play this item's children if this variable matches a condition."
 
 func get_editor_tab() -> EventConst.EditorDialogTab:
 	return EventConst.EditorDialogTab.Flow
@@ -45,7 +43,7 @@ func get_icon_path() -> String:
 #endregion
 
 func run(event_node: EventNode) -> EventConst.ItemResponseType:
-	var result = _build_and_run_script(event_node)
+	var result = _run_script(event_node)
 	
 	if typeof(result) != TYPE_BOOL:
 		error("Failed to run, did not recieve boolean from script execution!")

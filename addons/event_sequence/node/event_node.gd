@@ -28,7 +28,7 @@ var is_terminating: bool = false
 var label_jump_target: String = ""
 var new_for_loop_length: int = -1
 
-var while_loop_condition_script: GDScript = null
+var while_loop_condition_script = null
 var while_loop_condition_input: String = ""
 
 #endregion
@@ -120,6 +120,7 @@ func preload_scripts_and_labels(dict_list: Array[Dictionary], index_path: Array[
 		var script: Script = await load(event[EventConst.item_key_self][EventConst.item_key_script])
 		var inst = script.new()
 		inst.parse_dict(event[EventConst.item_key_self])
+		inst.prepare()
 		
 		# Save this instance to the dictionary
 		event[EventConst.item_key_self][EventConst.item_key_instance] = inst
@@ -202,8 +203,7 @@ func _run_dictionary_list(list: Array[Dictionary], is_first_recursion: bool = fa
 		
 		# If in while loop, check condition here
 		if while_loop_condition_script:
-			var inst := while_loop_condition_script.new()
-			if inst.execute(var_database[while_loop_condition_input]):
+			if while_loop_condition_script.execute(var_database[while_loop_condition_input]):
 				idx = start_idx
 			else:
 				while_loop_condition_script = null
