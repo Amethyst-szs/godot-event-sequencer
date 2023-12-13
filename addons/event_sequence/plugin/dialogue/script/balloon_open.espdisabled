@@ -1,0 +1,66 @@
+@tool
+extends EventItemBase
+
+func get_name() -> String:
+	return "Open Dialogue Balloon"
+
+func get_description() -> String:
+	return "Opens the current dialogue balloon scene and starts using a resource and title"
+
+func is_allow_in_editor() -> bool:
+	return true
+
+func get_first_column_config() -> Dictionary:
+	return {
+		"name": "None",
+		"editable": false,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_second_column_config() -> Dictionary:
+	return {
+		"name": "Config",
+		"editable": true,
+		"cell_mode": TreeItem.CELL_MODE_CUSTOM
+	}
+
+func get_userdata_keys() -> Array[Dictionary]:
+	return [
+		{
+			"name": "res",
+			"display_name": "Script Resource",
+			"desc": "res://path/here/",
+			"type": TYPE_STRING,
+			"require": true,
+		},
+		{
+			"name": "title",
+			"display_name": "Starting Title",
+			"desc": "title_name_here",
+			"type": TYPE_STRING,
+			"require": false,
+		},
+	]
+
+func get_color() -> Color:
+	return Color.hex(0xBD93F9FF)
+
+func get_icon_path() -> String:
+	return "res://addons/event_sequence/plugin/dialogue/icon/BalloonOpen.svg"
+
+func run(event_node: EventNode) -> EventConst.ItemResponseType:
+	if not is_valid_userdata("res"):
+		warn("No dialogue resource set!")
+		return EventConst.ItemResponseType.OK
+	
+	if not FileAccess.file_exists(userdata["res"]):
+		warn("Dialogue resource path doesn't exists!")
+		return EventConst.ItemResponseType.OK
+	
+	var resource := load(userdata["res"])
+	var title: String = ""
+	if userdata.has("title") and not userdata["title"].is_empty():
+		title = userdata["title"]
+	
+	DialogueManager.call_deferred("show_dialogue_balloon", resource, title)
+	return EventConst.ItemResponseType.OK
