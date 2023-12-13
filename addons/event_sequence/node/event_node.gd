@@ -35,7 +35,10 @@ var while_loop_condition_input: String = ""
 
 #region Signals
 
-var is_event_finished
+## Emitted when start or start_with_label is called
+signal event_started
+
+## Emitted when the node finishes its sequence and is ready to stop/free itself
 signal event_finished
 
 #endregion
@@ -48,7 +51,7 @@ func start():
 		start_from_label(start_label)
 		return
 	
-	is_event_finished = false
+	event_started.emit()
 	_run_dictionary_list(event_list, true)
 
 ## Start the sequence from a specific label, don't modify "is_external_call" unless you know
@@ -71,7 +74,7 @@ func start_from_label(label: String, is_external_call: bool = true):
 	# Reset the jump target and start
 	label_jump_target = ""
 	
-	is_event_finished = false
+	event_started.emit()
 	await _run_dictionary_list(dict, is_external_call, idx_path.back())
 
 ## Forcefully end the current sequence at the current point
@@ -214,7 +217,6 @@ func _run_dictionary_list(list: Array[Dictionary], is_first_recursion: bool = fa
 		is_terminating = false
 		var_database.clear()
 		
-		is_event_finished = true
 		event_finished.emit()
 		
 		if autofree:

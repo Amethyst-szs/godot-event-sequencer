@@ -42,9 +42,6 @@ func _run_benchmark():
 		
 		var start_time: int = Time.get_ticks_usec()
 		await event.start()
-		if not event.is_event_finished:
-			await event.event_finished
-		
 		var end_time: int = Time.get_ticks_usec()
 		
 		var dif: int = end_time - start_time
