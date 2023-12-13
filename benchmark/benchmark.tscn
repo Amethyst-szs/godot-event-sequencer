@@ -1,0 +1,488 @@
+[gd_scene load_steps=3 format=3 uid="uid://daystohodgefh"]
+
+[ext_resource type="Script" path="res://benchmark/benchmark.gd" id="1_kiyos"]
+[ext_resource type="Script" path="res://addons/event_sequence/node/event_node.gd" id="2_schv6"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_kiyos")
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Panel" type="PanelContainer" parent="Margin"]
+layout_mode = 2
+
+[node name="BenchmarkResults" type="VBoxContainer" parent="Margin/Panel"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="SystemInfo" type="VBoxContainer" parent="Margin/Panel"]
+layout_mode = 2
+size_flags_vertical = 8
+alignment = 1
+
+[node name="FPSInfoField" type="Label" parent="Margin/Panel/SystemInfo"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "fps"
+horizontal_alignment = 1
+
+[node name="SystemInfoField" type="Label" parent="Margin/Panel/SystemInfo"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "sys"
+horizontal_alignment = 1
+
+[node name="MemoryInfoField" type="Label" parent="Margin/Panel/SystemInfo"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "mem"
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="Margin/Panel/SystemInfo"]
+layout_mode = 2
+text = "Start Benchmark"
+
+[node name="EventList" type="Control" parent="."]
+unique_name_in_owner = true
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Fetch 100 Items" type="Node" parent="EventList"]
+unique_name_in_owner = true
+script = ExtResource("2_schv6")
+autostart = false
+autofree = false
+event_list = Array[Dictionary]([{
+"fc": false,
+"s": {
+"n": "Start",
+"src": "res://addons/event_sequence/item/general/comment.gd"
+}
+}, {
+"fc": false,
+"s": {
+"n": "Create New Int",
+"src": "res://addons/event_sequence/item/var/var_make_int.gd",
+"u": {
+"value": 100
+},
+"v": "Loop Count"
+}
+}, {
+"c": Array[Dictionary]([{
+"fc": false,
+"s": {
+"n": "Get Node by Unique Name",
+"src": "res://addons/event_sequence/item/var/var_get_name_unique.gd",
+"u": {
+"i": "GenericNode"
+},
+"v": "Item"
+}
+}]),
+"fc": false,
+"s": {
+"n": "Loop",
+"src": "res://addons/event_sequence/item/flow/flow_int_loop.gd",
+"v": "Loop Count"
+}
+}])
+
+[node name="Fetch 10,000 Items" type="Node" parent="EventList"]
+unique_name_in_owner = true
+script = ExtResource("2_schv6")
+autostart = false
+autofree = false
+event_list = Array[Dictionary]([{
+"fc": false,
+"s": {
+"n": "Start",
+"src": "res://addons/event_sequence/item/general/comment.gd"
+}
+}, {
+"fc": false,
+"s": {
+"n": "Create New Int",
+"src": "res://addons/event_sequence/item/var/var_make_int.gd",
+"u": {
+"value": 10000
+},
+"v": "Loop Count"
+}
+}, {
+"c": Array[Dictionary]([{
+"fc": false,
+"s": {
+"n": "Get Node by Unique Name",
+"src": "res://addons/event_sequence/item/var/var_get_name_unique.gd",
+"u": {
+"i": "GenericNode"
+},
+"v": "Item"
+}
+}]),
+"fc": false,
+"s": {
+"n": "Loop",
+"src": "res://addons/event_sequence/item/flow/flow_int_loop.gd",
+"v": "Loop Count"
+}
+}])
+
+[node name="Fetch 100,000 Items" type="Node" parent="EventList"]
+unique_name_in_owner = true
+script = ExtResource("2_schv6")
+autostart = false
+autofree = false
+event_list = Array[Dictionary]([{
+"fc": false,
+"s": {
+"n": "Start",
+"src": "res://addons/event_sequence/item/general/comment.gd"
+}
+}, {
+"fc": false,
+"s": {
+"n": "Create New Int",
+"src": "res://addons/event_sequence/item/var/var_make_int.gd",
+"u": {
+"value": 100000
+},
+"v": "Loop Count"
+}
+}, {
+"c": Array[Dictionary]([{
+"fc": false,
+"s": {
+"n": "Get Node by Unique Name",
+"src": "res://addons/event_sequence/item/var/var_get_name_unique.gd",
+"u": {
+"i": "GenericNode"
+},
+"v": "Item"
+}
+}]),
+"fc": false,
+"s": {
+"n": "Loop",
+"src": "res://addons/event_sequence/item/flow/flow_int_loop.gd",
+"v": "Loop Count"
+}
+}])
+
+[node name="Custom Script 100 Times" type="Node" parent="EventList"]
+unique_name_in_owner = true
+script = ExtResource("2_schv6")
+autostart = false
+autofree = false
+event_list = Array[Dictionary]([{
+"fc": false,
+"s": {
+"n": "Start",
+"src": "res://addons/event_sequence/item/general/comment.gd"
+}
+}, {
+"fc": false,
+"s": {
+"n": "Create New Int",
+"src": "res://addons/event_sequence/item/var/var_make_int.gd",
+"u": {
+"value": 100
+},
+"v": "Loop Count"
+}
+}, {
+"c": Array[Dictionary]([{
+"fc": false,
+"s": {
+"n": "Script",
+"src": "res://addons/event_sequence/item/general/script.gd",
+"u": {
+"code": "var _item: int = 0
+var _test: String = \"Test\""
+}
+}
+}]),
+"fc": false,
+"s": {
+"n": "Loop",
+"src": "res://addons/event_sequence/item/flow/flow_int_loop.gd",
+"v": "Loop Count"
+}
+}])
+
+[node name="Custom Script 10,000 Times" type="Node" parent="EventList"]
+unique_name_in_owner = true
+script = ExtResource("2_schv6")
+autostart = false
+autofree = false
+event_list = Array[Dictionary]([{
+"fc": false,
+"s": {
+"n": "Start",
+"src": "res://addons/event_sequence/item/general/comment.gd"
+}
+}, {
+"fc": false,
+"s": {
+"n": "Create New Int",
+"src": "res://addons/event_sequence/item/var/var_make_int.gd",
+"u": {
+"value": 10000
+},
+"v": "Loop Count"
+}
+}, {
+"c": Array[Dictionary]([{
+"fc": false,
+"s": {
+"n": "Script",
+"src": "res://addons/event_sequence/item/general/script.gd",
+"u": {
+"code": "var _item: int = 0
+var _test: String = \"Test\""
+}
+}
+}]),
+"fc": false,
+"s": {
+"n": "Loop",
+"src": "res://addons/event_sequence/item/flow/flow_int_loop.gd",
+"v": "Loop Count"
+}
+}])
+
+[node name="Label Hop 100 Times" type="Node" parent="EventList"]
+unique_name_in_owner = true
+script = ExtResource("2_schv6")
+autostart = false
+autofree = false
+event_list = Array[Dictionary]([{
+"fc": false,
+"s": {
+"n": "Create New Int",
+"src": "res://addons/event_sequence/item/var/var_make_int.gd",
+"u": {
+"value": 0
+},
+"v": "Value"
+}
+}, {
+"fc": false,
+"fl": true,
+"s": {
+"n": "Start",
+"src": "res://addons/event_sequence/item/flow/flow_label_add.gd"
+}
+}, {
+"fc": false,
+"s": {
+"n": "Create with Script",
+"src": "res://addons/event_sequence/item/var/var_locate_script.gd",
+"u": {
+"code": "return input + 1",
+"input": "Value"
+},
+"v": "Value"
+}
+}, {
+"c": Array[Dictionary]([{
+"fc": false,
+"s": {
+"n": "Jump to Label",
+"src": "res://addons/event_sequence/item/flow/flow_label_jump.gd",
+"v": "Start"
+}
+}]),
+"fc": false,
+"s": {
+"n": "If Condition",
+"src": "res://addons/event_sequence/item/flow/flow_if_condition.gd",
+"u": {
+"code": "return input < 100",
+"input": "Value"
+}
+}
+}])
+
+[node name="Label Hop 500 Times" type="Node" parent="EventList"]
+unique_name_in_owner = true
+script = ExtResource("2_schv6")
+autostart = false
+autofree = false
+event_list = Array[Dictionary]([{
+"fc": false,
+"s": {
+"n": "Create New Int",
+"src": "res://addons/event_sequence/item/var/var_make_int.gd",
+"u": {
+"value": 0
+},
+"v": "Value"
+}
+}, {
+"fc": false,
+"fl": true,
+"s": {
+"n": "Start",
+"src": "res://addons/event_sequence/item/flow/flow_label_add.gd"
+}
+}, {
+"fc": false,
+"s": {
+"n": "Create with Script",
+"src": "res://addons/event_sequence/item/var/var_locate_script.gd",
+"u": {
+"code": "return input + 1",
+"input": "Value"
+},
+"v": "Value"
+}
+}, {
+"c": Array[Dictionary]([{
+"fc": false,
+"s": {
+"n": "Jump to Label",
+"src": "res://addons/event_sequence/item/flow/flow_label_jump.gd",
+"v": "Start"
+}
+}]),
+"fc": false,
+"s": {
+"n": "If Condition",
+"src": "res://addons/event_sequence/item/flow/flow_if_condition.gd",
+"u": {
+"code": "return input < 500",
+"input": "Value"
+}
+}
+}])
+
+[node name="Label Hop And Return 100 Times" type="Node" parent="EventList"]
+unique_name_in_owner = true
+script = ExtResource("2_schv6")
+autostart = false
+autofree = false
+event_list = Array[Dictionary]([{
+"fc": false,
+"s": {
+"n": "Start",
+"src": "res://addons/event_sequence/item/general/comment.gd"
+}
+}, {
+"fc": false,
+"s": {
+"n": "Create New Int",
+"src": "res://addons/event_sequence/item/var/var_make_int.gd",
+"u": {
+"value": 100
+},
+"v": "Loop Count"
+}
+}, {
+"c": Array[Dictionary]([{
+"fc": false,
+"s": {
+"n": "Jump to Label and Return",
+"src": "res://addons/event_sequence/item/flow/flow_label_jump_ret.gd",
+"v": "TestArea"
+}
+}]),
+"fc": false,
+"s": {
+"n": "Loop",
+"src": "res://addons/event_sequence/item/flow/flow_int_loop.gd",
+"v": "Loop Count"
+}
+}, {
+"c": Array[Dictionary]([{
+"fc": false,
+"s": {
+"n": "Comment",
+"src": "res://addons/event_sequence/item/general/comment.gd"
+}
+}]),
+"fc": false,
+"fl": true,
+"s": {
+"n": "TestArea",
+"src": "res://addons/event_sequence/item/flow/flow_label_add.gd"
+}
+}])
+
+[node name="Label Hop And Return 10000 Times" type="Node" parent="EventList"]
+unique_name_in_owner = true
+script = ExtResource("2_schv6")
+autostart = false
+autofree = false
+event_list = Array[Dictionary]([{
+"fc": false,
+"s": {
+"n": "Start",
+"src": "res://addons/event_sequence/item/general/comment.gd"
+}
+}, {
+"fc": false,
+"s": {
+"n": "Create New Int",
+"src": "res://addons/event_sequence/item/var/var_make_int.gd",
+"u": {
+"value": 10000
+},
+"v": "Loop Count"
+}
+}, {
+"c": Array[Dictionary]([{
+"fc": false,
+"s": {
+"n": "Jump to Label and Return",
+"src": "res://addons/event_sequence/item/flow/flow_label_jump_ret.gd",
+"v": "TestArea"
+}
+}]),
+"fc": false,
+"s": {
+"n": "Loop",
+"src": "res://addons/event_sequence/item/flow/flow_int_loop.gd",
+"v": "Loop Count"
+}
+}, {
+"c": Array[Dictionary]([{
+"fc": false,
+"s": {
+"n": "Comment",
+"src": "res://addons/event_sequence/item/general/comment.gd"
+}
+}]),
+"fc": false,
+"fl": true,
+"s": {
+"n": "TestArea",
+"src": "res://addons/event_sequence/item/flow/flow_label_add.gd"
+}
+}])
+
+[node name="GenericNode" type="Node" parent="."]
+unique_name_in_owner = true
+
+[connection signal="pressed" from="Margin/Panel/SystemInfo/Button" to="." method="_run_benchmark"]

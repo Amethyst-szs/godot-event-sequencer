@@ -194,7 +194,7 @@ func _add_field(container: Control, key: Dictionary, type: Variant.Type, data, a
 			spin_box.allow_greater = true
 			spin_box.allow_lesser = true
 			spin_box.update_on_text_changed = true
-			spin_box.step = 0
+			spin_box.step = 1
 			if key[EventConst.userdata_key_type] == TYPE_INT:
 				spin_box.rounded = true
 			
@@ -268,7 +268,10 @@ func _field_edited(data, key: Dictionary, array_index: int):
 	
 	# Copy field data into TreeItem metadata
 	if not data is TextEdit:
-		target_item.set_meta(key[EventConst.userdata_key_name], data)
+		if key[EventConst.userdata_key_type] == TYPE_INT:
+			target_item.set_meta(key[EventConst.userdata_key_name], int(data))
+		else:
+			target_item.set_meta(key[EventConst.userdata_key_name], data)
 	else:
 		target_item.set_meta(key[EventConst.userdata_key_name], data.text)
 	

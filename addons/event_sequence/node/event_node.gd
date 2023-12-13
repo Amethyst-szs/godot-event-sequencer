@@ -33,6 +33,13 @@ var while_loop_condition_input: String = ""
 
 #endregion
 
+#region Signals
+
+var is_event_finished
+signal event_finished
+
+#endregion
+
 #region End-User Functions
 
 ## Starts the sequence from the top (unless overriden by "start_label" in inspector)
@@ -41,6 +48,7 @@ func start():
 		start_from_label(start_label)
 		return
 	
+	is_event_finished = false
 	_run_dictionary_list(event_list, true)
 
 ## Start the sequence from a specific label, don't modify "is_external_call" unless you know
@@ -62,6 +70,8 @@ func start_from_label(label: String, is_external_call: bool = true):
 	
 	# Reset the jump target and start
 	label_jump_target = ""
+	
+	is_event_finished = false
 	await _run_dictionary_list(dict, is_external_call, idx_path.back())
 
 ## Forcefully end the current sequence at the current point
@@ -85,7 +95,7 @@ func _ready():
 func _process(_delta: float):
 	# Check if there is a label_jump_target and start there if so
 	if not label_jump_target.is_empty():
-		start_from_label(label_jump_target, false)
+		start_from_label(label_jump_target, true)
 
 func _validate_property(property):
 	if property.name == "event_list":
@@ -203,6 +213,9 @@ func _run_dictionary_list(list: Array[Dictionary], is_first_recursion: bool = fa
 	if is_first_recursion and label_jump_target.is_empty():
 		is_terminating = false
 		var_database.clear()
+		
+		is_event_finished = true
+		event_finished.emit()
 		
 		if autofree:
 			queue_free()

@@ -27,6 +27,7 @@ func get_userdata_keys() -> Array[Dictionary]:
 			EventConst.userdata_key_desc: "Value",
 			EventConst.userdata_key_type: TYPE_FLOAT,
 			EventConst.userdata_key_require: true,
+			EventConst.userdata_key_default: 0.0,
 		}
 	]
 
