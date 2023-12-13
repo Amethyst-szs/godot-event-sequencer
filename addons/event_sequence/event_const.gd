@@ -20,6 +20,7 @@ const item_key_child: String = "c"
 
 const item_key_name: String = "n"
 const item_key_script: String = "src"
+const item_key_instance: String = "inst"
 const item_key_macro: String = "m"
 const item_key_variable: String = "v"
 const item_key_userdata: String = "u"

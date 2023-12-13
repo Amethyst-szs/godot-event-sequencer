@@ -1,64 +1,49 @@
-@tool
 @icon("res://icon.svg")
 
 extends Node
 class_name EventNode
 
+#region Exports & Other Variables
+
+## Should this event sequence automatically start on scene load?
+@export var autostart: bool = true
+## Should this sequence automatically free itself after ending?
+@export var autofree: bool = true
+## What label should the sequence start on? (Leave blank for default behavior)
+@export var start_label: String = ""
+
 # Lists and Databases
+
+# This is an @export_storage variable.
+# This lets the event editor modify the variable without exposing
+# it to the inspector. Code for this is in _validate_property
 @export var event_list: Array[Dictionary] = []
-@export var script_list: Array[Script] = []
-@export var label_list: Dictionary = {}
-@export var var_database: Dictionary = {}
+
+var label_list: Dictionary = {}
+var var_database: Dictionary = {}
 
 # Status
-@export var is_terminating: bool = false
-@export var label_jump_target: String = ""
-@export var new_for_loop_length: int = -1
+var is_terminating: bool = false
+var label_jump_target: String = ""
+var new_for_loop_length: int = -1
 
-# While loop condition
-@export var while_loop_condition_script: GDScript = null
-@export var while_loop_condition_input: String = ""
+var while_loop_condition_script: GDScript = null
+var while_loop_condition_input: String = ""
 
-func _ready():
-	if not Engine.is_editor_hint():
-		preload_scripts_and_labels(event_list)
-		start()
+#endregion
 
-func _process(_delta: float):
-	if not label_jump_target.is_empty():
-		start_from_label(label_jump_target, false)
+#region End-User Functions
 
-func preload_scripts_and_labels(dict_list: Array[Dictionary], index_path: Array[int] = []):
-	# Iterate through the event list
-	for event in dict_list:
-		# Ensure this item has self dict
-		if not event.has(EventConst.item_key_self):
-			continue
-		
-		# If the resource loader doesn't have this script cached, cache it
-		if not ResourceLoader.has_cached(event[EventConst.item_key_self][EventConst.item_key_script]):
-			var script := await ResourceLoader.load(event[EventConst.item_key_self][EventConst.item_key_script], "Script")
-			script_list.push_back(script)
-		
-		# Get index path to this specific item
-		var self_index_path: Array[int] = index_path.duplicate()
-		self_index_path.push_back(dict_list.find(event))
-		
-		# If this event is a label marker, add to label list
-		if event.has(EventConst.item_key_flag_label):
-			var label_name: String = event[EventConst.item_key_self][EventConst.item_key_name]
-			if label_list.has(label_name):
-				push_warning("EventNode \"%s\" has multiple labels with name \"%s\"" % [name, label_name])
-			
-			label_list[label_name] = self_index_path
-		
-		# If this event has children, look through them recursively as well
-		if event.has(EventConst.item_key_child):
-			preload_scripts_and_labels(event[EventConst.item_key_child], self_index_path)
-
+## Starts the sequence from the top (unless overriden by "start_label" in inspector)
 func start():
+	if not start_label.is_empty():
+		start_from_label(start_label)
+		return
+	
 	_run_dictionary_list(event_list, true)
 
+## Start the sequence from a specific label, don't modify "is_external_call" unless you know
+## what you are doing
 func start_from_label(label: String, is_external_call: bool = true):
 	if not label_list.has(label):
 		push_warning("Cannot start %s from label %s cause it doesn't exist" % [name, label])
@@ -78,6 +63,69 @@ func start_from_label(label: String, is_external_call: bool = true):
 	label_jump_target = ""
 	await _run_dictionary_list(dict, is_external_call, idx_path.back())
 
+## Forcefully end the current sequence at the current point
+func end_force():
+	is_terminating = true
+
+#endregion
+
+#region Virtual Functions
+
+func _ready():
+	# Create an instance of every script item and create label index list
+	preload_scripts_and_labels(event_list)
+	
+	if autostart:
+		start()
+
+func _process(_delta: float):
+	# Check if there is a label_jump_target and start there if so
+	if not label_jump_target.is_empty():
+		start_from_label(label_jump_target, false)
+
+func _validate_property(property):
+	if property.name == "event_list":
+		property.usage &= PROPERTY_USAGE_STORAGE
+
+#endregion
+
+#region Implementation
+
+func preload_scripts_and_labels(dict_list: Array[Dictionary], index_path: Array[int] = []):
+	# Never ever do this in the editor
+	if Engine.is_editor_hint():
+		return
+	
+	# Iterate through the event list
+	for event in dict_list:
+		# Ensure this item has self dict
+		if not event.has(EventConst.item_key_self):
+			continue
+		
+		# Create instance of this item's script
+		var script: Script = await load(event[EventConst.item_key_self][EventConst.item_key_script])
+		var inst = script.new()
+		inst.parse_dict(event[EventConst.item_key_self])
+		
+		# Save this instance to the dictionary
+		event[EventConst.item_key_self][EventConst.item_key_instance] = inst
+		
+		# Get index path to this specific item
+		var self_index_path: Array[int] = index_path.duplicate()
+		self_index_path.push_back(dict_list.find(event))
+		
+		# If this event is a label marker, add to label list
+		if event.has(EventConst.item_key_flag_label):
+			var label_name: String = event[EventConst.item_key_self][EventConst.item_key_name]
+			if label_list.has(label_name):
+				push_warning("EventNode \"%s\" has multiple labels with name \"%s\"" % [name, label_name])
+			
+			label_list[label_name] = self_index_path
+		
+		# If this event has children, look through them recursively as well
+		if event.has(EventConst.item_key_child):
+			preload_scripts_and_labels(event[EventConst.item_key_child], self_index_path)
+
 func _run_dictionary_list(list: Array[Dictionary], is_first_recursion: bool = false, start_idx: int = 0, loop_count: int = -1):
 	var idx: int = start_idx
 	var loops: int = loop_count
@@ -94,9 +142,8 @@ func _run_dictionary_list(list: Array[Dictionary], is_first_recursion: bool = fa
 		
 		var event_self: Dictionary = event_root[EventConst.item_key_self]
 		
-		# New instance of script
-		var script: Script = ResourceLoader.load(event_self[EventConst.item_key_script], "Script")
-		var script_instance = script.new()
+		# Get instance of script
+		var script_instance = event_self[EventConst.item_key_instance]
 		
 		# Increment counter
 		idx += 1
@@ -109,7 +156,6 @@ func _run_dictionary_list(list: Array[Dictionary], is_first_recursion: bool = fa
 			continue
 		
 		# Wait for the script to run and then continue
-		script_instance.parse_dict(event_self)
 		var result: EventConst.ItemResponseType = await script_instance.run(self)
 		
 		match(result):
@@ -151,5 +197,10 @@ func _run_dictionary_list(list: Array[Dictionary], is_first_recursion: bool = fa
 	
 	# Once iterating through events is complete, cleanup
 	if is_first_recursion and label_jump_target.is_empty():
-		var_database.clear()
 		is_terminating = false
+		var_database.clear()
+		
+		if autofree:
+			queue_free()
+
+#endregion
