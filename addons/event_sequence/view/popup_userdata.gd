@@ -235,7 +235,6 @@ func _setup_default_value(data, key: Dictionary, type: Variant.Type, node: Contr
 		return
 	
 	if array_index < 0:
-		print(key["name"])
 		if set_data:
 			_set_field_state_modified(key)
 		else:
@@ -311,14 +310,12 @@ func _field_reset(key: Dictionary):
 
 # Enable the reset button and show the okay checkmark
 func _set_field_state_modified(key: Dictionary):
-	print("Mod %s" % [key["name"]])
 	key["reset_node"].disabled = false
 	if key.has(EventConst.userdata_key_require) and key[EventConst.userdata_key_require]:
 		key["require_node"].texture = texture_field_okay
 
 # Disable the reset button and show required star if this is a required field
 func _set_field_state_default(key: Dictionary):
-	print("Default %s" % [key["name"]])
 	key["reset_node"].disabled = true
 	if key.has(EventConst.userdata_key_require) and key[EventConst.userdata_key_require]:
 		key["require_node"].texture = texture_require
