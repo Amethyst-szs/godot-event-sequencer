@@ -114,14 +114,24 @@ func build_menu(item: TreeItem, column: int, open_menu: bool = true):
 			data = key[EventConst.userdata_key_default]
 		
 		# Build edit field based on type
-		if not key[EventConst.userdata_key_type] == TYPE_ARRAY:
+		if key[EventConst.userdata_key_type] != TYPE_ARRAY:
 			_add_field(grid, key, key[EventConst.userdata_key_type], data)
 		else:
 			# Create button
 			var button := Button.new()
 			button.text = "Add Array Item"
+			button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			button.pressed.connect(_add_item_to_array.bind(key, column))
 			grid.add_child(button)
+			
+			# Add required icon early
+			grid.add_child(require_icon)
+			
+			# Setup the reset/required icons for array
+			if typeof(data) == TYPE_ARRAY and data.is_empty():
+				_set_field_state_default(key)
+			else:
+				_set_field_state_modified(key)
 			
 			# If this array doesn't have a meta key, add it
 			if not item.has_meta(key[EventConst.userdata_key_name]):
@@ -136,7 +146,8 @@ func build_menu(item: TreeItem, column: int, open_menu: bool = true):
 		require_icon.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 		require_icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		
-		grid.add_child(require_icon)
+		if key[EventConst.userdata_key_type] != TYPE_ARRAY:
+			grid.add_child(require_icon)
 		
 	# Spawn window
 	if open_menu:
@@ -149,10 +160,12 @@ func _add_field(container: Control, key: Dictionary, type: Variant.Type, data, a
 	if array_index > -1:
 		var remove := Button.new()
 		remove.text = "Remove Item"
-		remove.flat = true
-		remove.alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		remove.alignment = HORIZONTAL_ALIGNMENT_CENTER
 		remove.pressed.connect(_remove_item_from_array.bind(key, array_index))
 		container.add_child(remove)
+		
+		# Pad out item with a blank control node to align grid correctly
+		container.add_child(Control.new())
 	
 	match(type):
 		TYPE_STRING:
@@ -172,7 +185,7 @@ func _add_field(container: Control, key: Dictionary, type: Variant.Type, data, a
 			if key.has(EventConst.userdata_key_desc):
 				edit.placeholder_text = key[EventConst.userdata_key_desc]
 			
-			_setup_default_value(data, key, edit, "text", array_index)
+			_setup_default_value(data, key, type, edit, "text", array_index)
 			
 			container.add_child(edit)
 		TYPE_INT, TYPE_FLOAT:
@@ -185,7 +198,7 @@ func _add_field(container: Control, key: Dictionary, type: Variant.Type, data, a
 			if key[EventConst.userdata_key_type] == TYPE_INT:
 				spin_box.rounded = true
 			
-			_setup_default_value(data, key, spin_box, "value", array_index)
+			_setup_default_value(data, key, type, spin_box, "value", array_index)
 			
 			spin_box.value_changed.connect(_field_edited.bind(key, array_index))
 			container.add_child(spin_box)
@@ -194,33 +207,39 @@ func _add_field(container: Control, key: Dictionary, type: Variant.Type, data, a
 			if key.has(EventConst.userdata_key_desc):
 				button.text = key[EventConst.userdata_key_desc]
 			
-			_setup_default_value(data, key, button, "button_pressed", array_index)
+			_setup_default_value(data, key, type, button, "button_pressed", array_index)
 			
 			button.toggled.connect(_field_edited.bind(key, array_index))
 			container.add_child(button)
 		TYPE_COLOR:
 			var button := ColorPickerButton.new()
-			_setup_default_value(data, key, button, "color", array_index)
+			_setup_default_value(data, key, type, button, "color", array_index)
 			
 			button.color_changed.connect(_field_edited.bind(key, array_index))
 			container.add_child(button)
+	
+	# Pad out item with a blank control node to align grid correctly
+	if array_index > -1:
+		container.add_child(Control.new())
 
-func _setup_default_value(data, key: Dictionary, node: Control, property: String, array_index: int):
+func _setup_default_value(data, key: Dictionary, type: Variant.Type, node: Control, property: String, array_index: int):
 	var set_data: bool = false
 	
-	if data and typeof(data) == key[EventConst.userdata_key_type]:
+	if data and typeof(data) == type:
 		node.set(property, data)
-		set_data = true
+		if key.has(EventConst.userdata_key_default) and data != key[EventConst.userdata_key_default]:
+			set_data = true
 			
 	if data and typeof(data) == TYPE_ARRAY and typeof(data[array_index]) != TYPE_NIL:
-		var array: Array = node.get(property)
-		array[array_index] = data
-		set_data = true
-			
-	if set_data:
-		_set_field_state_modified(key)
-	else:
-		_set_field_state_default(key)
+		node.set(property, data[array_index])
+		return
+	
+	if array_index < 0:
+		print(key["name"])
+		if set_data:
+			_set_field_state_modified(key)
+		else:
+			_set_field_state_default(key)
 
 func _add_item_to_array(key: Dictionary, column: int):
 	var meta = target_item.get_meta(key[EventConst.userdata_key_name])
@@ -246,6 +265,7 @@ func _field_edited(data, key: Dictionary, array_index: int):
 	# If this is an array, handle seperately
 	if array_index > -1:
 		_field_edited_array(data, key, array_index)
+		return
 	
 	# Copy field data into TreeItem metadata
 	if not data is TextEdit:
@@ -268,17 +288,11 @@ func _field_edited_array(data, key: Dictionary, array_index: int):
 	var array: Array = target_item.get_meta(key[EventConst.userdata_key_name])
 	if not array:
 		return
-		
+	
 	if not data is TextEdit:
 		array[array_index] = data
 	else:
 		array[array_index] = data.text
-	
-	# Update reset and required control node indicators
-	if array.is_empty():
-		_set_field_state_default(key)
-	else:
-		_set_field_state_modified(key)
 
 # Reset the field to the EventConst.userdata_key_default key
 func _field_reset(key: Dictionary):
@@ -297,12 +311,14 @@ func _field_reset(key: Dictionary):
 
 # Enable the reset button and show the okay checkmark
 func _set_field_state_modified(key: Dictionary):
+	print("Mod %s" % [key["name"]])
 	key["reset_node"].disabled = false
 	if key.has(EventConst.userdata_key_require) and key[EventConst.userdata_key_require]:
 		key["require_node"].texture = texture_field_okay
 
 # Disable the reset button and show required star if this is a required field
 func _set_field_state_default(key: Dictionary):
+	print("Default %s" % [key["name"]])
 	key["reset_node"].disabled = true
 	if key.has(EventConst.userdata_key_require) and key[EventConst.userdata_key_require]:
 		key["require_node"].texture = texture_require
