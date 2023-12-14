@@ -22,10 +22,11 @@ WipeTool="*res://addons/wipetool/scene/wipe_tool.tscn"
 DialogueManager="*res://addons/dialogue_manager/dialogue_manager.gd"
 SaveAccessor="*res://addons/savedata-dx/backend/save_accessor.gd"
 SaveHolder="*res://addons/savedata-dx/backend/save_holder.gd"
+SoundManager="*res://addons/sound_manager/sound_manager.gd"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/dialogue_manager/plugin.cfg", "res://addons/event_sequence/plugin.cfg", "res://addons/savedata-dx/plugin.cfg", "res://addons/wipetool/plugin.cfg")
+enabled=PackedStringArray("res://addons/dialogue_manager/plugin.cfg", "res://addons/event_sequence/plugin.cfg", "res://addons/savedata-dx/plugin.cfg", "res://addons/sound_manager/plugin.cfg", "res://addons/wipetool/plugin.cfg")
 
 [internationalization]
 

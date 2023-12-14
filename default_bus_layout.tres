@@ -1,0 +1,14 @@
+[gd_resource type="AudioBusLayout" load_steps=2 format=3 uid="uid://y4b4t6u6pb4k"]
+
+[sub_resource type="AudioEffectReverb" id="AudioEffectReverb_puoid"]
+resource_name = "Reverb"
+
+[resource]
+bus/1/name = &"Other"
+bus/1/solo = false
+bus/1/mute = false
+bus/1/bypass_fx = false
+bus/1/volume_db = 4.03575
+bus/1/send = &"Master"
+bus/1/effect/0/effect = SubResource("AudioEffectReverb_puoid")
+bus/1/effect/0/enabled = true

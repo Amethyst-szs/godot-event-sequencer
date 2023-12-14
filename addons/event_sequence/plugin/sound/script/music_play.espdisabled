@@ -1,0 +1,101 @@
+@tool
+extends EventItemBase
+
+func get_name() -> String:
+	return "Play Music"
+
+func get_description() -> String:
+	return "A highly configurable item to start playing a specific music file"
+
+func is_allow_in_editor() -> bool:
+	return true
+
+func get_second_column_config() -> Dictionary:
+	return {
+		"name": "Config",
+		"editable": true,
+		"cell_mode": TreeItem.CELL_MODE_CUSTOM
+	}
+
+func get_userdata_keys() -> Array[Dictionary]:
+	return [
+		{
+			EventConst.userdata_key_name: "path",
+			EventConst.userdata_key_display: "Audio Stream Path",
+			EventConst.userdata_key_desc: "res://file/path/",
+			EventConst.userdata_key_type: TYPE_STRING,
+			EventConst.userdata_key_require: true,
+			EventConst.userdata_key_default: "",
+		},
+		{
+			EventConst.userdata_key_name: "fade",
+			EventConst.userdata_key_display: "Fade Time (Secs)",
+			EventConst.userdata_key_desc: "",
+			EventConst.userdata_key_type: TYPE_FLOAT,
+			EventConst.userdata_key_require: false,
+			EventConst.userdata_key_default: 0.0,
+		},
+		{
+			EventConst.userdata_key_name: "position",
+			EventConst.userdata_key_display: "Start Position (Secs)",
+			EventConst.userdata_key_desc: "",
+			EventConst.userdata_key_type: TYPE_FLOAT,
+			EventConst.userdata_key_require: false,
+			EventConst.userdata_key_default: 0.0,
+		},
+		{
+			EventConst.userdata_key_name: "volume",
+			EventConst.userdata_key_display: "Volume Offset (DB)",
+			EventConst.userdata_key_desc: "",
+			EventConst.userdata_key_type: TYPE_FLOAT,
+			EventConst.userdata_key_require: false,
+			EventConst.userdata_key_default: 0.0,
+		},
+		{
+			EventConst.userdata_key_name: "pitch",
+			EventConst.userdata_key_display: "Pitch (Percentage)",
+			EventConst.userdata_key_desc: "",
+			EventConst.userdata_key_type: TYPE_FLOAT,
+			EventConst.userdata_key_require: false,
+			EventConst.userdata_key_default: 100.0,
+		},
+	]
+
+func get_color() -> Color:
+	return Color.HOT_PINK
+
+func get_icon_path() -> String:
+	return "res://addons/event_sequence/icon/IconFlat.svg"
+
+var stream: AudioStream = null
+
+func prepare():
+	if not userdata.has("path"):
+		error("No audio stream path set!")
+		return
+	
+	stream = load(userdata["path"])
+
+func run(event_node: EventNode) -> EventConst.ItemResponseType:
+	if not stream:
+		warn("No audio stream is set up to play as music!")
+		return EventConst.ItemResponseType.OK
+	
+	# Get properties from userdata
+	var fade: float = _get_userdata_float("fade", 0.0)
+	var vol: float = _get_userdata_float("volume", 0.0)
+	var pos: float = _get_userdata_float("position", 0.0)
+	var pitch: float = _get_userdata_float("pitch", 100.0)
+	
+	var player := SoundManager.play_music_from_position_at_volume(stream, pos, vol, fade)
+	
+	if pitch > 0.0:
+		player.pitch_scale = pitch / 100.0
+	
+	return EventConst.ItemResponseType.OK
+
+func _get_userdata_float(key: String, default: float) -> float:
+	if userdata.has(key):
+		return userdata[key]
+	
+	return default

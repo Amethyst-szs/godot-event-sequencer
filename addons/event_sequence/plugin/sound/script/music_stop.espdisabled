@@ -1,0 +1,49 @@
+@tool
+extends EventItemBase
+
+func get_name() -> String:
+	return "Stop Music"
+
+func get_description() -> String:
+	return "End the currently playing music in the Sound Manager"
+
+func is_allow_in_editor() -> bool:
+	return true
+
+func get_second_column_config() -> Dictionary:
+	return {
+		"name": "Config",
+		"editable": true,
+		"cell_mode": TreeItem.CELL_MODE_CUSTOM
+	}
+
+func get_userdata_keys() -> Array[Dictionary]:
+	return [
+		{
+			EventConst.userdata_key_name: "fade",
+			EventConst.userdata_key_display: "Fade Time (Secs)",
+			EventConst.userdata_key_desc: "",
+			EventConst.userdata_key_type: TYPE_FLOAT,
+			EventConst.userdata_key_require: false,
+			EventConst.userdata_key_default: 0.0,
+		},
+	]
+
+func get_color() -> Color:
+	return Color.HOT_PINK
+
+func get_icon_path() -> String:
+	return "res://addons/event_sequence/icon/IconFlat.svg"
+
+func run(event_node: EventNode) -> EventConst.ItemResponseType:
+	# Get properties from userdata
+	var fade: float = _get_userdata_float("fade", 0.0)
+	SoundManager.stop_music(fade)
+
+	return EventConst.ItemResponseType.OK
+
+func _get_userdata_float(key: String, default: float) -> float:
+	if userdata.has(key):
+		return userdata[key]
+	
+	return default
