@@ -44,7 +44,7 @@ func copy(is_cut: bool = false):
 
 func paste():
 	duplicate_and_move(self, main_tree, false)
-	editor._tree_refresh()
+	editor.call_deferred("_tree_refresh")
 
 func duplicate_and_move(source: Tree, target: Tree, is_copying: bool):
 	# Reset the copy paste tree if copying new data into it

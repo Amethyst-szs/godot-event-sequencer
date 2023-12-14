@@ -87,6 +87,14 @@ item_count = 1
 item_0/text = "Open Plugin Manager"
 item_0/id = 0
 
+[node name="Debug" type="PopupMenu" parent="TreeContainer/VBox/Header/HeaderMenu"]
+disable_3d = true
+item_count = 2
+item_0/text = "Hot-reload Add Item Menu"
+item_0/id = 0
+item_1/text = "Print Selection Metadata"
+item_1/id = 1
+
 [node name="TreeAligner" type="HBoxContainer" parent="TreeContainer/VBox"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -385,4 +393,5 @@ stretch_mode = 1
 [connection signal="index_pressed" from="TreeContainer/VBox/Header/HeaderMenu/Edit" to="." method="_on_edit_index_pressed"]
 [connection signal="index_pressed" from="TreeContainer/VBox/Header/HeaderMenu/Macros" to="." method="_on_macro_menu_index_pressed"]
 [connection signal="index_pressed" from="TreeContainer/VBox/Header/HeaderMenu/Plugins" to="." method="_on_plugins_index_pressed"]
+[connection signal="index_pressed" from="TreeContainer/VBox/Header/HeaderMenu/Debug" to="." method="_on_debug_index_pressed"]
 [connection signal="files_selected" from="MacroDeleteWindow" to="." method="_on_macro_delete_window_files_selected"]

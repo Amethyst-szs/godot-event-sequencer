@@ -162,16 +162,13 @@ func _setup_column_config(item: TreeItem, column: EventConst.EditorColumn, confi
 func build_userdata_from_tree(item: TreeItem) -> Dictionary:
 	userdata = {}
 	
-	for meta in item.get_meta_list():
-		# Ensure this isn't an internal value we shouldn't read
-		if meta.begins_with("__"):
+	for key in get_userdata_keys():
+		var key_name: String = key[EventConst.userdata_key_name]
+		
+		if not item.has_meta(key_name):
 			continue
 		
-		# Ensure we aren't reading the flags, those aren't part of regular userdata
-		if meta == EventConst.item_key_flag_macro or meta == EventConst.item_key_flag_label or meta == EventConst.item_key_flag_collapsed:
-			continue
-		
-		userdata[meta] = item.get_meta(meta)
+		userdata[key_name] = item.get_meta(key_name)
 	
 	return userdata
 

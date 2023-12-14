@@ -122,11 +122,10 @@ func _tree_item_clicked(position: Vector2, mouse_button_index: int):
 
 # When right clicking on nothing in the tree, deselect and open add popup on nothing
 func _tree_empty_clicked(position: Vector2, mouse_button_index: int):
-	# If right clicked on a tree item, open the add popup
+	# If right clicked on nothing, deselect and open the add popup
 	if mouse_button_index == 2:
 		tree.deselect_all()
 		_open_add_dialog()
-		
 
 func _open_add_dialog():
 	popup_tree_add.popup()
@@ -415,6 +414,16 @@ func _on_plugins_index_pressed(index):
 		0:
 			popup_plugin_installer.popup()
 
+func _on_debug_index_pressed(index):
+	match(index):
+		0:
+			popup_tree_add._ready()
+		1:
+			if not tree.get_selected():
+				return
+			
+			print("\n- Selection Metadata: -")
+			for meta in tree.get_selected().get_meta_list():
+				print("%s: %s" % [meta, tree.get_selected().get_meta(meta)])
+
 #endregion
-
-
