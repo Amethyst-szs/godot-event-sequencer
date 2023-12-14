@@ -1,5 +1,5 @@
 @tool
-extends EventItemFlowBase
+extends EventItemWaitBase
 
 var signal_tally: int = 0
 var signal_tally_target: int = 0
@@ -16,6 +16,13 @@ func get_description() -> String:
 
 func is_allow_in_editor() -> bool:
 	return true
+
+func get_first_column_config() -> Dictionary:
+	return {
+		"name": "Variable Name (Node)",
+		"editable": true,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
 
 func get_second_column_config() -> Dictionary:
 	return {

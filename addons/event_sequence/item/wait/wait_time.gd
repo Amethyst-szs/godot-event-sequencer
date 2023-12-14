@@ -1,5 +1,5 @@
 @tool
-extends EventItemFlowBase
+extends EventItemWaitBase
 
 signal timer_complete
 
@@ -13,13 +13,6 @@ func get_description() -> String:
 
 func is_allow_in_editor() -> bool:
 	return true
-
-func get_first_column_config() -> Dictionary:
-	return {
-		"name": "None",
-		"editable": false,
-		"cell_mode": TreeItem.CELL_MODE_STRING
-	}
 
 func get_second_column_config() -> Dictionary:
 	return {

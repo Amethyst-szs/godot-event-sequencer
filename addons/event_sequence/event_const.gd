@@ -50,6 +50,7 @@ const ScriptScanFolders: Array[String] = [
 	"res://addons/event_sequence/item/set/",
 	"res://addons/event_sequence/item/method/",
 	"res://addons/event_sequence/item/flow/",
+	"res://addons/event_sequence/item/wait/",
 ]
 
 const ScriptMacroFolder: String = "res://addons/event_sequence/macro/"
@@ -61,6 +62,7 @@ enum EditorDialogTab {
 	Set,
 	Method,
 	Flow,
+	Wait,
 }
 
 # Editor tree columns
