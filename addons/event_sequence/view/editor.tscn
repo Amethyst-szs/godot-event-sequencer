@@ -39,6 +39,7 @@ theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
+metadata/_edit_use_anchors_ = true
 
 [node name="VBox" type="VBoxContainer" parent="TreeContainer"]
 layout_mode = 2
@@ -123,7 +124,7 @@ horizontal_alignment = 1
 unique_name_in_owner = true
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
-size_flags_horizontal = 8
+size_flags_horizontal = 4
 size_flags_vertical = 3
 theme_override_constants/v_separation = 8
 theme_override_constants/draw_relationship_lines = 1
@@ -139,7 +140,6 @@ enable_recursive_folding = false
 hide_root = true
 select_mode = 2
 scroll_horizontal_enabled = false
-scroll_vertical_enabled = false
 script = ExtResource("3_dhmyj")
 
 [node name="TreeAddPopup" type="Popup" parent="."]
