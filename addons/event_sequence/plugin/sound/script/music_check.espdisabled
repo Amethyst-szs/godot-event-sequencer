@@ -1,0 +1,49 @@
+@tool
+extends EventItemBase
+
+func get_name() -> String:
+	return "If Music is Playing"
+
+func get_description() -> String:
+	return "Only play this item's children if the SoundManager is currently playing music
+		(Can optionally check for a specific music resource as well)"
+
+func is_allow_in_editor() -> bool:
+	return true
+
+func get_second_column_config() -> Dictionary:
+	return {
+		"name": "Config",
+		"editable": true,
+		"cell_mode": TreeItem.CELL_MODE_CUSTOM
+	}
+
+func get_userdata_keys() -> Array[Dictionary]:
+	return [
+		{
+			EventConst.userdata_key_name: "path",
+			EventConst.userdata_key_display: "Audio Stream Path",
+			EventConst.userdata_key_desc: "res://path/ (Optional)",
+			EventConst.userdata_key_type: TYPE_STRING,
+			EventConst.userdata_key_require: false,
+			EventConst.userdata_key_default: "",
+		},
+	]
+
+func get_color() -> Color:
+	return Color.hex(0xFF99DBFF)
+
+func get_icon_path() -> String:
+	return "res://addons/event_sequence/plugin/sound/icon/MusicIf.svg"
+
+func run(event_node: EventNode) -> EventConst.ItemResponseType:
+	if userdata.has("path") and not userdata["path"].is_empty():
+		if SoundManager.is_music_track_playing(userdata["path"]):
+			return EventConst.ItemResponseType.OK
+		
+		return EventConst.ItemResponseType.SKIP_CHILDREN
+	
+	if SoundManager.is_music_playing():
+		return EventConst.ItemResponseType.OK
+	
+	return EventConst.ItemResponseType.SKIP_CHILDREN

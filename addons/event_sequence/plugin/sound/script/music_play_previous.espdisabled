@@ -1,0 +1,21 @@
+@tool
+extends "res://addons/event_sequence/plugin/sound/script/music_play.gd"
+
+func get_name() -> String:
+	return "Play Previous Music"
+
+func get_description() -> String:
+	return "Play the previous song that was playing.
+		The AudioStream can be optionally saved to an Event Variable to modify later."
+
+func get_userdata_keys() -> Array[Dictionary]:
+	var value: Array[Dictionary] = super()
+	value.remove_at(0)
+	return value
+
+func get_icon_path() -> String:
+	return "res://addons/event_sequence/plugin/sound/icon/MusicStartPrev.svg"
+
+func run(event_node: EventNode) -> EventConst.ItemResponseType:
+	stream = load(SoundManager.get_last_played_music_track())
+	return super(event_node)

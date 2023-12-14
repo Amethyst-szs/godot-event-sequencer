@@ -5,10 +5,18 @@ func get_name() -> String:
 	return "Play Music"
 
 func get_description() -> String:
-	return "A highly configurable item to start playing a specific music file"
+	return "A highly configurable item to start playing a specific music file.
+		The AudioStream can be optionally saved to an Event Variable to modify later."
 
 func is_allow_in_editor() -> bool:
 	return true
+
+func get_first_column_config() -> Dictionary:
+	return {
+		"name": "New Variable Name",
+		"editable": true,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
 
 func get_second_column_config() -> Dictionary:
 	return {
@@ -62,16 +70,15 @@ func get_userdata_keys() -> Array[Dictionary]:
 	]
 
 func get_color() -> Color:
-	return Color.HOT_PINK
+	return Color.hex(0xFF99DBFF)
 
 func get_icon_path() -> String:
-	return "res://addons/event_sequence/icon/IconFlat.svg"
+	return "res://addons/event_sequence/plugin/sound/icon/MusicStart.svg"
 
 var stream: AudioStream = null
 
 func prepare():
 	if not userdata.has("path"):
-		error("No audio stream path set!")
 		return
 	
 	stream = load(userdata["path"])
@@ -91,6 +98,9 @@ func run(event_node: EventNode) -> EventConst.ItemResponseType:
 	
 	if pitch > 0.0:
 		player.pitch_scale = pitch / 100.0
+	
+	if not event_variable.is_empty():
+		event_node.var_database[event_variable] = player
 	
 	return EventConst.ItemResponseType.OK
 

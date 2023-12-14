@@ -5,7 +5,8 @@ func get_name() -> String:
 	return "Set Music Bus"
 
 func get_description() -> String:
-	return "Set which audio bus the music streams should play on"
+	return "Set which audio bus the music streams should play on. 
+		Does not move currently playing music, just new music."
 
 func is_allow_in_editor() -> bool:
 	return true
@@ -30,10 +31,10 @@ func get_userdata_keys() -> Array[Dictionary]:
 	]
 
 func get_color() -> Color:
-	return Color.HOT_PINK
+	return Color.hex(0xFF99DBFF)
 
 func get_icon_path() -> String:
-	return "res://addons/event_sequence/icon/IconFlat.svg"
+	return "res://addons/event_sequence/plugin/sound/icon/MusicBus.svg"
 
 func run(event_node: EventNode) -> EventConst.ItemResponseType:
 	if userdata.has("bus"):

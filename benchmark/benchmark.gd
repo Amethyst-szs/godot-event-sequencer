@@ -45,7 +45,7 @@ func _run_benchmark():
 		var end_time: int = Time.get_ticks_usec()
 		
 		var dif: int = end_time - start_time
-		var dif_ms: int = dif / 1000
+		var dif_ms: float = floorf(float(dif) / 1000)
 		
 		var result := Label.new()
 		result.text = "%s: %s milli (%s micro)" % [event.name, str(dif_ms), str(dif)]
