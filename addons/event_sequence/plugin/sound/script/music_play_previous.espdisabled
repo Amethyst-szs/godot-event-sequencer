@@ -17,5 +17,16 @@ func get_icon_path() -> String:
 	return "res://addons/event_sequence/plugin/sound/icon/MusicStartPrev.svg"
 
 func run(event_node: EventNode) -> EventConst.ItemResponseType:
-	stream = load(SoundManager.get_last_played_music_track())
+	# If no music is playing, get the last played and return
+	if not SoundManager.is_music_playing():
+		stream = load(SoundManager.get_last_played_music_track())
+		return super(event_node)
+	
+	# If the track history only has one song, return with warning
+	if SoundManager.music.track_history.size() <= 1:
+		push_warning("No previous music has been played!")
+		return EventConst.ItemResponseType.OK
+	
+	# Play previous song
+	stream = load(SoundManager.music.track_history[1])
 	return super(event_node)

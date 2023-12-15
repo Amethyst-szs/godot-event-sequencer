@@ -1,0 +1,46 @@
+@tool
+extends EventItemBase
+
+func get_name() -> String:
+	return "Change Bus Layout"
+
+func get_description() -> String:
+	return "Swap out the current audio bus layout for a new one"
+
+func is_allow_in_editor() -> bool:
+	return true
+
+func get_second_column_config() -> Dictionary:
+	return {
+		"name": "Config",
+		"editable": true,
+		"cell_mode": TreeItem.CELL_MODE_CUSTOM
+	}
+
+func get_userdata_keys() -> Array[Dictionary]:
+	return [
+		{
+			EventConst.userdata_key_name: "path",
+			EventConst.userdata_key_display: "Bus Layout Path",
+			EventConst.userdata_key_desc: "res://path/layout.tres",
+			EventConst.userdata_key_type: TYPE_STRING,
+			EventConst.userdata_key_require: true,
+			EventConst.userdata_key_default: "",
+		},
+	]
+
+func get_color() -> Color:
+	return Color.hex(0xFF99DBFF)
+
+func get_icon_path() -> String:
+	return "res://addons/event_sequence/plugin/sound/icon/MusicStop.svg"
+
+func run(event_node: EventNode) -> EventConst.ItemResponseType:
+	if not userdata.has("path"):
+		push_warning("Cannot change audio bus layout, nothing was set!")
+		return EventConst.ItemResponseType.OK
+	
+	var layout: AudioBusLayout = load(userdata["path"])
+	AudioServer.set_bus_layout(layout)
+	
+	return EventConst.ItemResponseType.OK
