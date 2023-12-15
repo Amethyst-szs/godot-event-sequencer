@@ -1,0 +1,128 @@
+@tool
+extends EventItemBase
+
+func get_name() -> String:
+	return "Play Randomized SFXs"
+
+func get_description() -> String:
+	return "Play one sound effect file from a list, with volume and pitch variation options.
+		The played AudioStream can be optionally saved to an Event Variable to modify later."
+
+func is_allow_in_editor() -> bool:
+	return true
+
+func get_first_column_config() -> Dictionary:
+	return {
+		"name": "New Variable Name",
+		"editable": true,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_second_column_config() -> Dictionary:
+	return {
+		"name": "Config",
+		"editable": true,
+		"cell_mode": TreeItem.CELL_MODE_CUSTOM
+	}
+
+func get_userdata_keys() -> Array[Dictionary]:
+	return [
+		{
+			EventConst.userdata_key_name: "paths",
+			EventConst.userdata_key_display: "Audio Stream Paths",
+			EventConst.userdata_key_desc: "res://file/path/",
+			EventConst.userdata_key_type: TYPE_ARRAY,
+			EventConst.userdata_key_type_array: TYPE_STRING,
+			EventConst.userdata_key_require: true,
+			EventConst.userdata_key_default: "",
+		},
+		{
+			EventConst.userdata_key_name: "is_ui",
+			EventConst.userdata_key_display: "Is UI Sound",
+			EventConst.userdata_key_type: TYPE_BOOL,
+			EventConst.userdata_key_require: false,
+			EventConst.userdata_key_default: false,
+		},
+		{
+			EventConst.userdata_key_name: "volume_base",
+			EventConst.userdata_key_display: "Volume Offset (DB) (Base)",
+			EventConst.userdata_key_desc: "",
+			EventConst.userdata_key_type: TYPE_FLOAT,
+			EventConst.userdata_key_require: false,
+			EventConst.userdata_key_default: 0.0,
+		},
+		{
+			EventConst.userdata_key_name: "volume_vary",
+			EventConst.userdata_key_display: "Volume DB (Variation)",
+			EventConst.userdata_key_desc: "",
+			EventConst.userdata_key_type: TYPE_FLOAT,
+			EventConst.userdata_key_require: false,
+			EventConst.userdata_key_default: 0.0,
+		},
+		{
+			EventConst.userdata_key_name: "pitch_base",
+			EventConst.userdata_key_display: "Pitch (Percentage) (Base)",
+			EventConst.userdata_key_desc: "",
+			EventConst.userdata_key_type: TYPE_FLOAT,
+			EventConst.userdata_key_require: false,
+			EventConst.userdata_key_default: 100.0,
+		},
+		{
+			EventConst.userdata_key_name: "pitch_vary",
+			EventConst.userdata_key_display: "Pitch% (Variation)",
+			EventConst.userdata_key_desc: "",
+			EventConst.userdata_key_type: TYPE_FLOAT,
+			EventConst.userdata_key_require: false,
+			EventConst.userdata_key_default: 0.0,
+		},
+	]
+
+func get_color() -> Color:
+	return Color.hex(0xFF99DBFF)
+
+func get_icon_path() -> String:
+	return "res://addons/event_sequence/plugin/sound/icon/SoundPlayRand.svg"
+
+var streams: Array[AudioStream] = []
+
+func prepare():
+	if not userdata.has("paths") or userdata["paths"].is_empty():
+		return
+	
+	for path in userdata["paths"]:
+		streams.push_back(load(path))
+
+func run(event_node: EventNode) -> EventConst.ItemResponseType:
+	if streams.is_empty():
+		warn("No audio streams are set up to play as SFX!")
+		return EventConst.ItemResponseType.OK
+	
+	# Get properties from userdata
+	var volume_base: float = _get_userdata_float("volume_base", 0.0)
+	var volume_vary: float = _get_userdata_float("volume_vary", 0.0)
+	var pitch_base: float = _get_userdata_float("pitch_base", 100.0) / 100.0
+	var pitch_vary: float = _get_userdata_float("pitch_vary", 100.0) / 100.0
+	
+	# Start SFX
+	var stream: AudioStream = streams[randi() % streams.size()]
+	
+	var player: AudioStreamPlayer
+	if userdata.has("is_ui") and userdata["is_ui"]:
+		player = SoundManager.play_ui_sound(stream)
+	else:
+		player = SoundManager.play_sound(stream)
+	
+	# Apply pitch and volume
+	player.volume_db += volume_base + (randf_range(-1.0, 1.0) * volume_vary)
+	player.pitch_scale = pitch_base + (randf_range(-1.0, 1.0) * pitch_vary)
+	
+	if not event_variable.is_empty():
+		event_node.var_database[event_variable] = player
+	
+	return EventConst.ItemResponseType.OK
+
+func _get_userdata_float(key: String, default: float) -> float:
+	if userdata.has(key):
+		return userdata[key]
+	
+	return default

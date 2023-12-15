@@ -33,7 +33,7 @@ func get_color() -> Color:
 	return Color.hex(0xFF99DBFF)
 
 func get_icon_path() -> String:
-	return "res://addons/event_sequence/plugin/sound/icon/MusicStop.svg"
+	return "res://addons/event_sequence/plugin/sound/icon/TargetNewBus.svg"
 
 func run(event_node: EventNode) -> EventConst.ItemResponseType:
 	if not userdata.has("path"):

@@ -1,0 +1,103 @@
+@tool
+extends EventItemBase
+
+func get_name() -> String:
+	return "Play SFX"
+
+func get_description() -> String:
+	return "Play a specific sound effect with various configurable settings.
+		The AudioStream can be optionally saved to an Event Variable to modify later."
+
+func is_allow_in_editor() -> bool:
+	return true
+
+func get_first_column_config() -> Dictionary:
+	return {
+		"name": "New Variable Name",
+		"editable": true,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_second_column_config() -> Dictionary:
+	return {
+		"name": "Config",
+		"editable": true,
+		"cell_mode": TreeItem.CELL_MODE_CUSTOM
+	}
+
+func get_userdata_keys() -> Array[Dictionary]:
+	return [
+		{
+			EventConst.userdata_key_name: "path",
+			EventConst.userdata_key_display: "Audio Stream Path",
+			EventConst.userdata_key_desc: "res://file/path/",
+			EventConst.userdata_key_type: TYPE_STRING,
+			EventConst.userdata_key_require: true,
+			EventConst.userdata_key_default: "",
+		},
+		{
+			EventConst.userdata_key_name: "is_ui",
+			EventConst.userdata_key_display: "Is UI Sound",
+			EventConst.userdata_key_type: TYPE_BOOL,
+			EventConst.userdata_key_require: false,
+			EventConst.userdata_key_default: false,
+		},
+		{
+			EventConst.userdata_key_name: "volume",
+			EventConst.userdata_key_display: "Volume Offset (DB)",
+			EventConst.userdata_key_desc: "",
+			EventConst.userdata_key_type: TYPE_FLOAT,
+			EventConst.userdata_key_require: false,
+			EventConst.userdata_key_default: 0.0,
+		},
+		{
+			EventConst.userdata_key_name: "pitch",
+			EventConst.userdata_key_display: "Pitch (Percentage)",
+			EventConst.userdata_key_desc: "",
+			EventConst.userdata_key_type: TYPE_FLOAT,
+			EventConst.userdata_key_require: false,
+			EventConst.userdata_key_default: 100.0,
+		},
+	]
+
+func get_color() -> Color:
+	return Color.hex(0xFF99DBFF)
+
+func get_icon_path() -> String:
+	return "res://addons/event_sequence/plugin/sound/icon/SoundPlay.svg"
+
+var stream: AudioStream = null
+
+func prepare():
+	if not userdata.has("path"):
+		return
+	
+	stream = load(userdata["path"])
+
+func run(event_node: EventNode) -> EventConst.ItemResponseType:
+	if not stream:
+		warn("No audio stream is set up to play as SFX!")
+		return EventConst.ItemResponseType.OK
+	
+	# Get properties from userdata
+	var volume: float = _get_userdata_float("volume", 0.0)
+	var pitch: float = _get_userdata_float("pitch", 100.0)
+	
+	var player: AudioStreamPlayer
+	if userdata.has("is_ui") and userdata["is_ui"]:
+		player = SoundManager.play_ui_sound_with_pitch(stream, pitch / 100.0)
+	else:
+		player = SoundManager.play_sound_with_pitch(stream, pitch / 100.0)
+	
+	player.volume_db += volume
+	
+	if not event_variable.is_empty():
+		event_node.var_database[event_variable] = player
+	
+	return EventConst.ItemResponseType.OK
+
+func _get_userdata_float(key: String, default: float) -> float:
+	if userdata.has(key):
+		return userdata[key]
+	
+	return default

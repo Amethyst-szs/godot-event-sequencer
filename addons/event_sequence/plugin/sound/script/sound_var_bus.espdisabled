@@ -1,0 +1,70 @@
+@tool
+extends EventItemBase
+
+func get_name() -> String:
+	return "Set SFX Bus"
+
+func get_description() -> String:
+	return "Set which audio bus the sound or UI sound streams should play on. 
+		Does not move currently playing SFX, only new SFX."
+
+func is_allow_in_editor() -> bool:
+	return true
+
+func get_second_column_config() -> Dictionary:
+	return {
+		"name": "Config",
+		"editable": true,
+		"cell_mode": TreeItem.CELL_MODE_CUSTOM
+	}
+
+func get_userdata_keys() -> Array[Dictionary]:
+	return [
+		{
+			EventConst.userdata_key_name: "bus",
+			EventConst.userdata_key_display: "Bus Name",
+			EventConst.userdata_key_desc: "Master",
+			EventConst.userdata_key_type: TYPE_STRING,
+			EventConst.userdata_key_require: true,
+			EventConst.userdata_key_default: "",
+		},
+		{
+			EventConst.userdata_key_name: "is_normal",
+			EventConst.userdata_key_display: "Set Normal Sound Bus",
+			EventConst.userdata_key_type: TYPE_BOOL,
+			EventConst.userdata_key_require: false,
+			EventConst.userdata_key_default: false,
+		},
+		{
+			EventConst.userdata_key_name: "is_ui",
+			EventConst.userdata_key_display: "Set UI Sound Bus",
+			EventConst.userdata_key_type: TYPE_BOOL,
+			EventConst.userdata_key_require: false,
+			EventConst.userdata_key_default: false,
+		},
+	]
+
+func get_color() -> Color:
+	return Color.hex(0xFF99DBFF)
+
+func get_icon_path() -> String:
+	return "res://addons/event_sequence/plugin/sound/icon/SoundBus.svg"
+
+func run(event_node: EventNode) -> EventConst.ItemResponseType:
+	if not userdata.has("bus"):
+		warn("No bus has been set!")
+		return EventConst.ItemResponseType.OK
+	
+	if userdata.has("is_normal") and userdata["is_normal"]:
+		SoundManager.set_default_sound_bus(userdata["bus"])
+	
+	if userdata.has("is_ui") and userdata["is_ui"]:
+		SoundManager.set_default_ui_sound_bus(userdata["bus"])
+	
+	return EventConst.ItemResponseType.OK
+
+func _get_userdata_float(key: String, default: float) -> float:
+	if userdata.has(key):
+		return userdata[key]
+	
+	return default
