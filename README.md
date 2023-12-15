@@ -23,8 +23,8 @@ Featuring dozens of built-in Event Items, there is almost nothing you can't make
 Easily extend the features of the Event Sequencer using plugins. With a simple configuration file and some GDScript code, you can add any functionality to the Event Sequencer for any kind of game! The tool comes with several different plugins bundled in allowing easy integration into various Godot addons including:
 - SaveData-DX *(By Amethyst-szs)*
 - WipeTool *(By Amethyst-szs)*
-- Dialogue Manager *(Addon by Nathan Hoad, Integration by Amethyst-szs)*
-- Sound Manager *(Addon by Nathan Hoad, Integration by Amethyst-szs)*
+- Dialogue Manager *(Addon by [Nathan Hoad](https://github.com/nathanhoad), Integration by Amethyst-szs)*
+- Sound Manager *(Addon by [Nathan Hoad](https://github.com/nathanhoad), Integration by Amethyst-szs)*
 - An example plugin to copy and reference, helping you make your own additions as easy as possible
 - And more!
 
