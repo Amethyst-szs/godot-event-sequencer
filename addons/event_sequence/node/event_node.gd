@@ -160,12 +160,8 @@ func _run_dictionary_list(list: Array[Dictionary], is_first_recursion: bool = fa
 		
 		# Get event dictionary and increase the next index
 		var event_root: Dictionary = list[idx]
-		idx += 1
-		
-		if not event_root.has(EventConst.item_key_self):
-			continue
-		
 		var event_self: Dictionary = event_root[EventConst.item_key_self]
+		idx += 1
 		
 		# Get instance of script
 		if not event_self.has(EventConst.item_key_instance):
@@ -173,7 +169,7 @@ func _run_dictionary_list(list: Array[Dictionary], is_first_recursion: bool = fa
 		
 		var script_instance = event_self[EventConst.item_key_instance]
 		
-		# Check if this is a comment type event, skip if so
+		# Check if this is a comment or label type event, skip if so
 		if script_instance.is_comment() or script_instance.is_label():
 			if event_root.has(EventConst.item_key_child):
 				await _run_dictionary_list(event_root[EventConst.item_key_child])
@@ -187,10 +183,8 @@ func _run_dictionary_list(list: Array[Dictionary], is_first_recursion: bool = fa
 			EventConst.ItemResponseType.OK:
 				if event_root.has(EventConst.item_key_child):
 					await _run_dictionary_list(event_root[EventConst.item_key_child])
-			EventConst.ItemResponseType.SKIP_CHILDREN:
-				continue
-			EventConst.ItemResponseType.JUMP:
-				continue
+			EventConst.ItemResponseType.TERMINATE:
+				is_terminating = true
 			EventConst.ItemResponseType.JUMP_AND_RETURN:
 				await start_from_label(label_jump_target, false)
 			EventConst.ItemResponseType.LOOP_FOR:
@@ -199,14 +193,12 @@ func _run_dictionary_list(list: Array[Dictionary], is_first_recursion: bool = fa
 			EventConst.ItemResponseType.LOOP_WHILE:
 				if event_root.has(EventConst.item_key_child):
 					await _run_dictionary_list(event_root[EventConst.item_key_child])
-			EventConst.ItemResponseType.TERMINATE:
-				is_terminating = true
 		
 		# If not at the final local child, continue here
 		if idx < list.size():
 			continue
 		
-		# If still in for loop, restart here
+		# If in for loop, restart here
 		if loop_count > 0:
 			loop_count -= 1
 			idx = start_idx

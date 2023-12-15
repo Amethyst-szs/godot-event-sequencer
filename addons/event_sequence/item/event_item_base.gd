@@ -63,7 +63,6 @@ func prepare():
 	return
 
 func run(event_node: EventNode) -> EventConst.ItemResponseType:
-	print(name)
 	return EventConst.ItemResponseType.OK
 
 func parse_dict(dict: Dictionary) -> void:
