@@ -1,6 +1,6 @@
 # Godot Event Sequencer Plugin  
 <a href="url"><img src="https://github.com/Amethyst-szs/godot-event-sequencer/assets/62185604/d763de10-dd2d-4f30-bca6-1b10058c2279" align="center" height="42" width="420" ></a>  
-*A visual scripting system for Godot 4, designed for easy cutscenes, stories, and other scripted sequences!*
+*A visual scripting system for Godot 4, designed for easy cutscenes and other scripted events!*
 
 ## Welcome to the Event Sequencer
 At the heart of this plugin is the new Event Node and Event Editor, allowing streamlined work for scripted sequences. Simply add an Event Node to your scene, open the new editor, and start adding Event Items to suit your needs!  
