@@ -29,6 +29,8 @@ var undo_redo: EditorUndoRedoManager = null
 const default_item_name: String = "Start"
 const default_item_path: String = "res://addons/event_sequence/item/general/comment.gd"
 
+const error_item_path: String = "res://addons/event_sequence/item/error.gd"
+
 #region Initalization
 
 func _enter_tree():
@@ -188,7 +190,7 @@ func save() -> void:
 		# Set event list to new event list
 		selected_node.event_list = new_event_list
 
-## Creates a default tree with one comment node
+## Creates a default tree item
 func setup_default_tree(parent: TreeItem) -> void:
 	var default_item_script: Script = ResourceLoader.load(default_item_path, "Script")
 	var default_item = default_item_script.new()
@@ -196,6 +198,15 @@ func setup_default_tree(parent: TreeItem) -> void:
 	default_item.name = default_item_name
 	default_item.script_path = default_item_path
 	default_item.add_to_tree(parent, self, false)
+
+## Creates an error tree item (used if the script for an item can't be found)
+func get_error_tree_item(parent: TreeItem, script_path: StringName) -> TreeItem:
+	var error_item_script: Script = ResourceLoader.load(error_item_path, "Script")
+	var error_item = error_item_script.new()
+	
+	error_item.name = "%s: %s" % [EventConst.missing_script_prefix, script_path.get_file()]
+	error_item.script_path = script_path
+	return error_item.add_to_tree(parent, self, false, false, true)
 
 # Destroy the current tree and try to build a new tree, updating UI visiblity in process
 func _new_tree() -> void:
@@ -259,6 +270,10 @@ func _try_build_tree(parent: TreeItem = null, dict_list: Array = []) -> bool:
 	return true
 
 func _build_item_from_dict(parent_item: TreeItem, dict: Dictionary, is_macro: bool, is_collapsed: bool = false) -> TreeItem:
+	# If the script for this item doesn't exist, replace with error marker
+	if not FileAccess.file_exists(dict[EventConst.item_key_script]):
+		return get_error_tree_item(parent_item, dict[EventConst.item_key_script])
+	
 	# Load in the item's script
 	var script: Script = ResourceLoader.load(dict[EventConst.item_key_script], "Script")
 	var script_instance = script.new()
@@ -300,13 +315,17 @@ func _build_dict_from_item(item: TreeItem) -> Dictionary:
 	dict[EventConst.item_key_name] = item.get_text(EventConst.EditorColumn.NAME)
 	dict[EventConst.item_key_script] = item.get_metadata(EventConst.EditorColumn.NAME)
 	
-	# New instance of script
-	var script: Script = ResourceLoader.load(dict[EventConst.item_key_script], "Script")
-	var script_instance = script.new()
-	
 	var variable = _get_property_from_column(item, EventConst.EditorColumn.VARIABLE)
 	if variable:
 		dict[EventConst.item_key_variable] = variable
+	
+	# If the script for this item doesn't exist, return here
+	if not FileAccess.file_exists(dict[EventConst.item_key_script]):
+		return dict
+	
+	# New instance of script
+	var script: Script = ResourceLoader.load(dict[EventConst.item_key_script], "Script")
+	var script_instance = script.new()
 	
 	var userdata_cellmode: int = item.get_cell_mode(EventConst.EditorColumn.USERDATA)
 	if userdata_cellmode == TreeItem.CELL_MODE_CUSTOM:

@@ -83,7 +83,7 @@ func _ready():
 	if name.is_empty():
 		name = get_name()
 
-func add_to_tree(parent: TreeItem, editor: Control, is_macro: bool, is_collapsed: bool = false) -> TreeItem:
+func add_to_tree(parent: TreeItem, editor: Control, is_macro: bool, is_collapsed: bool = false, is_error: bool = false) -> TreeItem:
 	var item: TreeItem = parent.create_child()
 	
 	# Mark as label if is label
@@ -91,7 +91,7 @@ func add_to_tree(parent: TreeItem, editor: Control, is_macro: bool, is_collapsed
 		item.set_meta(EventConst.item_key_flag_label, true)
 	
 	# Name column
-	if name.is_empty():
+	if name.is_empty() or (not is_error and name.begins_with(EventConst.missing_script_prefix)):
 		name = get_name()
 	
 	item.set_text(EventConst.EditorColumn.NAME, name)

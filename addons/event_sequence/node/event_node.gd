@@ -121,6 +121,11 @@ func _preload_scripts_and_labels(dict_list: Array[Dictionary], index_path: Array
 		
 		# Create instance of this item's script
 		var script: Script = await load(event[EventConst.item_key_self][EventConst.item_key_script])
+		if script == null:
+			push_error("EventNode item \"%s\" couldn't load its script! Is the file missing?"
+				% [event[EventConst.item_key_self][EventConst.item_key_name]])
+			continue
+		
 		var inst = script.new()
 		inst.parse_dict(event[EventConst.item_key_self])
 		inst.prepare()
@@ -153,18 +158,20 @@ func _run_dictionary_list(list: Array[Dictionary], is_first_recursion: bool = fa
 		if is_terminating or not label_jump_target.is_empty():
 			return
 		
-		# Get event dictionary
+		# Get event dictionary and increase the next index
 		var event_root: Dictionary = list[idx]
+		idx += 1
+		
 		if not event_root.has(EventConst.item_key_self):
 			continue
 		
 		var event_self: Dictionary = event_root[EventConst.item_key_self]
 		
 		# Get instance of script
-		var script_instance = event_self[EventConst.item_key_instance]
+		if not event_self.has(EventConst.item_key_instance):
+			continue
 		
-		# Increment counter
-		idx += 1
+		var script_instance = event_self[EventConst.item_key_instance]
 		
 		# Check if this is a comment type event, skip if so
 		if script_instance.is_comment() or script_instance.is_label():

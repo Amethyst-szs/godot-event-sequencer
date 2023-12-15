@@ -72,15 +72,18 @@ enum EditorColumn {
 	USERDATA,
 }
 
-const userdata_key_name = "name"
-const userdata_key_display = "display_name"
-const userdata_key_desc = "desc"
+# Prefix for the "Error" type tree item
+const missing_script_prefix: String = "ERROR! Missing Script"
 
-const userdata_key_require = "require"
-const userdata_key_default = "default"
+const userdata_key_name := "name"
+const userdata_key_display := "display_name"
+const userdata_key_desc := "desc"
 
-const userdata_key_type = "type"
-const userdata_key_type_hint = "type_hint"
-const userdata_key_type_array = "type_array"
+const userdata_key_require := "require"
+const userdata_key_default := "default"
+
+const userdata_key_type := "type"
+const userdata_key_type_hint := "type_hint"
+const userdata_key_type_array := "type_array"
 
 #endregion
