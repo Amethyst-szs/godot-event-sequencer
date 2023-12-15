@@ -91,39 +91,39 @@ func open():
 		label_desc.text = config.get_value("esplugin", "desc", "Desc Missing!")
 		info_container.add_child(label_desc)
 		
-		# Add prerequest marker
-		var missing_prerequest: bool = false
-		if config.get_value("prerequest", "require", false):
-			missing_prerequest = _add_prerequest_data(info_container, config, enabled_plugins)
+		# Add prerequisite marker
+		var missing_prerequisite: bool = false
+		if config.get_value("prerequisite", "require", false):
+			missing_prerequisite = _add_prerequisite_data(info_container, config, enabled_plugins)
 		
 		# Add toggle plugin button
 		var toggle := CheckButton.new()
 		toggle.alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		toggle.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		toggle.text = "Enabled"
-		toggle.disabled = missing_prerequest
+		toggle.disabled = missing_prerequisite
 		toggle.button_pressed = config.get_value("enabled", "is_enabled", false)
 		container.add_child(toggle)
 		
 		# Hook up toggle to function
 		toggle.toggled.connect(_toggle_button_hit.bind(dir))
 
-func _add_prerequest_data(container: Control, config: ConfigFile, plugin_list: PackedStringArray) -> bool:
-	var label_prerequest := Label.new()
-	container.add_child(label_prerequest)
+func _add_prerequisite_data(container: Control, config: ConfigFile, plugin_list: PackedStringArray) -> bool:
+	var label_prerequisite := Label.new()
+	container.add_child(label_prerequisite)
 	
-	var is_valid := _is_active_plugin(plugin_list, config.get_value("prerequest", "name", "NONE"))
+	var is_valid := _is_active_plugin(plugin_list, config.get_value("prerequisite", "name", "NONE"))
 	if is_valid:
-		label_prerequest.text = "Your project has required prerequest for this plugin"
-		label_prerequest.add_theme_color_override("font_color", Color.GRAY)
+		label_prerequisite.text = "Your project has required prerequisite for this plugin"
+		label_prerequisite.add_theme_color_override("font_color", Color.GRAY)
 		return false
 	
-	label_prerequest.text = "Missing Prerequest: %s" % config.get_value("prerequest", "name", "NONE")
-	label_prerequest.add_theme_color_override("font_color", Color.LIGHT_CORAL)
+	label_prerequisite.text = "Missing prerequisite: %s" % config.get_value("prerequisite", "name", "NONE")
+	label_prerequisite.add_theme_color_override("font_color", Color.LIGHT_CORAL)
 	
 	var prequest_url_button := LinkButton.new()
-	prequest_url_button.text = "- Check out prerequest here- "
-	prequest_url_button.uri = config.get_value("prerequest", "url", "https://google.com")
+	prequest_url_button.text = "- Check out prerequisite here- "
+	prequest_url_button.uri = config.get_value("prerequisite", "url", "https://google.com")
 	container.add_child(prequest_url_button)
 	return true
 
@@ -172,7 +172,7 @@ func _toggle_button_hit(state: bool, dir: String):
 
 #endregion
 
-#region Prerequests
+#region prerequisites
 
 func _get_plugin_list() -> PackedStringArray:
 	var config = ConfigFile.new()
