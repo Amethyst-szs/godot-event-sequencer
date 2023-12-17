@@ -39,7 +39,10 @@ func _ready():
 	plugin_container.add_child(plugin_tabs)
 	
 	# Add all enabled plugin buttons to interface
-	_setup_plugins(plugin_tabs)
+	var plugin_count := _setup_plugins(plugin_tabs)
+	if plugin_count < 1:
+		plugin_container.remove_child(plugin_tabs)
+		tabs.remove_child(plugin_container)
 	
 	# Fetch macro directory and add new menu tab
 	DirAccess.make_dir_recursive_absolute(EventConst.ScriptMacroFolder)
@@ -135,19 +138,22 @@ func _button_pressed(script_path: String):
 
 #region Plugin Methids
 
-func _setup_plugins(container: TabContainer):
+func _setup_plugins(container: TabContainer) -> int:
 	# Load plugins directory
 	var plugin_dir := DirAccess.open(plugin_folder)
 	if plugin_dir.get_open_error() != OK:
 		printerr("EventNode couldn't open plugins folder")
-		return
+		return -1
+	
+	# Keep track of amount of added plugins (is returned at end)
+	var plugin_count: int = 0
 	
 	# For each directory in plugins dir, try to create a new panel
 	for dir in plugin_dir.get_directories():
 		var dir_access := DirAccess.open(plugin_folder + dir)
 		if dir_access.get_open_error() != OK:
 			printerr("EventNode couldn't open %s plugin" % [dir])
-			return
+			continue
 		
 		# Ensure the directory has a config file
 		if not dir_access.file_exists("esplugin.cfg"):
@@ -161,6 +167,9 @@ func _setup_plugins(container: TabContainer):
 		if not config.get_value("enabled", "is_enabled", false):
 			continue
 		
+		# Increase plugin count
+		plugin_count += 1
+		
 		# Create VBox
 		var list := _create_plugin_category(container, config.get_value("esplugin", "name_short", "NoName"))
 		
@@ -169,6 +178,8 @@ func _setup_plugins(container: TabContainer):
 		for item in script_dir.get_files():
 			var button_script := "%s%s/%s/%s" % [plugin_folder, dir, script_dir_name, item]
 			_create_button(button_script, list)
+	
+	return plugin_count
 
 func _create_plugin_category(container: TabContainer, category: String) -> VBoxContainer:
 	var box := VBoxContainer.new()
