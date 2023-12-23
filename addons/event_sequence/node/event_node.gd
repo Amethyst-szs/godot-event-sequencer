@@ -1,5 +1,5 @@
 @tool
-@icon("res://icon.svg")
+@icon("res://addons/event_sequence/icon/IconLogo.svg")
 
 extends Node
 class_name EventNode
@@ -7,9 +7,9 @@ class_name EventNode
 #region Exports & Other Variables
 
 ## Should this event sequence automatically start on scene load?
-@export var autostart: bool = true
+@export var autostart: bool = false
 ## Should this sequence automatically free itself after ending?
-@export var autofree: bool = true
+@export var autofree: bool = false
 ## What label should the sequence start on? (Leave blank for default behavior)
 @export var start_label: String = ""
 
@@ -24,6 +24,15 @@ var label_list: Dictionary = {}
 var var_database: Dictionary = {}
 
 # Status
+var is_active: bool = false:
+	set(value):
+		is_active = value
+		
+		if value:
+			event_finished.emit()
+		else:
+			event_started.emit()
+
 var is_terminating: bool = false
 var label_jump_target: String = ""
 var new_for_loop_length: int = -1
@@ -51,7 +60,7 @@ func start():
 		start_from_label(start_label)
 		return
 	
-	event_started.emit()
+	is_active = true
 	_run_dictionary_list(event_list, true)
 
 ## Start the sequence from a specific label, don't modify "is_external_call" unless you know
@@ -74,7 +83,7 @@ func start_from_label(label: String, is_external_call: bool = true):
 	# Reset the jump target and start
 	label_jump_target = ""
 	
-	event_started.emit()
+	is_active = true
 	await _run_dictionary_list(dict, is_external_call, idx_path.back())
 
 ## Forcefully end the current sequence at the current point
@@ -216,7 +225,7 @@ func _run_dictionary_list(list: Array[Dictionary], is_first_recursion: bool = fa
 		is_terminating = false
 		var_database.clear()
 		
-		event_finished.emit()
+		is_active = false
 		
 		if autofree:
 			queue_free()
