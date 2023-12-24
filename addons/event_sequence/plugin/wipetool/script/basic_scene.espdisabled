@@ -1,0 +1,51 @@
+@tool
+extends EventItemBase
+
+func get_name() -> String:
+	return "Wipe to Other Scene"
+
+func get_description() -> String:
+	return "Start a wipe transition that loads another scene"
+
+func is_allow_in_editor() -> bool:
+	return true
+
+func get_first_column_config() -> Dictionary:
+	return {
+		"name": "None",
+		"editable": false,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_second_column_config() -> Dictionary:
+	return {
+		"name": "Config",
+		"editable": true,
+		"cell_mode": TreeItem.CELL_MODE_CUSTOM
+	}
+
+func get_userdata_keys() -> Array[Dictionary]:
+	return [
+		{
+			EventConst.userdata_key_name: "scene",
+			EventConst.userdata_key_display: "Scene Path",
+			EventConst.userdata_key_desc: "res://path/to/scene.tscn",
+			EventConst.userdata_key_type: TYPE_STRING,
+			EventConst.userdata_key_require: true,
+		},
+	]
+
+func get_color() -> Color:
+	return Color.GRAY
+
+func get_icon_path() -> String:
+	return "res://addons/event_sequence/plugin/wipetool/icon/BasicScene.svg"
+
+func run(event_node: EventNode) -> EventConst.ItemResponseType:
+	if not is_valid_userdata("scene"):
+		warn("No target scene has been set!")
+		return EventConst.ItemResponseType.OK
+	
+	WipeTool.wipe_with_scene_change(userdata["scene"])
+	
+	return EventConst.ItemResponseType.OK
