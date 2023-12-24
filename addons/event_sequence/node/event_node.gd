@@ -29,9 +29,9 @@ var is_active: bool = false:
 		is_active = value
 		
 		if value:
-			event_finished.emit()
-		else:
 			event_started.emit()
+		else:
+			event_finished.emit()
 
 var is_terminating: bool = false
 var label_jump_target: String = ""
