@@ -117,7 +117,7 @@ func _validate_property(property):
 
 #region Implementation
 
-func _preload_scripts_and_labels(dict_list: Array[Dictionary], index_path: Array[int] = []):
+func _preload_scripts_and_labels(dict_list: Array, index_path: Array[int] = []):
 	# Never ever do this in the editor
 	if Engine.is_editor_hint():
 		return
@@ -158,7 +158,7 @@ func _preload_scripts_and_labels(dict_list: Array[Dictionary], index_path: Array
 		if event.has(EventConst.item_key_child):
 			_preload_scripts_and_labels(event[EventConst.item_key_child], self_index_path)
 
-func _run_dictionary_list(list: Array[Dictionary], is_first_recursion: bool = false, start_idx: int = 0, loop_count: int = -1):
+func _run_dictionary_list(list: Array, is_first_recursion: bool = false, start_idx: int = 0, loop_count: int = -1):
 	var idx: int = start_idx
 	var loops: int = loop_count
 	
