@@ -1,0 +1,46 @@
+@tool
+extends EventItemBase
+
+func get_name() -> String:
+	return "Change Camera Action in Switch"
+
+func get_description() -> String:
+	return "Change which Camera Action is active in a CameraActionSwitch"
+
+func is_allow_in_editor() -> bool:
+	return true
+
+func get_first_column_config() -> Dictionary:
+	return {
+		"name": "Switch Node Variable",
+		"editable": true,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_second_column_config() -> Dictionary:
+	return {
+		"name": "Action Name",
+		"editable": true,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_color() -> Color:
+	return Color.INDIAN_RED.lightened(0.2)
+
+func get_icon_path() -> String:
+	return "res://addons/event_sequence/plugin/camera/icon/SwitchSet.svg"
+
+func run(event_node: EventNode) -> EventConst.ItemResponseType:
+	if not is_valid_event_variable(event_node, false):
+		warn("CameraActionSwitch variable name not found!")
+		return EventConst.ItemResponseType.OK
+	
+	var switch = event_node.var_database[event_variable]
+	if not switch is CameraActionSwitch:
+		warn("Variable does not contain CameraActionSwitch node!")
+		return EventConst.ItemResponseType.OK
+	
+	var cam_name: String = userdata[EventConst.item_key_userdata_generic]
+	(switch as CameraActionSwitch).start_by_node_name(cam_name)
+	
+	return EventConst.ItemResponseType.OK

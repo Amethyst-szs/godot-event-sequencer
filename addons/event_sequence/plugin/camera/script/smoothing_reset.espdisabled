@@ -1,0 +1,36 @@
+@tool
+extends EventItemBase
+
+func get_name() -> String:
+	return "Reset Camera Smoothing"
+
+func get_description() -> String:
+	return "Instantly reset the camera's position and rotation smoothing"
+
+func is_allow_in_editor() -> bool:
+	return true
+
+func get_first_column_config() -> Dictionary:
+	return {
+		"name": "None",
+		"editable": false,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_second_column_config() -> Dictionary:
+	return {
+		"name": "None",
+		"editable": false,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_color() -> Color:
+	return Color.INDIAN_RED.lightened(0.2)
+
+func get_icon_path() -> String:
+	return "res://addons/event_sequence/plugin/camera/icon/SmoothReset.svg"
+
+func run(event_node: EventNode) -> EventConst.ItemResponseType:
+	var camera := event_node.get_viewport().get_camera_2d()
+	camera.reset_smoothing()
+	return EventConst.ItemResponseType.OK

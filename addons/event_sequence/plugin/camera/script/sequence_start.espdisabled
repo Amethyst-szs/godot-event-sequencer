@@ -1,0 +1,60 @@
+@tool
+extends EventItemBase
+
+func get_name() -> String:
+	return "Start Camera Action Sequence"
+
+func get_description() -> String:
+	return "Start a camera action sequence from last point or beginning"
+
+func is_allow_in_editor() -> bool:
+	return true
+
+func get_first_column_config() -> Dictionary:
+	return {
+		"name": "Sequence Node Variable",
+		"editable": true,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_second_column_config() -> Dictionary:
+	return {
+		"name": "Config",
+		"editable": true,
+		"cell_mode": TreeItem.CELL_MODE_CUSTOM
+	}
+
+func get_userdata_keys() -> Array[Dictionary]:
+	return [
+		{
+			EventConst.userdata_key_name: "resume",
+			EventConst.userdata_key_display: "Resume",
+			EventConst.userdata_key_desc: "Continue from last pause?",
+			EventConst.userdata_key_type: TYPE_BOOL,
+			EventConst.userdata_key_require: false,
+			EventConst.userdata_key_default: false,
+		},
+	]
+
+func get_color() -> Color:
+	return Color.INDIAN_RED.lightened(0.2)
+
+func get_icon_path() -> String:
+	return "res://addons/event_sequence/plugin/camera/icon/SequenceStart.svg"
+
+func run(event_node: EventNode) -> EventConst.ItemResponseType:
+	if not is_valid_event_variable(event_node, false):
+		warn("CameraActionSequence variable name not found!")
+		return EventConst.ItemResponseType.OK
+	
+	var sequence = event_node.var_database[event_variable]
+	if not sequence is CameraActionSequence:
+		warn("Variable does not contain CameraActionSequence node!")
+		return EventConst.ItemResponseType.OK
+	
+	if userdata.has("resume") and userdata["resume"]:
+		(sequence as CameraActionSequence).sequence_resume()
+	else:
+		(sequence as CameraActionSequence).sequence_start()
+	
+	return EventConst.ItemResponseType.OK

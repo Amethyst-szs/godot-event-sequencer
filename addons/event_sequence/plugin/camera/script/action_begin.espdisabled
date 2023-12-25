@@ -1,0 +1,44 @@
+@tool
+extends EventItemBase
+
+func get_name() -> String:
+	return "Start Camera Action"
+
+func get_description() -> String:
+	return "Start a camera action using an event variable"
+
+func is_allow_in_editor() -> bool:
+	return true
+
+func get_first_column_config() -> Dictionary:
+	return {
+		"name": "Action Node Variable",
+		"editable": true,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_second_column_config() -> Dictionary:
+	return {
+		"name": "None",
+		"editable": false,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_color() -> Color:
+	return Color.INDIAN_RED.lightened(0.2)
+
+func get_icon_path() -> String:
+	return "res://addons/event_sequence/plugin/camera/icon/ActionStart.svg"
+
+func run(event_node: EventNode) -> EventConst.ItemResponseType:
+	if not is_valid_event_variable(event_node, false):
+		warn("CameraAction not found!")
+		return EventConst.ItemResponseType.OK
+	
+	var action = event_node.var_database[event_variable]
+	if not action is CameraAction:
+		warn("Variable does not contain CameraAction node!")
+		return EventConst.ItemResponseType.OK
+	
+	(action as CameraAction).start()
+	return EventConst.ItemResponseType.OK

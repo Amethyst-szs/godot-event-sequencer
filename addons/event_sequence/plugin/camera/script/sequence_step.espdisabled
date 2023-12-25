@@ -1,0 +1,45 @@
+@tool
+extends EventItemBase
+
+func get_name() -> String:
+	return "Advance Camera Action Sequence"
+
+func get_description() -> String:
+	return "Advance to the next action in a camera action sequence"
+
+func is_allow_in_editor() -> bool:
+	return true
+
+func get_first_column_config() -> Dictionary:
+	return {
+		"name": "Sequence Node Variable",
+		"editable": true,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_second_column_config() -> Dictionary:
+	return {
+		"name": "None",
+		"editable": false,
+		"cell_mode": TreeItem.CELL_MODE_STRING
+	}
+
+func get_color() -> Color:
+	return Color.INDIAN_RED.lightened(0.2)
+
+func get_icon_path() -> String:
+	return "res://addons/event_sequence/plugin/camera/icon/SequenceStep.svg"
+
+func run(event_node: EventNode) -> EventConst.ItemResponseType:
+	if not is_valid_event_variable(event_node, false):
+		warn("CameraActionSequence variable name not found!")
+		return EventConst.ItemResponseType.OK
+	
+	var sequence = event_node.var_database[event_variable]
+	if not sequence is CameraActionSequence:
+		warn("Variable does not contain CameraActionSequence node!")
+		return EventConst.ItemResponseType.OK
+	
+	(sequence as CameraActionSequence).sequence_step()
+	
+	return EventConst.ItemResponseType.OK
